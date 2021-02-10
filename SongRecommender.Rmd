@@ -1,0 +1,47 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+
+
+```{r}
+library(httr)
+
+url <- 'https://api.spotify.com/v1/recommendations'
+CLIENT_ID <- '7870a259411b4c8b8d2ad173b5a7ed73'
+CLIENT_SECRET <- 'df3661fc87e24dc499c3dd2f154ec981'
+auth_token <- 'BQA4Hq3H5ZcQtiR7cIrOuwN90d-hZk9PSAIiaDez6IEEJAfP3v0oOly0AqnWV-2FHFhncQZ82rQQz0U78bpLVtrJvhy9XzVOzrQrA_KLXx0oO0vP7P2G_pmJS_Mh9w1pRIhF5iVMYUk4WdlnC4i66wOCtuXWuA'
+
+
+response = POST(
+  'https://accounts.spotify.com/api/token',
+  accept_json(),
+  authenticate(CLIENT_ID, CLIENT_SECRET),
+  body = list(grant_type = 'client_credentials'),
+  encode = 'form',
+  verbose()
+)
+
+mytoken <- content(response)$access_token
+
+HeaderValue = paste0('Bearer', mytoken)
+```
+
+```{r}
+artistID = "06HL4z0CvFAxyc27GXpf02"
+URI = paste0('https://api.spotify.com/v1/artists/', artistID)
+response2 = GET(url = URI, add_headers(Authorization = HeaderValue))
+Artist = content(response2)
+```
+
+
+
+```{r}
+GET(url,
+    add_headers(Authorization = 'Bearer'),
+    query = list(seed_artists = '4NHQUGzhtTLFvgF5SZesLK',
+                 seed_genres = 'classical,country',
+                 seed_tracks = '0c6xIDDpzE81m2q797ordA'))
+
+```
