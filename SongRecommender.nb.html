@@ -1751,17 +1751,20 @@ summary {
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShodHRyKVxuXG51cmwgPC0gJ2h0dHBzOi8vYXBpLnNwb3RpZnkuY29tL3YxL3JlY29tbWVuZGF0aW9ucydcbkNMSUVOVF9JRCA8LSAnNzg3MGEyNTk0MTFiNGM4YjhkMmFkMTczYjVhN2VkNzMnXG5DTElFTlRfU0VDUkVUIDwtICdkZjM2NjFmYzg3ZTI0ZGM0OTljM2RkMmYxNTRlYzk4MSdcbmF1dGhfdG9rZW4gPC0gJ0JRQTRIcTNINVpjUXRpUjdjSXJPdXdOOTBkLWhaazlQU0FJaWFEZXo2SUVFSkFmUDN2MG9PbHkwQXFuV1YtMkZIRmhuY1FaODJyUVF6MFU3OGJwTFZ0ckp2aHk5WHpWT3pyUXJBX0tMWHgwb08wdlA3UDJHX3BtSlNfTWg5dzFwUkloRjVpVk1ZVWs0V2RsbkM0aTY2d09DdHVYV3VBJ1xuXG5cbnJlc3BvbnNlID0gUE9TVChcbiAgJ2h0dHBzOi8vYWNjb3VudHMuc3BvdGlmeS5jb20vYXBpL3Rva2VuJyxcbiAgYWNjZXB0X2pzb24oKSxcbiAgYXV0aGVudGljYXRlKENMSUVOVF9JRCwgQ0xJRU5UX1NFQ1JFVCksXG4gIGJvZHkgPSBsaXN0KGdyYW50X3R5cGUgPSAnY2xpZW50X2NyZWRlbnRpYWxzJyksXG4gIGVuY29kZSA9ICdmb3JtJyxcbiAgdmVyYm9zZSgpXG4pXG5gYGAifQ== -->
-<pre class="r"><code>library(httr)
-
-url &lt;- &#39;https://api.spotify.com/v1/recommendations&#39;
-CLIENT_ID &lt;- &#39;7870a259411b4c8b8d2ad173b5a7ed73&#39;
-CLIENT_SECRET &lt;- &#39;df3661fc87e24dc499c3dd2f154ec981&#39;
-auth_token &lt;- &#39;BQA4Hq3H5ZcQtiR7cIrOuwN90d-hZk9PSAIiaDez6IEEJAfP3v0oOly0AqnWV-2FHFhncQZ82rQQz0U78bpLVtrJvhy9XzVOzrQrA_KLXx0oO0vP7P2G_pmJS_Mh9w1pRIhF5iVMYUk4WdlnC4i66wOCtuXWuA&#39;
-
-
-response = POST(
-  &#39;https://accounts.spotify.com/api/token&#39;,
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbImRhdGEuZnJhbWUiXSwibnJvdyI6MywibmNvbCI6Mn0sInJkZiI6Ikg0c0lBQUFBQUFBQUJsMlMzVzdhTUJUSDNhUjBhcVpPbGZZQzlBRkErZjY0ekFLTVVGb0l0SkJ4RXptMldTSlNoNFlFQ2xkN2tqMXFONGNtMHhUZitQaC96dTl2SDl1em5xOEl2Z0FBNE1FbDRBRGZZaUc0Y3FhU3JNa0FYSEpzZGNFeTErWDh4cXErc3FBVWJ5dWtUQWpPMk8wL1BnVnVyMTBwWHlwbDNuZG0vYWRhL1F5TFBBcnlkRU5vdTJGeDF6Wk1RNFN5WnFtU0ZLcklERTBzUXl3WlNxaEJnMkJEK1ZlSTE0cXVTMnRrR2tSV01WSXRDeWtZeTJ0SlV3bXlUS2txL1AzTnM5WGhxekxVVnNqTDQ1bUIzR3hTSEI0dEVYZWkxY2Fhem0wM2hqMXkwdDErZjJTdnA4cGVUQ2ZKVWJSZjZYTFJrUWZEUVVTUnR6TGx6UE5PNHJOaGh0dnhJczlHKytobythZkY1SlI1bVIzY2ovMDN4b243cVRHVnZ3ZmJsOUU4ZUlpc2c3U2R1ZEZBaXhjUFA1NDM2aEluMUZGalhUOU1uTHp3bDRYZHVOc1doUzlrVjEwS1Y0bjhQVG5XK1FWTUN0S0FyclAwMEszQm14TDhCYzZEYjdxakJPNXE5MW9VTU14aGQ1MHhucTNlRzhpbmRKdkhLV1VRVno1NXF3RmZaQTNodHFEbFNYQUhSUVhkZENTajNPR2MveGczVmN6L0YzTWZlM0ovS3E5VzVYVkY2TStZa3Zyd0NReEpVbjhzMXZLNTQrNDJpMmxldDhMVVhUZFBjMWpYQ1NoTmF1WGNISGovQzJNQmdtM3JBZ0FBIn0= -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["Key"],"name":[1],"type":["chr"],"align":["left"]},{"label":["Value"],"name":[2],"type":["chr"],"align":["left"]}],"data":[{"1":"CLIENT_ID","2":"7870a259411b4c8b8d2ad173b5a7ed73"},{"1":"CLIENT_SECRET","2":"df3661fc87e24dc499c3dd2f154ec981"},{"1":"auth_token","2":"BQA4Hq3H5ZcQtiR7cIrOuwN90d-hZk9PSAIiaDez6IEEJAfP3v0oOly0AqnWV-2FHFhncQZ82rQQz0U78bpLVtrJvhy9XzVOzrQrA_KLXx0oO0vP7P2G_pmJS_Mh9w1pRIhF5iVMYUk4WdlnC4i66wOCtuXWuA"}],"options":{"columns":{"min":{},"max":[10],"total":[2]},"rows":{"min":[10],"max":[10],"total":[3]},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucmVzcG9uc2UgPSBQT1NUKFxuICAnaHR0cHM6Ly9kZXZlbG9wZXIuc3BvdGlmeS5jb20vZGFzaGJvYXJkL2FwcGxpY2F0aW9ucy83ODcwYTI1OTQxMWI0YzhiOGQyYWQxNzNiNWE3ZWQ3MycsXG4gIGFjY2VwdF9qc29uKCksXG4gIGF1dGhlbnRpY2F0ZShDTElFTlRfSUQsIENMSUVOVF9TRUNSRVQpLFxuICBib2R5ID0gbGlzdChncmFudF90eXBlID0gJ2NsaWVudF9jcmVkZW50aWFscycpLFxuICBlbmNvZGUgPSAnZm9ybScsXG4gIHZlcmJvc2UoKVxuKVxuYGBgIn0= -->
+<pre class="r"><code>response = POST(
+  &#39;https://developer.spotify.com/dashboard/applications/7870a259411b4c8b8d2ad173b5a7ed73&#39;,
   accept_json(),
   authenticate(CLIENT_ID, CLIENT_SECRET),
   body = list(grant_type = &#39;client_credentials&#39;),
@@ -1769,9 +1772,18 @@ response = POST(
   verbose()
 )</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiRXJyb3IgaW4gY3VybDo6Y3VybF9mZXRjaF9tZW1vcnkodXJsLCBoYW5kbGUgPSBoYW5kbGUpIDogXG4gIFRpbWVvdXQgd2FzIHJlYWNoZWQ6IFthY2NvdW50cy5zcG90aWZ5LmNvbV0gUmVzb2x2aW5nIHRpbWVkIG91dCBhZnRlciAxMDAwMCBtaWxsaXNlY29uZHNcbiJ9 -->
+<!-- rnb-output-begin eyJkYXRhIjoiRXJyb3IgaW4gY3VybDo6Y3VybF9mZXRjaF9tZW1vcnkodXJsLCBoYW5kbGUgPSBoYW5kbGUpIDogXG4gIFRpbWVvdXQgd2FzIHJlYWNoZWQ6IFtkZXZlbG9wZXIuc3BvdGlmeS5jb21dIFJlc29sdmluZyB0aW1lZCBvdXQgYWZ0ZXIgMTAwMDAgbWlsbGlzZWNvbmRzXG4ifQ== -->
 <pre><code>Error in curl::curl_fetch_memory(url, handle = handle) : 
-  Timeout was reached: [accounts.spotify.com] Resolving timed out after 10000 milliseconds</code></pre>
+  Timeout was reached: [developer.spotify.com] Resolving timed out after 10000 milliseconds</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuSGVhZGVyVmFsdWVcblxuYGBgIn0= -->
+<pre class="r"><code>HeaderValue
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIFwiQmVhcmVyXCJcbiJ9 -->
+<pre><code>[1] &quot;Bearer&quot;</code></pre>
 <!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -1797,7 +1809,7 @@ Artist = content(response2)</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 
-<div id="rmd-source-code">LS0tDQp0aXRsZTogIlIgTm90ZWJvb2siDQpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sNCi0tLQ0KDQoNCg0KYGBge3J9DQpsaWJyYXJ5KGh0dHIpDQoNCnVybCA8LSAnaHR0cHM6Ly9hcGkuc3BvdGlmeS5jb20vdjEvcmVjb21tZW5kYXRpb25zJw0KQ0xJRU5UX0lEIDwtICc3ODcwYTI1OTQxMWI0YzhiOGQyYWQxNzNiNWE3ZWQ3MycNCkNMSUVOVF9TRUNSRVQgPC0gJ2RmMzY2MWZjODdlMjRkYzQ5OWMzZGQyZjE1NGVjOTgxJw0KYXV0aF90b2tlbiA8LSAnQlFBNEhxM0g1WmNRdGlSN2NJck91d045MGQtaFprOVBTQUlpYURlejZJRUVKQWZQM3Ywb09seTBBcW5XVi0yRkhGaG5jUVo4MnJRUXowVTc4YnBMVnRySnZoeTlYelZPenJRckFfS0xYeDBvTzB2UDdQMkdfcG1KU19NaDl3MXBSSWhGNWlWTVlVazRXZGxuQzRpNjZ3T0N0dVhXdUEnDQoNCg0KcmVzcG9uc2UgPSBQT1NUKA0KICAnaHR0cHM6Ly9hY2NvdW50cy5zcG90aWZ5LmNvbS9hcGkvdG9rZW4nLA0KICBhY2NlcHRfanNvbigpLA0KICBhdXRoZW50aWNhdGUoQ0xJRU5UX0lELCBDTElFTlRfU0VDUkVUKSwNCiAgYm9keSA9IGxpc3QoZ3JhbnRfdHlwZSA9ICdjbGllbnRfY3JlZGVudGlhbHMnKSwNCiAgZW5jb2RlID0gJ2Zvcm0nLA0KICB2ZXJib3NlKCkNCikNCg0KbXl0b2tlbiA8LSBjb250ZW50KHJlc3BvbnNlKSRhY2Nlc3NfdG9rZW4NCg0KSGVhZGVyVmFsdWUgPSBwYXN0ZTAoJ0JlYXJlcicsIG15dG9rZW4pDQpgYGANCg0KYGBge3J9DQphcnRpc3RJRCA9ICIwNkhMNHowQ3ZGQXh5YzI3R1hwZjAyIg0KVVJJID0gcGFzdGUwKCdodHRwczovL2FwaS5zcG90aWZ5LmNvbS92MS9hcnRpc3RzLycsIGFydGlzdElEKQ0KcmVzcG9uc2UyID0gR0VUKHVybCA9IFVSSSwgYWRkX2hlYWRlcnMoQXV0aG9yaXphdGlvbiA9IEhlYWRlclZhbHVlKSkNCkFydGlzdCA9IGNvbnRlbnQocmVzcG9uc2UyKQ0KYGBgDQoNCg0KDQpgYGB7cn0NCkdFVCh1cmwsDQogICAgYWRkX2hlYWRlcnMoQXV0aG9yaXphdGlvbiA9ICdCZWFyZXInKSwNCiAgICBxdWVyeSA9IGxpc3Qoc2VlZF9hcnRpc3RzID0gJzROSFFVR3podFRMRnZnRjVTWmVzTEsnLA0KICAgICAgICAgICAgICAgICBzZWVkX2dlbnJlcyA9ICdjbGFzc2ljYWwsY291bnRyeScsDQogICAgICAgICAgICAgICAgIHNlZWRfdHJhY2tzID0gJzBjNnhJRERwekU4MW0ycTc5N29yZEEnKSkNCg0KYGBgDQo=</div>
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIlIgTm90ZWJvb2siDQpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sNCi0tLQ0KDQoNCg0KYGBge3J9DQpsaWJyYXJ5KGh0dHIpDQoNCmNyZWRzIDwtIHJlYWQudGFibGUoZmlsZT0nY3JlZGVudGlhbHMudHh0JyxoZWFkZXI9RkFMU0UsDQogICAgICAgICAgICAgICAgICAgICBzZXA9Jz0nLGNvbC5uYW1lcz1jKCdLZXknLCdWYWx1ZScpKQ0KDQpkZnJhbWUNCnVybCA8LSAnaHR0cHM6Ly9hcGkuc3BvdGlmeS5jb20vdjEvcmVjb21tZW5kYXRpb25zJw0KQ0xJRU5UX0lEIDwtIGNyZWRzWzEsMl0NCkNMSUVOVF9TRUNSRVQgPC0gY3JlZHNbMiwyXQ0KYXV0aF90b2tlbiA8LSBjcmVkc1szLDJdDQpgYGANCg0KDQoNCmBgYHtyfQ0KcmVzcG9uc2UgPSBQT1NUKA0KICAnaHR0cHM6Ly9kZXZlbG9wZXIuc3BvdGlmeS5jb20vZGFzaGJvYXJkL2FwcGxpY2F0aW9ucy83ODcwYTI1OTQxMWI0YzhiOGQyYWQxNzNiNWE3ZWQ3MycsDQogIGFjY2VwdF9qc29uKCksDQogIGF1dGhlbnRpY2F0ZShDTElFTlRfSUQsIENMSUVOVF9TRUNSRVQpLA0KICBib2R5ID0gbGlzdChncmFudF90eXBlID0gJ2NsaWVudF9jcmVkZW50aWFscycpLA0KICBlbmNvZGUgPSAnZm9ybScsDQogIHZlcmJvc2UoKQ0KKQ0KcmVzcG9uc2UNCmBgYA0KYGBge3J9DQpteXRva2VuIDwtIGNvbnRlbnQocmVzcG9uc2UpJGFjY2Vzc190b2tlbg0KbXl0b2tlbg0KSGVhZGVyVmFsdWUgPSBwYXN0ZTAoJ0JlYXJlcicsIG15dG9rZW4pDQpIZWFkZXJWYWx1ZQ0KYGBgDQoNCmBgYHtyfQ0KYXJ0aXN0SUQgPSAiMDZITDR6MEN2RkF4eWMyN0dYcGYwMiINClVSSSA9IHBhc3RlMCgnaHR0cHM6Ly9hcGkuc3BvdGlmeS5jb20vdjEvYXJ0aXN0cy8nLCBhcnRpc3RJRCkNCnJlc3BvbnNlMiA9IEdFVCh1cmwgPSBVUkksIGFkZF9oZWFkZXJzKEF1dGhvcml6YXRpb24gPSBIZWFkZXJWYWx1ZSkpDQpBcnRpc3QgPSBjb250ZW50KHJlc3BvbnNlMikNCmBgYA0KDQoNCg0KYGBge3J9DQpHRVQodXJsLA0KICAgIGFkZF9oZWFkZXJzKEF1dGhvcml6YXRpb24gPSAnQmVhcmVyJyksDQogICAgcXVlcnkgPSBsaXN0KHNlZWRfYXJ0aXN0cyA9ICc0TkhRVUd6aHRUTEZ2Z0Y1U1plc0xLJywNCiAgICAgICAgICAgICAgICAgc2VlZF9nZW5yZXMgPSAnY2xhc3NpY2FsLGNvdW50cnknLA0KICAgICAgICAgICAgICAgICBzZWVkX3RyYWNrcyA9ICcwYzZ4SUREcHpFODFtMnE3OTdvcmRBJykpDQoNCmBgYA0K</div>
 
 
 
