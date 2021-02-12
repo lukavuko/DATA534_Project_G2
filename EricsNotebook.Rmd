@@ -1,0 +1,15 @@
+---
+title: "Project Notebook"
+author: "Eric Baxter"
+date: "12/02/2021"
+output: html_document
+---
+
+## Feb 3 2021
+
+Had a meeting with the group to discuss project ideas. We looked at API's, and after a few hours settled on the Spotify API and each members assigned functions.
+
+
+## Feb 12 2021
+
+I wrote all of the functions for receiving song and artist information. 
