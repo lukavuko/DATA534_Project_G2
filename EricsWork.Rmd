@@ -44,7 +44,7 @@ getArtistInfo <- function(authentication_token, artist, byName = FALSE, datafram
     content <- content(response)
     
     if(response$status_code != 200){
-      return(paste(response$status_code,":", content$error$message))
+      stop(paste(response$status_code,":", content$error$message))
     }
     
     if (dataframe == TRUE){
@@ -74,7 +74,7 @@ getArtistInfo <- function(authentication_token, artist, byName = FALSE, datafram
     content <- content(response)
     
     if(response$status_code != 200){
-      return(paste(response$status_code,":", content$error$message))
+      stop(paste(response$status_code,":", content$error$message))
     }
     
     if (dataframe == TRUE){
@@ -127,7 +127,7 @@ getSongInfo <- function(authentication_token, song, byName = FALSE, dataframe = 
     content <- content(response)
     
     if(response$status_code != 200){
-      return(paste(response$status_code,":", content$error$message))
+      stop(paste(response$status_code,":", content$error$message))
     }
 
     if (dataframe == TRUE){
@@ -149,7 +149,7 @@ getSongInfo <- function(authentication_token, song, byName = FALSE, dataframe = 
     content <- content(response)
     
     if(response$status_code != 200){
-      return(paste(response$status_code,":", content$error$message))
+      stop(paste(response$status_code,":", content$error$message))
     }
     
     if(dataframe == TRUE){
@@ -191,7 +191,7 @@ getRelatedArtists <- function(authentication_token, artistId, dataframe =  TRUE)
   content <- content(response)
   
   if(response$status_code != 200){
-    return(paste(response$status_code,":", content$error$message))
+    stop(paste(response$status_code,":", content$error$message))
   }
         
   if(dataframe == TRUE){
@@ -223,7 +223,7 @@ getTopSongs <- function(authentication_token, artistId, dataframe =  TRUE, regio
   content <- content(response)
   
   if(response$status_code != 200){
-    return(paste(response$status_code,":", content$error$message))
+    stop(paste(response$status_code,":", content$error$message))
   }
         
   if(dataframe == TRUE){
@@ -246,6 +246,19 @@ getTopSongs <- function(authentication_token, artistId, dataframe =  TRUE, regio
 x <- getTopSongs(authentication_token, "1Qp56T7n950O3EGMsSl81D", dataframe = F)
 ```
 
+```{r}
+stoptest <- function(x){
+  if (x == 0){
+    stop("Stupid dumbshit input 0")
+  }
+  
+  print("good number")
+}
+```
+
+```{r}
+stoptest(0)
+```
 
 
 
