@@ -1,0 +1,50 @@
+---
+title: "Testing Eric's Functions"
+author: "Eric Baxter"
+date: "13/02/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+source('EricsFunctions.R')
+```
+
+```{r}
+client_id <-  Sys.getenv('CLIENT_ID')
+secret_id <-  Sys.getenv('CLIENT_SECRET_ID')
+
+authentication_token <-  get_authentication_token(client_id, secret_id)
+authentication_token
+```
+```{r}
+ghost_json <- getArtistInfo(authentication_token, "1Qp56T7n950O3EGMsSl81D", dataframe = F)
+ghost_json
+```
+```{r}
+ghost_df <- getArtistInfo(authentication_token, "Ghost", byName = TRUE, dataframe = T, lim = 7)
+ghost_df
+```
+
+```{r}
+motormouth <- getSongInfo(authentication_token, "Motormouth", byName = T, dataframe = T)
+motormouth
+```
+
+```{r}
+similar_to_ghost <- getRelatedArtists(authentication_token, "1Qp56T7n950O3EGMsSl81D", dataframe = TRUE)
+similar_to_ghost
+```
+
+```{r}
+ghost_top_songs <- getTopSongs(authentication_token, "1Qp56T7n950O3EGMsSl81D", output = "dataframe")
+ghost_top_songs
+```
+
+```{r}
+getTopSongs(authentication_token, "1Qp56T7n950O3EGMsSl81D", output = "graph")
+```
+

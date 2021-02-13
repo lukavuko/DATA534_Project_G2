@@ -14,3 +14,9 @@ Had a meeting with the group to discuss project ideas. We looked at API's, and a
 
 - I wrote all of the functions for receiving song and artist information. 
 - Figured out unit tests and implemented on my code.
+
+## Feb 13 2021
+
+- Wrote documentation file
+- Altered `getTopSongs` function to optionally return a graphic
+- Compiled all functions into one `EricsFunctions.R` script, and put my examples into `EricsFunctionsExamples.Rmd` 

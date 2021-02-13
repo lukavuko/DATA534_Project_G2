@@ -18,6 +18,8 @@ get_authentication_token <- function(client_id, client_secret_id) {
 }  
   
 getArtistInfo <- function(authentication_token, artist, byName = FALSE, dataframe = TRUE, lim = 10){
+  # This runs if the user searches a specific Id, and the API can pull one artist knowing
+  # it is the intended one.
   if (byName == FALSE){
     url <- "https://api.spotify.com/v1/artists/"
     query <- artist
@@ -26,12 +28,13 @@ getArtistInfo <- function(authentication_token, artist, byName = FALSE, datafram
                                 Authorization = paste("Bearer", authentication_token)))
     content <- content(response)
     
+    # Ensure the response code indicates success. If not return the error
     if(response$status_code != 200){
       stop(paste(response$status_code,":", content$error$message))
     }
     
     if (dataframe == TRUE){
-      # The dataframe can only handle 1 genre, but the requst returns a list.
+      # The dataframe can only handle 1 genre, but the request returns a list.
       # We only take the top genre, and if there are none, we set it as unknown.
       if(length(content$genres) != 0){
         genre <- content$genres[[1]]
@@ -49,7 +52,7 @@ getArtistInfo <- function(authentication_token, artist, byName = FALSE, datafram
       return(content)
     }
   }
-  
+  # Run this if user searches by name. The function returns a list of the top matches.
   if (byName == TRUE){
     url <- glue('https://api.spotify.com/v1/search?q={artist}&type=artist&limit={lim}')
     response <- GET(url, add_headers(q = artist, type = "artist", Accept = "application/json", 
@@ -93,6 +96,7 @@ getArtistInfo <- function(authentication_token, artist, byName = FALSE, datafram
 
 
 getSongInfo <- function(authentication_token, song, byName = FALSE, dataframe = TRUE, lim = 10){
+  # User searches by song Id, and teh function returns info on that specific song
   if(byName == FALSE){
     url <- "https://api.spotify.com/v1/tracks/"
     query <- song
@@ -118,6 +122,7 @@ getSongInfo <- function(authentication_token, song, byName = FALSE, dataframe = 
   }
   
   else{
+    # User searches by name, so the function returns a list of matches
     url <- glue("https://api.spotify.com/v1/search?q={song}&type=track&limit={lim}")
     response <- GET(url, add_headers(q = song, type = "track", Accept = "application/json", 
                                      Authorization = paste("Bearer", authentication_token)))
@@ -178,7 +183,10 @@ getRelatedArtists <- function(authentication_token, artistId, dataframe =  TRUE)
 }
 
 
-getTopSongs <- function(authentication_token, artistId, dataframe =  TRUE, region = "CA"){
+getTopSongs <- function(authentication_token, artistId, output =  "dataframe", region = "CA"){
+  if (output != "json" & output != "dataframe" & output != "graph"){
+    stop("output parameter must be one of json, dataframe, graph")
+  }
   url <- glue("https://api.spotify.com/v1/artists/{artistId}/top-tracks?market={region}")
   response <- GET(url, add_headers(Accept = "application/json", 
                                    Authorization = paste("Bearer", authentication_token)))
@@ -188,17 +196,31 @@ getTopSongs <- function(authentication_token, artistId, dataframe =  TRUE, regio
     stop(paste(response$status_code,":", content$error$message))
   }
   
-  if(dataframe == TRUE){
-    df <- data.frame(song = character(), id = character())
+  if(output != "json"){
+    df <- data.frame(song = character(), id = character(), popularity = integer(), duration_mins = integer())
     
     for (i in 1:length(content$tracks)){
       row <- data.frame(song = content$tracks[[i]]$name,
-                        id = content$tracks[[i]]$id)
+                        id = content$tracks[[i]]$id,
+                        popularity = content$tracks[[i]]$popularity,
+                        duration_mins = content$tracks[[i]]$duration_ms / 60000)
       df <- rbind(df, row)
     }
-    return(df)
+    
+    if (output == "dataframe"){
+      return(df)
+    }
+    
+    else{ # Only output left is 'graph'
+      plot <- df %>% ggplot(aes(x = popularity, y = reorder(song, popularity))) + 
+        geom_bar(stat = "identity",  fill = "blue") +
+        ggtitle(paste0(content$tracks[[1]]$artists[[1]]$name, "'s Most Popular Tracks"))+
+        ylab("Song Name")+
+        xlab("Popularity")
+      return(plot)            
+    }
   }
-  else{
+  else{ # User requested json
     return(content)
   }
 }
