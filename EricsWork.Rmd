@@ -34,7 +34,7 @@ authentication_token <-  get_authentication_token(client_id, secret_id)
 ## Get Artist Info
 
 ```{r}
-getArtistInfo <- function(authentication_token, artist, byName = FALSE, dataframe = TRUE){
+getArtistInfo <- function(authentication_token, artist, byName = FALSE, dataframe = TRUE, lim = 10){
   if (byName == FALSE){
     url <- "https://api.spotify.com/v1/artists/"
     query <- artist
@@ -42,6 +42,10 @@ getArtistInfo <- function(authentication_token, artist, byName = FALSE, datafram
                     add_headers(Accept = "application/json", 
                                 Authorization = paste("Bearer", authentication_token)))
     content <- content(response)
+    
+    if(response$status_code != 200){
+      return(paste(response$status_code,":", content$error$message))
+    }
     
     if (dataframe == TRUE){
     # The dataframe can only handle 1 genre, but the requst returns a list.
@@ -64,10 +68,14 @@ getArtistInfo <- function(authentication_token, artist, byName = FALSE, datafram
   }
   
   if (byName == TRUE){
-    url <- glue('https://api.spotify.com/v1/search?q={artist}&type=artist&limit=5')
+    url <- glue('https://api.spotify.com/v1/search?q={artist}&type=artist&limit={lim}')
     response <- GET(url, add_headers(q = artist, type = "artist", Accept = "application/json", 
                                      Authorization = paste("Bearer", authentication_token)))
     content <- content(response)
+    
+    if(response$status_code != 200){
+      return(paste(response$status_code,":", content$error$message))
+    }
     
     if (dataframe == TRUE){
     df <- data.frame(name = character(), 
@@ -75,7 +83,7 @@ getArtistInfo <- function(authentication_token, artist, byName = FALSE, datafram
                         genres = character(),
                         followers = integer(),
                         id = character())
-    for (i in 1:5){
+    for (i in 1:length(content$artists$items)){
       
       
       if(length(content$artists$items[[i]]$genres) != 0){
@@ -103,19 +111,24 @@ getArtistInfo <- function(authentication_token, artist, byName = FALSE, datafram
 
 
 ```{r}
-ghost <- getArtistInfo(authentication_token, "1Qp56T7n950O3EGMsSl81D", dataframe = FALSE)
-ghost <- getArtistInfo(authentication_token, "Ghost", byName = TRUE, dataframe = TRUE)
+ghost <- getArtistInfo(authentication_token, "1Qp56T7n950O3EGMsSl81D", dataframe = F)
+ghost <- getArtistInfo(authentication_token, "Ghost", byName = TRUE, dataframe = T, lim = 7)
 ```
 
 
 ```{r}
-getSongInfo <- function(authentication_token, song, dataframe = TRUE){
+getSongInfo <- function(authentication_token, song, byName = FALSE, dataframe = TRUE, lim = 10){
+  if(byName == FALSE){
     url <- "https://api.spotify.com/v1/tracks/"
     query <- song
     response <- GET(paste0(url, query), 
                     add_headers(Accept = "application/json", 
                                 Authorization = paste("Bearer", authentication_token)))
     content <- content(response)
+    
+    if(response$status_code != 200){
+      return(paste(response$status_code,":", content$error$message))
+    }
 
     if (dataframe == TRUE){
     df <- data.frame(artist = content$artists[[1]]$name, album  = content$album$name,
@@ -127,12 +140,46 @@ getSongInfo <- function(authentication_token, song, dataframe = TRUE){
     else{
       return(content)
     }
+  }
+  
+  else{
+    url <- glue("https://api.spotify.com/v1/search?q={song}&type=track&limit={lim}")
+    response <- GET(url, add_headers(q = song, type = "track", Accept = "application/json", 
+                                     Authorization = paste("Bearer", authentication_token)))
+    content <- content(response)
+    
+    if(response$status_code != 200){
+      return(paste(response$status_code,":", content$error$message))
+    }
+    
+    if(dataframe == TRUE){
+      df <- data.frame(artist = character(), album  = character(),
+                     trackName = character(), release_date = character(),
+                     popularity = integer(), duration = integer(),
+                     id = character())
+      for(i in 1:length(content$tracks$items)){
+        entry <- content$tracks$items[[i]]
+        row <- data.frame(artist = entry$artists[[1]]$name,
+                          album = entry$album$name,
+                          trackName = entry$name,
+                          release_date = entry$album$release_date,
+                          popularity = entry$popularity,
+                          duration = entry$duration_ms,
+                          id = entry$id)
+        df <- rbind(df, row)
+      }
+      return(df)
+    }
+    else{
+      return(content)
+    }
+  }
 }
 ```
 
 
 ```{r}
-dance <- getSongInfo(authentication_token, "1E2WTcYLP1dFe1tiGDwRmT", dataframe = FALSE)
+motormouth <- getSongInfo(authentication_token, "Motormouth", byName = T, dataframe = T)
 ```
 
 
@@ -142,6 +189,10 @@ getRelatedArtists <- function(authentication_token, artistId, dataframe =  TRUE)
   response <- GET(url, add_headers(Accept = "application/json", 
                                 Authorization = paste("Bearer", authentication_token)))
   content <- content(response)
+  
+  if(response$status_code != 200){
+    return(paste(response$status_code,":", content$error$message))
+  }
         
   if(dataframe == TRUE){
     df <- data.frame(artist = character(), id = character())
@@ -170,6 +221,10 @@ getTopSongs <- function(authentication_token, artistId, dataframe =  TRUE, regio
   response <- GET(url, add_headers(Accept = "application/json", 
                                 Authorization = paste("Bearer", authentication_token)))
   content <- content(response)
+  
+  if(response$status_code != 200){
+    return(paste(response$status_code,":", content$error$message))
+  }
         
   if(dataframe == TRUE){
     df <- data.frame(song = character(), id = character())
@@ -188,7 +243,7 @@ getTopSongs <- function(authentication_token, artistId, dataframe =  TRUE, regio
 ```
 
 ```{r}
-x <- getTopSongs(authentication_token, "1Qp56T7n950O3EGMsSl81D", dataframe = TRUE)
+x <- getTopSongs(authentication_token, "1Qp56T7n950O3EGMsSl81D", dataframe = F)
 ```
 
 
