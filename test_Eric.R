@@ -1,4 +1,4 @@
-source("EricsFunctions.R", chdir = TRUE)
+source("EricsFunctions.R")
 
 library(testthat)
 
@@ -45,13 +45,12 @@ motormouth <-
     dataframe = T,
     lim = 14
   )
-faketoken <- getSongInfo("BADTOKEN", "5hISmTJXBXdOes4htbUhGk")
 
 test_that("Gets correct song", {
   expect_match(totem$trackName, "Wolf Totem")
   expect_match(dance$trackName, "Dance Macabre")
   expect_equal(nrow(motormouth), 14)
-  expect_match(faketoken, "401 : Invalid access token")
+  expect_error(getSongInfo("BADTOKEN", "5hISmTJXBXdOes4htbUhGk"), "401 : Invalid access token")
 })
 
 # Test getRelatedArtists
@@ -60,21 +59,21 @@ suicide <-
   getRelatedArtists(authentication_token, "6HZr7Fs2VfV1PYHIwo8Ylc", dataframe = T)
 ghost <-
   getRelatedArtists(authentication_token, "1Qp56T7n950O3EGMsSl81D", dataframe = T)
-fakeartist <- getRelatedArtists(authentication_token, "BADINPUT") 
+
 
 test_that("Check related artists", {
   expect_match(suicide$name[1], "Chelsea Grin")
   expect_match(ghost$name[1], "Mastodon")
-  expect_match(fakeartist, "400 : invalid id")
+  expect_error(getRelatedArtists(authentication_token, "BADINPUT") , "400 : invalid id")
 })
 
 
 # Test getTopSongs
 
 grandson <-
-  getTopSongs(authentication_token, "4ZgQDCtRqZlhLswVS6MHN4", dataframe = T)
+  getTopSongs(authentication_token, "4ZgQDCtRqZlhLswVS6MHN4", output = "dataframe")
 giraffe <-
-  getTopSongs(authentication_token, "1yqs45BSh7457Flyhmdv7f", dataframe = T)
+  getTopSongs(authentication_token, "1yqs45BSh7457Flyhmdv7f", output = "dataframe")
 
 test_that("Check top songs", {
   expect_match(grandson$song[1], "Blood // Water")
