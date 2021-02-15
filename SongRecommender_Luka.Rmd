@@ -8,7 +8,11 @@ output: html_notebook
 library(httr)
 library(jsonlite)
 library(glue)
+library(stringr)
+
 ```
+
+
 
 ## Token Function
 ```{r}
@@ -29,16 +33,138 @@ get_authentication_token <- function(CLIENT_ID, CLIENT_SECRET){
 }
 ```
 
+### Testing Token Access
+```{r}
+
+client_id = Sys.getenv('Spotify_client_id')
+client_secret = Sys.getenv('Spotify_client_secret')
+
+## Assign token to global to not need inputting it into each function
+auth_token <<- get_authentication_token(client_id, client_secret)
+
+```
+
+
+
+## Artist name to ID converter
+```{r}
+
+get_artist_ID <- function(artist = NA, authentication_token = auth_token) {
+  
+  if(is.na(artist)) {
+    return('No artist string provided.')
+  }
+  
+  print(paste0("Searching artist: ", artist))
+  artist <- str_replace_all(artist, ' ', '%20')
+  url = glue('https://api.spotify.com/v1/search?q={artist}&type=artist&limit=1')
+  
+  response <- GET(url, add_headers(Accept = 'application/json', Authorization = paste('Bearer', authentication_token)))
+  print(paste0("Search response status: ", response$status))
+  
+  content <- content(response)$artists$items[[1]]
+  
+  artist_name <- content$name
+  artist_id <- content$id
+  artist_popularity <- content$popularity
+  artist_genres <- unlist(content$genres)
+
+
+  if(is.null(artist_id) | class(artist_id)=='try-error') {
+        artist_id <- 'Unknown'
+        print(paste0("Artist ID: ", artist_id))
+        return(NULL)
+  }
+  
+  print("Related Genres: ")
+  print(artist_genres)
+  
+  print(paste("Artist Found: ", artist_name))
+
+  return(data.frame('Artist.name' = c(artist_name),
+                    'Artist.ID' = c(artist_id), 
+                    'Artist.Popularity' = c(artist_popularity)))
+                    #'Genres' = list(c(artist_genres[1]), c(artist_genres[2]))))
+}
+```
+
+
+### Testing artist to ID function:
+```{r}
+get_artist_ID('alt')[2]
+```
+
+
+
+
+## Song name to ID converter
+```{r}
+get_track_ID <- function(track = NA, limit = 5,
+                         authentication_token = auth_token) {
+  
+  if(is.na(track)) {
+    return('No artist string provided.')
+  }
+  
+  print(paste0("Searching track: ", track))
+  track <- str_replace_all(track, ' ', '%20')
+  url = glue('https://api.spotify.com/v1/search?q={track}&type=track&limit={limit}')
+  
+  response <- GET(url, add_headers(Accept = 'application/json', Authorization = paste('Bearer', authentication_token)))
+  print(paste0("Search response status: ", response$status))
+  
+  content <- content(response)$tracks$items
+
+  if(length(content) == 0){
+    print('No tracks found')
+    return(NULL)
+  }
+  
+  tracks_found <- data.frame('Track.Name' = '', 'Track.Artist' = '', 'Track.ID' = '', 'Track.Popularity' = '')
+
+  for(item in 1:length(content)) {
+        
+    track_name <- content[[item]]$name
+    artist_list <- content[[item]]$artists
+    track_ID <- content[[item]]$id
+    track_popularity <- content[[item]]$popularity
+    
+    artists <- ''
+    for(artist in 1:length(artist_list)){
+      if(artist == 1){
+        artists <- glue('{artist_list[[artist]]$name}')
+      } else {
+        artists <- glue('{artists}, {artist_list[[artist]]$name}')
+      }
+    }
+      
+    if(is.null(track_ID) | class(track_ID)=='try-error') {
+      track_ID <- 'Unknown'
+    }
+      
+    tracks_found <- rbind(tracks_found, data.frame(
+                          'Track.Name' = track_name,
+                          'Track.Artist' = artists,
+                          'Track.ID' = track_ID,
+                          'Track.Popularity' = track_popularity))
+  }
+  
+  return(tracks_found)
+}
+
+```
+
+### Testing song to ID converter
+```{r}
+get_track_ID('bloodflood')
+```
+
+
 ## Primary Song Recomendation Function
 ```{r}
 
-
-
-
-
-
-
-get_songs <- function(authentication_token, seed_artists, seed_genres, seed_tracks, 
+get_songs <- function(seed_artists, seed_genres, seed_tracks, 
+                      authentication_token = auth_token,
                       ## Optional bleow
                       limit=10, market=NA, 
                       min_acousticness=NA, max_acousticness=NA, target_acousticness=NA,
@@ -55,7 +181,32 @@ get_songs <- function(authentication_token, seed_artists, seed_genres, seed_trac
                       min_tempo=NA, max_tempo=NA, target_tempo=NA,
                       min_time_signature=NA, max_time_signature=NA, target_time_signature=NA,
                       min_valence=NA, max_valence=NA, target_valence=NA) {
+  temp <- ''
+  for(artist in 1:length(seed_artists)){
+    if(artist == 1){
+      id <- get_artist_ID(seed_artists[artist])[2]
+      temp <- glue('{id}')
+    } else {
+      id <- get_artist_ID(seed_artists[artist])[2]
+      temp <- glue('{temp}%2C{id}')
+    }
+  }
+
+  seed_artists <- temp
   
+  temp <- ''
+  for(genre in 1:length(seed_genres)){
+    
+    clean <- str_replace_all(seed_genres[genre], ' ', '%20')
+    
+    if(genre == 1){
+      temp <- clean
+    } else {
+      temp <- glue('{temp}%2C{clean}')
+    }
+  }
+  seed_genres <- temp
+
   base_url = 'https://api.spotify.com/v1/recommendations'
   
   query = query_assembler(seed_artists, seed_genres, seed_tracks, limit, market, 
@@ -79,15 +230,47 @@ get_songs <- function(authentication_token, seed_artists, seed_genres, seed_trac
   response <- GET(url, add_headers(Accept = 'application/json',
                                    Authorization = paste('Bearer', authentication_token)))
   
-  #songs <- NA
-  #links <- NA
-  for(i in seq_along(response)){
-  print(content(response)$tracks[[i]]$name)
+  content <- content(response)$tracks
+
+  if(length(content) == 0){
+    print('No tracks found')
+    return(NULL)
   }
   
-  return (content(response))
+  tracks_found <- data.frame('Track.Name' = '', 'Track.Artist' = '', 'Track.ID' = '', 'Track.Popularity' = '', 'Track.Link' = '')
   
+  for(item in 1:length(content)) {
+        
+    track_name <- content[[item]]$name
+    artist_list <- content[[item]]$artists
+    track_ID <- content[[item]]$id
+    track_popularity <- content[[item]]$popularity
+    track_link <- content[[item]]$external_urls$spotify
+    
+    artists <- ''
+    for(artist in 1:length(artist_list)){
+      if(artist == 1){
+        artists <- glue('{artist_list[[artist]]$name}')
+      } else {
+        artists <- glue('{artists}, {artist_list[[artist]]$name}')
+      }
+    }
+      
+    if(is.null(track_ID) | class(track_ID)=='try-error') {
+      track_ID <- 'Unknown'
+    }
+      
+    tracks_found <- rbind(tracks_found, data.frame(
+                          'Track.Name' = track_name,
+                          'Track.Artist' = artists,
+                          'Track.ID' = track_ID,
+                          'Track.Popularity' = track_popularity,
+                          'Track.Link' = track_link))
+  }
+  return(tracks_found)
 }
+
+
 ```
 
 
@@ -154,7 +337,6 @@ query_assembler <- function(seed_artists, seed_genres, seed_tracks, limit, marke
       formatted_args[[i]] <- glue('&{specified_args[i,1]}={specified_args[i,2]}')
     }
   }
-  formatted_args
   
   ## CONCATENATE SPECIFIED VALUE LIST
   assembled_query <- do.call(paste, c(as.list(formatted_args), sep = ""))
@@ -165,58 +347,16 @@ query_assembler <- function(seed_artists, seed_genres, seed_tracks, limit, marke
 
 ```
 
-### Testing Token Access
+
+### Testing Song recommender
 ```{r}
 
-client_id = Sys.getenv('Spotify_client_id')
-client_secret = Sys.getenv('Spotify_client_secret')
-auth_token = get_authentication_token(client_id, client_secret)
+## Find song IDs
+#get_track_ID('light of the seven')
 
-```
+## Input Artist, Genre, and track ID parameters to give song recommendations
+get_songs('BTS', c('edm'), '1SbsbLsUMnAKWHx1zAV6ER')
 
-
-### Testing Cell
-```{r}
-
-# Can we possible wrap all the parameters in a list then pass that?
-#my_params <- list(seed_artists='4NHQUGzhtTLFvgF5SZesLK', seed_genres='classical,country',
-#                 seed_tracks='0c6xIDDpzE81m2q797ordA', limit=10, market='CA')
-
-reply <- get_songs(authentication_token = auth_token,
-                   seed_artists='ULq258CyTgm6ULmxQmNz2Q',
-                   seed_genres='funk,jazz,psychedelicrock',
-                   seed_tracks='1alflwKGRVGvSOlMWDM2Z9',
-                   limit=10, market='US')
-
-#reply$tracks
-
-# IMPORTANT:
-# $tracks$name = song name
-
-# TRACK LINKS
-# $tracks$uri = track deep link (for the app)
-# $track$external_urls$spotify = track url 1
-# $track$linked_from$external_urls$spotify = track url 2
-
-# EXTRA TRACK FEATURES
-# $track$explicit = explicit or not
-# $track$popularity = popularity
-# $track$preview_url = 30 second preview <33333333
-
-# ARTIST
-# $tracks$artists$name = artist name
-# $tracks$artists$external_urls$spotify = artist link
-
-# ALBUM
-# $tracks$album$name = album name
-# $tracks$album$release_date = album release date
-# $tracks$album$external_urls$spotify = album link
-```
-
-```{r}
-
-# How to parse the JSON content???
-as.data.frame(fromJSON(reply))
 
 ```
 
