@@ -3,7 +3,26 @@ library(jsonlite)
 library(httr)
 library(glue)
 library(stringr)
+library(roxygen2)
+library(devtools)
 
+
+#' Get an Authentication Token for the Spotify API
+#'
+#'Queries the API for a token and sets the token as a global variable
+#'
+#'A token will only remain valid for a few hours. If the package gives 401 errors, rerun this function.
+#'
+#' @param client_id Your client id. Can be found at https://developer.spotify.com/dashboard
+
+#' @param client_secret_id Similar to client id
+#'
+#' @return an authentication token, saved to global environments as auth_token
+#'
+#' @examples
+#' get_authentication_token(client_id, client_secret_id)
+#' 
+#' @export
 get_authentication_token <- function(client_id, client_secret_id) {
   response = POST(
     'https://accounts.spotify.com/api/token',
@@ -14,10 +33,27 @@ get_authentication_token <- function(client_id, client_secret_id) {
     verbose()
   )
   authentication_token = content(response)$access_token
-  return (authentication_token)
+  auth_token <<- authentication_token
+  return(auth_token)
 }  
   
-getArtistInfo <- function(authentication_token, artist, byName = FALSE, dataframe = TRUE, lim = 10){
+#' Get Data on a Spotify Artist
+#' 
+#' Search using either an artists name or Spotify id code.
+#'
+#' @param artist The id or name of a Spotify artist to search.
+#' @param byName Boolean. TRUE searches artist by name, FALSE searches by id.
+#' @param dataframe Boolean. TRUE returns data cleaned in a dataframe, FALSE returns raw json.
+#' @param lim The number of results to return if searched by name.
+#' @param authentication_token The users authentication token. Defaults to the value returned by get_authentication_token.
+#'
+#' @return A dataframe or json object containing an artists information.
+#' @export
+#'
+#' @examples
+#' getArtistInfo("Ghost", byName = TRUE, dataframe = TRUE)
+#' 
+getArtistInfo <- function(artist, byName = FALSE, dataframe = TRUE, lim = 10, authentication_token = auth_token){
   # This runs if the user searches a specific Id, and the API can pull one artist knowing
   # it is the intended one.
   if (byName == FALSE){
@@ -95,7 +131,23 @@ getArtistInfo <- function(authentication_token, artist, byName = FALSE, datafram
 }
 
 
-getSongInfo <- function(authentication_token, song, byName = FALSE, dataframe = TRUE, lim = 10){
+#' Get data on a song using Spotify API
+#' 
+#' Search using either a songs name or Spotify id code.
+#'
+#' @param song The name or id of a song to search for.
+#' @param byName Boolean. TRUE searches by name, FALSE searches by id.
+#' @param dataframe Boolean. TRUE returns data in a dataframe, FALSE returns raw JSON object.
+#' @param lim The number of results to return if searched by name.
+#' @param authentication_token The users authentication token. Defaults to the value returned by get_authentication_token.
+#'
+#' @return A dataframe or json object of song information.
+#' @export
+#'
+#' @examples
+#' getSongInfo(")
+#' 
+getSongInfo <- function(song, byName = FALSE, dataframe = TRUE, lim = 10, authentication_token = auth_token){
   # User searches by song Id, and teh function returns info on that specific song
   if(byName == FALSE){
     url <- "https://api.spotify.com/v1/tracks/"
@@ -157,7 +209,19 @@ getSongInfo <- function(authentication_token, song, byName = FALSE, dataframe = 
 }
 
 
-getRelatedArtists <- function(authentication_token, artistId, dataframe =  TRUE){
+#' Get an Artists Related Artists
+#'
+#' @param artistId The Spotify ID of an artist.
+#' @param dataframe Boolean. TRUE returns data in a cleaned dataframe, FALSE returns raw JSON object.
+#' @param authentication_token The users authentication token. Defaults to the value returned by get_authentication_token.
+#'
+#' @return Ten artists related to the speccified artist. 
+#' @export
+#'
+#' @examples
+#' getRelatedArtists(artistId = "1Qp56T7n950O3EGMsSl81D", dataframe = TRUE)
+#'
+getRelatedArtists <- function(artistId, dataframe =  TRUE, authentication_token = auth_token){
   url <- glue("https://api.spotify.com/v1/artists/{artistId}/related-artists")
   response <- GET(url, add_headers(Accept = "application/json", 
                                    Authorization = paste("Bearer", authentication_token)))
@@ -183,7 +247,19 @@ getRelatedArtists <- function(authentication_token, artistId, dataframe =  TRUE)
 }
 
 
-getTopSongs <- function(authentication_token, artistId, output =  "dataframe", region = "CA"){
+#' Get an Artists Top Songs on Spotify
+#'
+#' @param artistId The Spotify ID of an artist.
+#' @param output How to output data. acceptable values are "json", "dataframe", or "graph".
+#' @param region The two letter code of the market region to check. Default is "CA" for Canada.
+#' @param authentication_token The users authentication token. Defaults to the value returned by get_authentication_token.
+#'
+#' @return An object of chosen type containing info on an artists top songs.
+#' @export
+#'
+#' @examples
+#' getTopSongs("3WPKDlucMsXH6FC1XaclZC", output = "dataframe", region = "CA")
+getTopSongs <- function(artistId, output =  "dataframe", region = "CA", authentication_token = auth_token){
   if (output != "json" & output != "dataframe" & output != "graph"){
     stop("output parameter must be one of json, dataframe, graph")
   }

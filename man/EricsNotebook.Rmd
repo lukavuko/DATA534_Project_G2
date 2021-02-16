@@ -20,3 +20,9 @@ Had a meeting with the group to discuss project ideas. We looked at API's, and a
 - Wrote documentation file
 - Altered `getTopSongs` function to optionally return a graphic
 - Compiled all functions into one `EricsFunctions.R` script, and put my examples into `EricsFunctionsExamples.Rmd` 
+
+## Feb 16 2021
+
+- Created package structure
+- Wrote roxygen documentation
+- Edited my functions to take auth_token from global environment as default
