@@ -216,7 +216,8 @@ getTopSongs <- function(authentication_token, artistId, output =  "dataframe", r
         geom_bar(stat = "identity",  fill = "blue") +
         ggtitle(paste0(content$tracks[[1]]$artists[[1]]$name, "'s Most Popular Tracks"))+
         ylab("Song Name")+
-        xlab("Popularity")
+        xlab("Popularity") +
+        xlim(c(0,100))
       return(plot)            
     }
   }
