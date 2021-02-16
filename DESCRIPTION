@@ -1,0 +1,17 @@
+Package: wrappify
+Type: Package
+Title: A Spotify API Wrapper for R
+Version: 0.1.0
+Author: Luka Vukovic
+Maintainer: The package maintainer <lukavuko@student.ubc.ca>
+Description: This package provides users with a simple means for accessing the
+    spotify using only their client credentials. They can easily convert artist
+    and track names into their IDs then use this information to obtain track
+    recommendations based on seed artists, genres, and tracks with many optional
+    arguments relating to track energy, danceability, tempo, key, acousticness,
+    and so on. Users can also pull other track metrics such as track/artist
+    popularity, explicit status, and external links.
+License: What license is it under?
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.1.1
