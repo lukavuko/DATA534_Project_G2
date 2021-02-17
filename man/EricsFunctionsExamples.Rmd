@@ -10,7 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r}
-source('~/Documents/Masters/block4/534_cloud/DATA534_Project_G2/R/EricsFunctions.R')
+source('~/Documents/Masters/block4/534_cloud/wrappify/R/EricsFunctions.R')
 ```
 
 ```{r}
