@@ -11,15 +11,16 @@ authentication_token = getAuthenticationToken(client_id = client_id,
 
 #### Testing getAuthenticationToken Function ####
 
-test_that('A test to check if an error is returned on entering an invalid client or secret ID',
+test_that('A test to check if an error is raised on entering an invalid client or secret ID',
           {
             expect_error(getAuthenticationToken('abcd',1))
             expect_error(getAuthenticationToken('abcd','abcd'))
           })
 
+#### Testing searchForPodcast ####
 
 #### Testing getPodcastID Function ####
-test_that('A test to check if an error is returned on entering invalid market ID', 
+test_that('A test to check if an error is raised on entering invalid market ID', 
           {
             expect_error(getPodcastID('Philosophize This!',market = 7))
             expect_error(getPodcastID('Philosophize This!', market='AAA'))
@@ -33,7 +34,7 @@ test_that('A test to check whether a valid podcast ID is returned',
 
 #### Testing getRecentEpisodes Function ####
 
-test_that('A test to check if an error is returned on entering invalid arguments', 
+test_that('A test to check if an error is raised on entering invalid arguments', 
           {
             expect_error(getRecentEpisodes(1))
             expect_error(getRecentEpisodes('2Shpxw7dPoxRJCdfFXTWLE',market = 7))
@@ -50,6 +51,11 @@ test_response_e_f <- getRecentEpisodes(podcast_id = '2FLQbu3SLMIrRIDM0CaiHG',
 
 is.element(test_response_e_f$Explicit,TRUE)
 
+test_that('Checking whether the output is of type data.frame',
+          {
+          expect_equal(class(getRecentEpisodes(podcast_id = '2FLQbu3SLMIrRIDM0CaiHG')),'data.frame')
+            })
+
 
 test_that('Checking filters', 
           {
@@ -60,8 +66,22 @@ test_that('Checking filters',
                                             limit = 5)),5)
           })
 
+#### Testing getEpisodeInformation Function ####
+
+test_that('A test to check if an error is raised on entering invalid arguments', 
+          {
+            expect_error(getEpisodeInformation(1))
+            expect_error(getEpisodeInformation('1'))
+            expect_error(getEpisodeInformation('3xUldphixY3rZnjxhfMxCK',market = 7))
+          })
 
 
+test_that('Checking the output',
+          {
+            expect_equal(class(getEpisodeInformation(episode_id = '3xUldphixY3rZnjxhfMxCK')),'data.frame')
+            expect_equal(getEpisodeInformation(episode_id = '3xUldphixY3rZnjxhfMxCK')$episode_name,
+                         'Chris Chan: A Comprehensive History - Part 42')
+          })
 
 
 

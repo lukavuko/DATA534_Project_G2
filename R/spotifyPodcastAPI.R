@@ -271,7 +271,7 @@ getRecentEpisodes <- function(podcast_id, explicit = TRUE, limit=5, market='US',
 getEpisodeInformation <- function(episode_id, market='US'){
   
   if (is.character(episode_id)==FALSE){
-    stop('epiosde_id must be a string')
+    stop('episode_id must be a string')
   }
   
   if (is.character(market)==TRUE & nchar(market)!=2){
