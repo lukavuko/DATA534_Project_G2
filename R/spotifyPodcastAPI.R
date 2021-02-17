@@ -2,6 +2,7 @@ library(httr)
 library(jsonlite)
 library(utils)
 library(glue)
+library(stringr)
 
 
 
@@ -95,7 +96,7 @@ searchForPodcast <- function(keywords, language = 'en', market='US', explicit = 
     stop('Please reduce the number of episodes to be extracted!')
   }
   
-  if (is.character(language)==TRUE & nchar(market)!=2){
+  if (is.character(language)==TRUE & nchar(language)!=2){
     stop('Only ISO ISO 639-1 codes are accepted at the moment!')
   }
   
@@ -134,7 +135,7 @@ searchForPodcast <- function(keywords, language = 'en', market='US', explicit = 
     podcast_publisher[[i]] <- response$shows$items[[i]]$publisher
     podcast_id[[i]] <- response$shows$items[[i]]$id
     explicit_content[[i]] <- response$shows$items[[i]]$explicit 
-    podcast_language[[i]] <- response$shows$items[[i]]$language[[1]]
+    podcast_language[[i]] <- str_sub(tolower(response$shows$items[[i]]$language[[1]]),-2)
   }
   
   podcast_search = data.frame(unlist(podcast_name),
@@ -146,12 +147,12 @@ searchForPodcast <- function(keywords, language = 'en', market='US', explicit = 
   colnames(podcast_search) <- c('Podcast Name', 'Podcast Publisher', 'Explicit','Language', 'Podcast ID')
   
   if (explicit == FALSE){
-    podcast_df <- subset(podcast_search, Explicit == FALSE & Language == language)
+    podcast_df <- subset(podcast_search, Explicit == FALSE & Language == tolower(language))
     return(head(podcast_df, limit))
   }
   
   else{
-    podcast_df <- subset(podcast_search, Language == language)
+    podcast_df <- subset(podcast_search, Language == tolower(language))
     return(head(podcast_df, limit))
   }
   
