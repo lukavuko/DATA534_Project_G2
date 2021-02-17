@@ -4,6 +4,7 @@ library(utils)
 library(glue)
 
 
+
 #' Title
 #'
 #' @param client_id 
@@ -14,7 +15,7 @@ library(glue)
 #'
 #' @examples
 #' 
-getAuthenticationTtoken <- function(client_id, client_secret_id){
+getAuthenticationToken <- function(client_id, client_secret_id){
   response = POST('https://accounts.spotify.com/api/token',
                   accept_json(),
                   authenticate(client_id, client_secret_id),
