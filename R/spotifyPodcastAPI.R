@@ -16,12 +16,18 @@ library(glue)
 #' @examples
 #' 
 getAuthenticationToken <- function(client_id, client_secret_id){
+  if (is.character(client_id) == FALSE | is.character(client_secret_id) == FALSE){
+    stop('Client ID/Client Secret ID must be a string value')
+  }
   response = POST('https://accounts.spotify.com/api/token',
                   accept_json(),
                   authenticate(client_id, client_secret_id),
                   body = list(grant_type = 'client_credentials'),
                   encode = 'form',
                   verbose())
+  if(response$status_code != 200){
+    stop(paste(response$status_code,":", content(response)$error$message))
+  }
   authentication_token <<- content(response)$access_token
   return (authentication_token)
 }
