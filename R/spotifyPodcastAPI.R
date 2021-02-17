@@ -67,9 +67,6 @@ getPodcastID <- function(query, market='US'){
     stop(paste(response$status_code,":", content(response)$error$message))
   }
   
-  if(is.null(response$shows) == TRUE){
-    stop('No podcasts were found. Please use fewer keywords.')
-  }
   
   response = content(response)
   return (response$shows$items[[1]]$id)
@@ -124,9 +121,6 @@ searchForPodcast <- function(keywords, language = 'en', market='US', explicit = 
     stop(paste(response$status_code,":", content(response)$error$message))
   }
   
-  if(is.null(response$shows) == TRUE){
-    stop('No podcasts were found. Please use fewer keywords.')
-  }
   
   podcast_name = list()
   podcast_publisher = list()

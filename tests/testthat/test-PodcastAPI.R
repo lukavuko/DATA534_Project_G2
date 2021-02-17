@@ -2,7 +2,6 @@
 library(spotifyPodcastAPI)
 library(testthat)
 
-
 #### Initializing Authentication Token ####
 
 client_id = Sys.getenv('CLIENT_ID')
