@@ -172,7 +172,6 @@ searchForPodcast <- function(keywords, language = 'en', market='US', explicit = 
 #' @examples
 #' 
 getRecentEpisodes <- function(podcast_id, explicit = TRUE, limit=5, market='US', duration=NA){
-  
   if (is.logical(explicit)==FALSE){
     stop('Incorrect filter! Please select TRUE or FALSE')
   }
@@ -237,8 +236,8 @@ getRecentEpisodes <- function(podcast_id, explicit = TRUE, limit=5, market='US',
   if (explicit == FALSE){
     recent_episodes_df <- subset(recent_episodes, Explicit == FALSE)
     if (is.na(duration) == FALSE){
-      recent_episodes_df <- subset(recent_episodes, Duration <= duration)
-      return(recent_episodes_df)
+      recent_episodes_df <- subset(recent_episodes_df, Duration <= duration)
+      return(head(recent_episodes_df,limit))
     }
     else{
       return(head(recent_episodes_df, limit))   
@@ -249,7 +248,7 @@ getRecentEpisodes <- function(podcast_id, explicit = TRUE, limit=5, market='US',
   else{
     if (is.na(duration) == FALSE){
       recent_episodes_df <- subset(recent_episodes, Duration <= duration)
-      return(recent_episodes_df)
+      return(head(recent_episodes_df, limit))
     }
     else{
       return(head(recent_episodes, limit))   

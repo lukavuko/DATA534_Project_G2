@@ -25,4 +25,49 @@ test_that('A test to check if an error is returned on entering invalid market ID
             expect_error(getPodcastID('Philosophize This!', market='AAA'))
 })
 
-test_that('A test to ')
+test_that('A test to check whether a valid podcast ID is returned',
+          {
+            expect_equal(getPodcastID('Philosophize This!'),'2Shpxw7dPoxRJCdfFXTWLE')
+            expect_equal(getPodcastID('Conspiracy Theories Parcast'),'5RdShpOtxKO3ZWohR2M6Sv')
+          })
+
+#### Testing getRecentEpisodes Function ####
+
+test_that('A test to check if an error is returned on entering invalid arguments', 
+          {
+            expect_error(getRecentEpisodes(1))
+            expect_error(getRecentEpisodes('2Shpxw7dPoxRJCdfFXTWLE',market = 7))
+            expect_error(getRecentEpisodes('2Shpxw7dPoxRJCdfFXTWLE',explicit = 'G'))
+            expect_error(getRecentEpisodes('2Shpxw7dPoxRJCdfFXTWLE',limit = 100))
+            expect_error(getRecentEpisodes('2Shpxw7dPoxRJCdfFXTWLE',duration = 'TwentyMinutes'))
+          })
+
+test_response_eld_t <- getRecentEpisodes(podcast_id = '2FLQbu3SLMIrRIDM0CaiHG',
+                                         duration = 40)
+
+test_response_e_f <- getRecentEpisodes(podcast_id = '2FLQbu3SLMIrRIDM0CaiHG',
+                                       explicit = FALSE)
+
+is.element(test_response_e_f$Explicit,TRUE)
+
+
+test_that('Checking filters', 
+          {
+            expect_false(any(test_response_e_f$Explicit==TRUE))
+            expect_true(any(test_response_eld_t$Explicit==TRUE))
+            expect_false(any(test_response_eld_t$Duration>40))
+            expect_equal(nrow(getRecentEpisodes(podcast_id = '2FLQbu3SLMIrRIDM0CaiHG', 
+                                            limit = 5)),5)
+          })
+
+
+
+
+
+
+
+
+
+
+
+
