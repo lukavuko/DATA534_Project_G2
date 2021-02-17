@@ -3,6 +3,7 @@ library(jsonlite)
 library(utils)
 library(glue)
 
+
 #' Title
 #'
 #' @param client_id 
@@ -13,7 +14,7 @@ library(glue)
 #'
 #' @examples
 #' 
-get_authentication_token <- function(client_id, client_secret_id){
+getAuthenticationTtoken <- function(client_id, client_secret_id){
   response = POST('https://accounts.spotify.com/api/token',
                   accept_json(),
                   authenticate(client_id, client_secret_id),
@@ -23,6 +24,7 @@ get_authentication_token <- function(client_id, client_secret_id){
   authentication_token <<- content(response)$access_token
   return (authentication_token)
 }
+
 
 #' Title
 #'
@@ -34,7 +36,7 @@ get_authentication_token <- function(client_id, client_secret_id){
 #'
 #' @examples
 #' 
-get_podcast_id <- function(query, market='US'){
+getPodcastID <- function(query, market='US'){
   
   
   if (is.character(market)==TRUE & nchar(market)!=2){
@@ -62,6 +64,7 @@ get_podcast_id <- function(query, market='US'){
   
 }
 
+
 #' Title
 #'
 #' @param keywords 
@@ -75,7 +78,7 @@ get_podcast_id <- function(query, market='US'){
 #'
 #' @examples
 #' 
-search_for_podcast <- function(keywords, language = 'en', market='US', explicit = TRUE, limit=5){
+searchForPodcast <- function(keywords, language = 'en', market='US', explicit = TRUE, limit=5){
   
   if (is.logical(explicit)==FALSE){
     stop('Incorrect filter! Please select TRUE or FALSE')
@@ -147,6 +150,7 @@ search_for_podcast <- function(keywords, language = 'en', market='US', explicit 
   
 }
 
+
 #' Title
 #'
 #' @param podcast_id 
@@ -160,7 +164,7 @@ search_for_podcast <- function(keywords, language = 'en', market='US', explicit 
 #'
 #' @examples
 #' 
-get_recent_episodes <- function(podcast_id, explicit = TRUE, limit=5, market='US', duration=NA){
+getRecentEpisodes <- function(podcast_id, explicit = TRUE, limit=5, market='US', duration=NA){
   
   if (is.logical(explicit)==FALSE){
     stop('Incorrect filter! Please select TRUE or FALSE')
@@ -247,6 +251,7 @@ get_recent_episodes <- function(podcast_id, explicit = TRUE, limit=5, market='US
   
 }
 
+
 #' Title
 #'
 #' @param episode_id 
@@ -257,7 +262,7 @@ get_recent_episodes <- function(podcast_id, explicit = TRUE, limit=5, market='US
 #'
 #' @examples
 #' 
-get_episode_information <- function(episode_id, market='US'){
+getEpisodeInformation <- function(episode_id, market='US'){
   
   if (is.character(episode_id)==FALSE){
     stop('epiosde_id must be a string')

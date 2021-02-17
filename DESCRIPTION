@@ -1,13 +1,9 @@
 Package: spotifyPodcastAPI
-Title: Spotify Podcast API
-Version: 0.0.0.9000
-Authors@R: 
-    person(given = "Aditya",
-           family = "Saluja",
-           role = c("aut", "cre"),
-           email = "first.last@example.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+Title: A Spotify Podcast Wrapper for R
+Version: 0.1.0
+Author: Aditya Saluja
+Maintainer: The package maintainer <adisal97@student.ubc.ca>
+Description: Happy podcasting!
 License: `use_mit_license()`
 Encoding: UTF-8
 LazyData: true
