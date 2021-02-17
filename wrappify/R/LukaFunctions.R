@@ -10,10 +10,20 @@
 # 0 - Install and Load Dependencies
 ######################################
 
-library('pacman')
 #install.packages("pacman")
-pacman::p_load(httr, jsonlite, glue, stringr, roxygen2)
+#pacman::p_load(httr, jsonlite, glue, stringr, roxygen2)
 
+packages = c('httr', 'jsonlite', 'glue', 'stringr', 'roxygen2')
+
+package.check <- lapply(
+  packages,
+  FUN = function(x) {
+    if (!require(x, character.only = TRUE)) {
+      install.packages(x, dependencies = TRUE)
+      library(x, character.only = TRUE)
+    }
+  }
+)
 
 ######################################
 # 1 - Authentication Function
@@ -41,11 +51,18 @@ get_authentication_token <- function (CLIENT_ID, CLIENT_SECRET) {
                   encode = 'form',
                   verbose())
 
-  ## Assign a global authorization token.
-  ## The user only needs to run the function to refresh their authorization token.
-  auth_token <<- content(response)$access_token
+  content <- content(response)
 
-  return(auth_token)
+  ## If request was successful, assign a global authorization token.
+  ## The user only needs to rerun the function to refresh their authorization token.
+  if (is.null(content$access_token)) {
+    message('Token authentication unsuccessful. Check credentials and try again')
+    message('Error description: ', content$error_description)
+    return(NULL)
+    } else {
+      auth_token <<- content$access_token
+      return(auth_token)
+  }
 }
 
 
@@ -63,17 +80,24 @@ get_authentication_token <- function (CLIENT_ID, CLIENT_SECRET) {
 #' @export
 #'
 #' @examples
-#' get_artist_ID('alt j')
-get_artist_ID <- function (artist = NA,
+#' getArtist_ID('alt j')
+getArtist_ID <- function (artist = NA,
                            authentication_token = auth_token) {
 
   # Check if an input was provided
   if (is.na(artist)) {
-    return('No artist string provided.')
+    message('No artist string provided')
+    return(NULL)
+  }
+
+  # Check if a token was defined
+  if (exists('auth_token') == FALSE) {
+    message("Authorization token not defined.\nPlease run: get_authentication_token with your credentials")
+    return(NULL)
   }
 
   # Confirm input with user
-  print(paste0("Searching artist: ", artist))
+  message(paste0("Searching artist: ", artist))
 
   # Format query url for the API
   artist <- str_replace_all(artist, ' ', '%20')
@@ -82,11 +106,22 @@ get_artist_ID <- function (artist = NA,
   # Get a response and let the user know of the response status
   response <- GET(url, add_headers(Accept = 'application/json',
                                    Authorization = paste('Bearer', authentication_token)))
-  print(paste0("Search response status: ", response$status))
 
-  # Parse content
+  # Check if response was successful
+  if (response$status != 200) {
+    message("Search failed with response status: ", response$status)
+    return(NULL)
+  }
+
+  # Check if any artist was found
+  if (content(response)$artists$total == 0) {
+    message(glue('No artists found with input: {artist}'))
+    return(NULL)
+  }
+
   content <- content(response)$artists$items[[1]]
 
+  # Parse content
   artist_name <- content$name
   artist_id <- content$id
   artist_popularity <- content$popularity
@@ -95,12 +130,12 @@ get_artist_ID <- function (artist = NA,
   # Check that an artist id was returned
   if (is.null(artist_id) | class(artist_id)=='try-error') {
     artist_id <- 'Unknown'
-    print(paste0("Artist ID: ", artist_id))
+    message("Artist ID: ", artist_id)
     return(NULL)
   }
 
-  # Prints if artist search was successful
-  print(paste("Artist Found: ", artist_name))
+  # Message if artist search was successful
+  message(paste("Artist Found: ", artist_name))
 
   return(data.frame(
     'Artist.name' = c(artist_name),
@@ -125,23 +160,24 @@ get_artist_ID <- function (artist = NA,
 #' @export
 #'
 #' @examples
-#' get_track_ID('breeze blocks')
-get_track_ID <- function(track = NA, limit = 5,
+#' getTrack_ID('breeze blocks')
+getTrack_ID <- function(track = NA, limit = 5,
                          authentication_token = auth_token) {
 
   # Check if an input was provided
-  if(is.na(track)) {
-    return('No artist string provided.')
+  if (is.na(track)) {
+    message('No track string provided')
+    return(NULL)
   }
 
   # Check if a token was defined
-  if(is.na(auth_token)) {
-    return("Authorization token not defined.
-            Please run: get_authentication_token with your credentials.")
+  if (exists('auth_token') == FALSE) {
+    message("Authorization token not defined.\nPlease run: get_authentication_token with your credentials")
+    return(NULL)
   }
 
   # Confirm input with user
-  print(paste0("Searching track: ", track))
+  message(paste0("Searching track: ", track))
 
   # Format query url for the API
   track <- str_replace_all(track, ' ', '%20')
@@ -150,18 +186,22 @@ get_track_ID <- function(track = NA, limit = 5,
   # Get a response and let the user know of the response status
   response <- GET(url, add_headers(Accept = 'application/json',
                                    Authorization = paste('Bearer', authentication_token)))
-  print(paste0("Search response status: ", response$status))
 
-
-  content <- content(response)$tracks$items
-
-  # Let user know if the query returned no tracks
-  if(length(content) == 0){
-    print('No tracks found')
+  # Check if response was successful
+  if (response$status != 200) {
+    message("Search failed with response status: ", response$status)
     return(NULL)
   }
 
-  # Data collection frame
+  content <- content(response)$tracks$items
+
+  # Let user know if any tracks were found
+  if(length(content) == 0){
+    message(glue('No tracks found with input: {track}'))
+    return(NULL)
+  }
+
+  # Parse content
   tracks_found <- data.frame('Track.Name' = '',
                              'Track.Artist' = '',
                              'Track.ID' = '',
@@ -263,11 +303,11 @@ get_track_ID <- function(track = NA, limit = 5,
 #' First find song IDs using as an example: get_track_ID('sunday candy')
 #' Then Input Artist, Genre, and track ID parameters to retrieve song recommendations
 #' get_track_recommendations(c('kanye west', 'chance the rapper', 'kendrick'), c('hip hop', 'rap'), '6fTdcGsjxlAD9PSkoPaLMX')
-get_track_recommendations <- function(seed_artists, seed_genres, seed_tracks,
+getTrackRecommendations <- function(seed_artists = NA, seed_genres = NA, seed_tracks = NA,
                                       authentication_token = auth_token,
 
                                       ## Optional bleow
-                                      limit=10, market=NA,
+                                      limit=NA, market=NA,
                                       min_acousticness=NA, max_acousticness=NA, target_acousticness=NA,
                                       min_danceability=NA, max_danceability=NA, target_danceability=NA,
                                       min_duration_ms=NA, max_duration_ms=NA, target_duration_ms=NA,
@@ -282,22 +322,43 @@ get_track_recommendations <- function(seed_artists, seed_genres, seed_tracks,
                                       min_tempo=NA, max_tempo=NA, target_tempo=NA,
                                       min_time_signature=NA, max_time_signature=NA, target_time_signature=NA,
                                       min_valence=NA, max_valence=NA, target_valence=NA) {
+  # Check if an input was provided
+  if (is.na(seed_artists) | is.na(seed_genres) | is.na(seed_tracks)) {
+    message('Not all seeds were provided')
+    return(NULL)
+  }
+
+  # Check if a token was defined
+  if (exists('auth_token') == FALSE) {
+    message("Authorization token not defined.\nPlease run: get_authentication_token with your credentials")
+    return(NULL)
+  }
 
   # Artist names need to be converted to a string of artist IDs
   artist_ids <- ''
   for (artist in 1:length(seed_artists)) {
     if (artist == 1) {
-      id <- get_artist_ID(seed_artists[artist])[2]
+      id <- getArtist_ID(seed_artists[artist])[2]
+      # Ensure artists are found so NULL arguments aren't passed forward
+      if (is.null(id)) {
+        message('No artist IDs found with the given seed_artists: ', seed_artists[artist])
+        return(NULL)
+      }
       artist_ids <- paste(id)
     } else {
-      id <- get_artist_ID(seed_artists[artist])[2]
+      # Ensure artists are found so NULL arguments aren't passed forward
+      if (is.null(id)) {
+        message('No artist IDs found with the given seed_artists: ', seed_artists[artist])
+        return(NULL)
+      }
+      id <- getArtist_ID(seed_artists[artist])[2]
       artist_ids <- glue('{artist_ids}%2C{id}')
     }
   }
 
   seed_artists <- artist_ids
 
-  # Genre names also need to be formatted
+  # Genre names need to be converted to a string of genres
   genres_str <- ''
   for (genre in 1:length(seed_genres)) {
     clean <- str_replace_all(seed_genres[genre], ' ', '%20')
@@ -310,10 +371,23 @@ get_track_recommendations <- function(seed_artists, seed_genres, seed_tracks,
 
   seed_genres <- genres_str
 
+  # Track IDs need to be converted to a string of tracks
+  track_str <- ''
+  for (track in 1:length(seed_tracks)) {
+    clean <- str_replace_all(seed_tracks[track], ' ', '%20')
+    if (track == 1) {
+      track_str <- clean
+    } else {
+      track_str <- glue('{track_str}%2C{clean}')
+    }
+  }
+
+  seed_tracks <- track_str
+
   base_url = 'https://api.spotify.com/v1/recommendations'
 
   # Call the query assembler to combine and remove all unspecified values from arguments
-  query = query_assembler(seed_artists, seed_genres, seed_tracks, limit, market,
+  query = queryAssembler(seed_artists, seed_genres, seed_tracks, limit, market,
                           min_acousticness, max_acousticness, target_acousticness,
                           min_danceability, max_danceability, target_danceability,
                           min_duration_ms, max_duration_ms, target_duration_ms,
@@ -329,19 +403,22 @@ get_track_recommendations <- function(seed_artists, seed_genres, seed_tracks,
                           min_time_signature, max_time_signature, target_time_signature,
                           min_valence, max_valence, target_valence)
 
-
-
   # Get a response and let the user know of the response status
   url = paste0(base_url, query)
   response <- GET(url, add_headers(Accept = 'application/json',
                                    Authorization = paste('Bearer', authentication_token)))
-  print(paste0("Search response status: ", response$status))
 
+  # Check if response was successful
+  if (response$status != 200) {
+    message("Search failed with response status: ", response$status)
+    message("The request may either be invalid or simply returned no tracks from Spotify\nTry limiting some seeds to vectors of length 1.")
+    return(NULL)
+  }
 
   # Let user know if query returned no tracks
   content <- content(response)$tracks
   if(length(content) == 0){
-    print('No tracks found')
+    message('No tracks were found\nPlease check the seed_genres and seed_tracks used')
     return(NULL)
   }
 
@@ -392,7 +469,6 @@ get_track_recommendations <- function(seed_artists, seed_genres, seed_tracks,
   labs <- c(glue('Explicit ({slices[1]})'), glue('Clean ({slices[2]})'))
   pi <- pie(slices, labels = labs, main = 'Proportion of Returned Tracks\nwith Explicit Content')
 
-  #
   return(list(tracks_found, pi))
 }
 
@@ -456,7 +532,7 @@ get_track_recommendations <- function(seed_artists, seed_genres, seed_tracks,
 #' @return A formatted string query to use in track recommendation API calls
 #' @export
 #'
-query_assembler <- function(seed_artists, seed_genres, seed_tracks, limit, market,
+queryAssembler <- function(seed_artists, seed_genres, seed_tracks, limit, market,
                             min_acousticness, max_acousticness, target_acousticness,
                             min_danceability, max_danceability, target_danceability,
                             min_duration_ms, max_duration_ms, target_duration_ms,
