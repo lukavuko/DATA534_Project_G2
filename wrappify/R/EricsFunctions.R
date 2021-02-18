@@ -146,7 +146,7 @@ getArtistInfo <- function(artist, byName = FALSE, dataframe = TRUE, lim = 10, au
 #' @export
 #'
 #' @examples
-#' getSongInfo(")
+#' getSongInfo("Motormouth", byName = T, dataframe = T)
 #'
 getSongInfo <- function(song, byName = FALSE, dataframe = TRUE, lim = 10, authentication_token = auth_token){
   # User searches by song Id, and teh function returns info on that specific song
@@ -306,6 +306,19 @@ getTopSongs <- function(artistId, output =  "dataframe", region = "CA", authenti
 
 # Get Audio Features
 
+#' Get Audio Features of a Song
+#'
+#' Spotify automatically generates a number of audio features for each song.
+#'
+#' @param songId The Id of a song to search
+#' @param output Output type. "json", "dataframe", or "graph"
+#' @param authentication_token the users authentication token for the Spotify API. Defaults to the value saved when get_authentication_token is run.
+#'
+#' @return A json object, dataframe, or graph describing song features
+#' @export
+#'
+#' @examples
+#' getAudioFeatures("68ngtC3pGiTjXcFwxYCJ7Z", output = "graph")
 getAudioFeatures <- function(songId, output =  "dataframe", authentication_token = auth_token){
   if (output != "json" & output != "dataframe" & output != "graph"){
     stop("output parameter must be one of json, dataframe, graph")

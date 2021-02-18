@@ -29,3 +29,7 @@ A dataframe or json object of song information.
 \description{
 Search using either a songs name or Spotify id code.
 }
+\examples{
+getSongInfo("Motormouth", byName = T, dataframe = T)
+
+}
