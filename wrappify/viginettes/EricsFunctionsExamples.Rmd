@@ -1,0 +1,53 @@
+---
+title: "Testing Eric's Functions"
+author: "Eric Baxter"
+date: "13/02/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+setwd("~/Documents/Masters/block4/534_cloud/wrappify/wrappify")
+source('R/EricsFunctions.R')
+```
+
+```{r}
+client_id <-  Sys.getenv('CLIENT_ID')
+secret_id <-  Sys.getenv('CLIENT_SECRET_ID')
+
+get_authentication_token(client_id, secret_id)
+```
+```{r}
+ghost_json <- getArtistInfo("1Qp56T7n950O3EGMsSl81D", dataframe = F)
+ghost_json
+```
+```{r}
+ghost_df <- getArtistInfo("Ghost", byName = TRUE, dataframe = T, lim = 7)
+ghost_df
+```
+
+```{r}
+motormouth <- getSongInfo("Motormouth", byName = T, dataframe = T)
+motormouth
+```
+
+```{r}
+similar_to_ghost <- getRelatedArtists(artistId = "1Qp56T7n950O3EGMsSl81D", dataframe = TRUE)
+similar_to_ghost
+```
+
+```{r}
+ghost_top_songs <- getTopSongs("1Qp56T7n950O3EGMsSl81D", output = "dataframe")
+ghost_top_songs
+```
+
+```{r}
+getTopSongs("1Qp56T7n950O3EGMsSl81D", output = "graph")
+```
+```{r}
+getAudioFeatures("68ngtC3pGiTjXcFwxYCJ7Z", output = "graph")
+```
+
