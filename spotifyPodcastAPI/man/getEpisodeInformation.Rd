@@ -2,21 +2,21 @@
 % Please edit documentation in R/spotifyPodcastAPI.R
 \name{getEpisodeInformation}
 \alias{getEpisodeInformation}
-\title{Title}
+\title{Get Episode Information}
 \usage{
 getEpisodeInformation(episode_id, market = "US")
 }
 \arguments{
-\item{episode_id}{}
+\item{episode_id}{string: The episode's ID}
 
-\item{market}{}
+\item{market}{string: string: (optional, defaults to US) Returns shows that are available in that market}
 }
 \value{
-
+a DataFrame that contains the name and a brief discription of the episode.
 }
 \description{
-Title
+Get Episode Information
 }
 \examples{
-
+episode_id('4nRWJ76Tu0ceXJj3uJc4D7')
 }

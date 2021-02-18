@@ -1,21 +1,30 @@
+#### Loading Dependencies ####
+
 library(httr)
 library(jsonlite)
 library(utils)
 library(glue)
 library(stringr)
+library(ggplot2)
 
+#### Authentication Function ####
 
-
-#' Title
+#' Authentication Token 
+#' 
+#' Get an Authentication Token for the Spotify API.
+#' A token is only valid for a few hours. If a 401 
+#' error is raised rerun the function to get a new
+#' token. 
 #'
-#' @param client_id 
-#' @param client_secret_id 
+#' @param client_id string: (Visit https://developer.spotify.com/dashboard for more information)
+#' @param client_secret_id string: (Visit https://developer.spotify.com/dashboard for more information)
 #'
-#' @return
+#' @return authentication token saved to a global variable authentication_token
 #' @export
 #'
-#' @examples
-#' 
+#' @examples 
+#' getAuthenticationToken(client_id, client_secret_id)
+ 
 getAuthenticationToken <- function(client_id, client_secret_id){
   if (is.character(client_id) == FALSE | is.character(client_secret_id) == FALSE){
     stop('Client ID/Client Secret ID must be a string value')
@@ -34,16 +43,20 @@ getAuthenticationToken <- function(client_id, client_secret_id){
 }
 
 
-#' Title
+#' Get Show ID
+#' 
+#' Retrieves a podcast ID from a general name search query
 #'
-#' @param query 
-#' @param market 
+#' @param query string: The show to search for 
+#' @param market string: (optional, defaults to US) A string returning shows that are available in that market 
 #'
-#' @return
+#' @return A string containing the show's ID
 #' @export
 #'
 #' @examples
-#' 
+#' getPodcastID('Philosophize This!', market='US')
+#' getPodcastID('Philosophize This!')
+
 getPodcastID <- function(query, market='US'){
   
   
@@ -74,19 +87,24 @@ getPodcastID <- function(query, market='US'){
 }
 
 
-#' Title
+#' Search for a new podcast 
 #'
-#' @param keywords 
-#' @param language 
-#' @param market 
-#' @param explicit 
-#' @param limit 
+#' @param keywords string: The search query 
+#' @param language string: (optional, defaults to ENGLISH) 
+#' @param market string: (optional, defaults to US) Returns shows that are available in that market 
+#' @param explicit logical: (optional, defaults to TRUE) To enable the filter set explict to FALSE
+#' @param limit integer: (optional, defaults to 5, min = 1, max = 50) Number of shows to be returned
 #'
-#' @return
+#' @return Dataframe containing the podcast name, publisher, language, explicit content filter and podcast ID
 #' @export
 #'
 #' @examples
-#' 
+#' searchForPodcast('History')
+#' searchForPodcast('History', language='es')
+#' searchForPodcast('History', language='es', market='ES')
+#' searchForPodcast('History', language='es', market='ES', explicit=FALSE)
+#' searchForPodcast('History', language='es', market='ES', explicit=FALSE, limit=10)
+
 searchForPodcast <- function(keywords, language = 'en', market='US', explicit = TRUE, limit=5){
   
   if (is.logical(explicit)==FALSE){
@@ -98,7 +116,7 @@ searchForPodcast <- function(keywords, language = 'en', market='US', explicit = 
   }
   
   if (is.character(language)==TRUE & nchar(language)!=2){
-    stop('Only ISO ISO 639-1 codes are accepted at the moment!')
+    stop('Only ISO 639-1 codes are accepted at the moment!')
   }
   
   if (is.character(market)==TRUE & nchar(market)!=2){
@@ -161,19 +179,20 @@ searchForPodcast <- function(keywords, language = 'en', market='US', explicit = 
 }
 
 
-#' Title
+#' Get Recent Episodes 
 #'
-#' @param podcast_id 
-#' @param explicit 
-#' @param limit 
-#' @param market 
-#' @param duration 
+#' @param podcast_id string: The show's ID 
+#' @param explicit logical: (optional, defaults to TRUE) To enable the filter set explict to FALSE
+#' @param limit integer: (optional, defaults to 5, min = 1, max = 50) Number of episodes to be returned
+#' @param market string: (optional, defaults to US) Returns shows that are available in that market 
+#' @param duration numeric: (optional, defaults to NA) Returns episodes under that are under the specified duration (in minutes)
 #'
-#' @return
+#' @return Dataframe containing the episode name, release date, duration, explicit content filter and ID
 #' @export
 #'
-#' @examples
-#' 
+#' @examples 
+#' getRecentEpisodes('5RdShpOtxKO3ZWohR2M6Sv')
+
 getRecentEpisodes <- function(podcast_id, explicit = TRUE, limit=5, market='US', duration=NA){
   if (is.logical(explicit)==FALSE){
     stop('Incorrect filter! Please select TRUE or FALSE')
@@ -261,16 +280,17 @@ getRecentEpisodes <- function(podcast_id, explicit = TRUE, limit=5, market='US',
 }
 
 
-#' Title
+#' Get Episode Information
 #'
-#' @param episode_id 
-#' @param market 
+#' @param episode_id string: The episode's ID
+#' @param market string: string: (optional, defaults to US) Returns shows that are available in that market 
 #'
-#' @return
+#' @return a DataFrame that contains the name and a brief discription of the episode.
 #' @export
 #'
 #' @examples
-#' 
+#' episode_id('4nRWJ76Tu0ceXJj3uJc4D7')
+
 getEpisodeInformation <- function(episode_id, market='US'){
   
   if (is.character(episode_id)==FALSE){
@@ -303,4 +323,28 @@ getEpisodeInformation <- function(episode_id, market='US'){
   
   return (episode_information)
   
+}
+
+#### Plot Podcast Stats ####
+
+#' Get Basic Stats
+#' 
+#' In this release the function plots the duration of episodes over time. More functionality will be added in future releases 
+#'
+#' @param podcast_id The show's ID 
+#' @param limit integer: (optional, defaults to 5, min = 1, max = 50) Number of episodes to be returned
+#'
+#' @return a plot 
+#' @export
+#'
+#' @examples
+#' getBasicStats('2FLQbu3SLMIrRIDM0CaiHG')
+#' 
+getBasicStats <- function(podcast_id, limit=50){
+  response <- getRecentEpisodes(podcast_id, limit = limit)
+  ggplot(response,
+         aes(as.Date(`Release Date`),
+             Duration)) + geom_line() + labs(title='Duartion of Episodes Over Time', 
+                                             x='Release Date',
+                                             y='Duration (minutes)')
 }

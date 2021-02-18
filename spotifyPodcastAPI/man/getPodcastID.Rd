@@ -2,21 +2,22 @@
 % Please edit documentation in R/spotifyPodcastAPI.R
 \name{getPodcastID}
 \alias{getPodcastID}
-\title{Title}
+\title{Get Show ID}
 \usage{
 getPodcastID(query, market = "US")
 }
 \arguments{
-\item{query}{}
+\item{query}{string: The show to search for}
 
-\item{market}{}
+\item{market}{string: (optional, defaults to US) A string returning shows that are available in that market}
 }
 \value{
-
+A string containing the show's ID
 }
 \description{
-Title
+Retrieves a podcast ID from a general name search query
 }
 \examples{
-
+getPodcastID('Philosophize This!', market='US')
+getPodcastID('Philosophize This!')
 }

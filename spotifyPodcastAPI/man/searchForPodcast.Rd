@@ -2,7 +2,7 @@
 % Please edit documentation in R/spotifyPodcastAPI.R
 \name{searchForPodcast}
 \alias{searchForPodcast}
-\title{Title}
+\title{Search for a new podcast}
 \usage{
 searchForPodcast(
   keywords,
@@ -13,22 +13,26 @@ searchForPodcast(
 )
 }
 \arguments{
-\item{keywords}{}
+\item{keywords}{string: The search query}
 
-\item{language}{}
+\item{language}{string: (optional, defaults to ENGLISH)}
 
-\item{market}{}
+\item{market}{string: (optional, defaults to US) Returns shows that are available in that market}
 
-\item{explicit}{}
+\item{explicit}{logical: (optional, defaults to TRUE) To enable the filter set explict to FALSE}
 
-\item{limit}{}
+\item{limit}{integer: (optional, defaults to 5, min = 1, max = 50) Number of shows to be returned}
 }
 \value{
-
+Dataframe containing the podcast name, publisher, language, explicit content filter and podcast ID
 }
 \description{
-Title
+Search for a new podcast
 }
 \examples{
-
+searchForPodcast('History')
+searchForPodcast('History', language='es')
+searchForPodcast('History', language='es', market='ES')
+searchForPodcast('History', language='es', market='ES', explicit=FALSE)
+searchForPodcast('History', language='es', market='ES', explicit=FALSE, limit=10)
 }

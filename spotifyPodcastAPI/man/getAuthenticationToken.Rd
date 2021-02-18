@@ -2,21 +2,24 @@
 % Please edit documentation in R/spotifyPodcastAPI.R
 \name{getAuthenticationToken}
 \alias{getAuthenticationToken}
-\title{Title}
+\title{Authentication Token}
 \usage{
 getAuthenticationToken(client_id, client_secret_id)
 }
 \arguments{
-\item{client_id}{}
+\item{client_id}{string: (Visit https://developer.spotify.com/dashboard for more information)}
 
-\item{client_secret_id}{}
+\item{client_secret_id}{string: (Visit https://developer.spotify.com/dashboard for more information)}
 }
 \value{
-
+authentication token saved to a global variable authentication_token
 }
 \description{
-Title
+Get an Authentication Token for the Spotify API.
+A token is only valid for a few hours. If a 401
+error is raised rerun the function to get a new
+token.
 }
 \examples{
-
+getAuthenticationToken(client_id, client_secret_id)
 }
