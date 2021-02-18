@@ -52,7 +52,7 @@ test_that("Check top songs", {
 
 test_that("Check Audio Features", {
   expect_error(getAudioFeatures("5hISmTJXBXdOes4htbUhGk", authentication_token = "BADTOKEN"), "401 : Invalid access token")
-  expect_error(getAudioFeatures("BADINPUT") , "400 : invalid id")
+  expect_error(getAudioFeatures("BADINPUT") , "400 : invalid request")
   expect_equal(getAudioFeatures("3Vok4b8G2Yak5vaHOqKipV", output = "json")$valence, 0.355)
   expect_equal(getAudioFeatures("68ngtC3pGiTjXcFwxYCJ7Z", output = "json")$tempo, 121.016)
 

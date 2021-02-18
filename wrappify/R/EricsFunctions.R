@@ -24,6 +24,7 @@ library(devtools)
 #'
 #' @export
 get_authentication_token <- function(client_id, client_secret_id) {
+  # Aditya wrote most of this function, and I copied it for ease of use
   response = POST(
     'https://accounts.spotify.com/api/token',
     accept_json(),
