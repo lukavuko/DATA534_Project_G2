@@ -8,7 +8,7 @@ Description: This package provides users with a simple means for accessing the
     spotify API using their client credentials. Users can gather information on specific songs, artists,
     or podcasts using either a name or SPotify ID. Functionality is included to recieve information on
     related artists, top songs, recent podcast episodes, and song recomendations given parameters. 
-License: GPL-3
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Suggests: 
