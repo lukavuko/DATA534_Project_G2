@@ -1,79 +1,49 @@
-source("R/EricsFunctions.R")
+#source("R/EricsFunctions.R")
 
-library(testthat)
-
+#library(testthat)
+context("Testing functions written by Eric")
 
 client_id <-  Sys.getenv('CLIENT_ID')
 client_secret_id <-  Sys.getenv('CLIENT_SECRET_ID')
 get_authentication_token(client_id, client_secret_id)
 
-
 # Test getArtist
 
-ghost <-
-  getArtistInfo("1Qp56T7n950O3EGMsSl81D", dataframe = TRUE)
-ghost2 <-
-  getArtistInfo(
-    "Ghost",
-    byName = TRUE,
-    dataframe = T,
-    lim = 7
-  )
-Hu <-
-  getArtistInfo("0b2B3PwcYzQAhuJacmcYgc", dataframe = TRUE)
-
 test_that("Gets correct artists", {
-  expect_match(ghost$name, "Ghost")
-  expect_match(Hu$name, "The HU")
-  expect_equal(nrow(ghost2), 7)
+  expect_match(getArtistInfo("1Qp56T7n950O3EGMsSl81D", dataframe = TRUE)$name, "Ghost")
+  expect_match(getArtistInfo("0b2B3PwcYzQAhuJacmcYgc", dataframe = TRUE)$name, "The HU")
+  expect_equal(nrow(getArtistInfo("Ghost", byName = TRUE, dataframe = T, lim = 7)), 7)
+  expect_error(getArtistInfo("BADINPUT") , "400 : invalid id")
+  expect_error(getArtistInfo("1Qp56T7n950O3EGMsSl81D", authentication_token = "BADTOKEN"), "401 : Invalid access token")
 })
 
 
 # Test getSongInfo
 
-totem <-
-  getSongInfo("5hISmTJXBXdOes4htbUhGk", dataframe = TRUE)
-dance <-
-  getSongInfo("1E2WTcYLP1dFe1tiGDwRmT", dataframe = T)
-motormouth <-
-  getSongInfo(
-    "Motormouth",
-    byName = T,
-    dataframe = T,
-    lim = 14
-  )
-
 test_that("Gets correct song", {
-  expect_match(totem$trackName, "Wolf Totem")
-  expect_match(dance$trackName, "Dance Macabre")
-  expect_equal(nrow(motormouth), 14)
+  expect_match(getSongInfo("5hISmTJXBXdOes4htbUhGk", dataframe = TRUE)$trackName, "Wolf Totem")
+  expect_match(getSongInfo("1E2WTcYLP1dFe1tiGDwRmT", dataframe = T)$trackName, "Dance Macabre")
+  expect_equal(nrow(getSongInfo("Motormouth", byName = T, dataframe = T, lim = 14)), 14)
   expect_error(getSongInfo("5hISmTJXBXdOes4htbUhGk", authentication_token = "BADTOKEN"), "401 : Invalid access token")
+  expect_error(getSongInfo("BADINPUT") , "400 : invalid id")
 })
 
 # Test getRelatedArtists
 
-suicide <-
-  getRelatedArtists("6HZr7Fs2VfV1PYHIwo8Ylc", dataframe = T)
-ghost <-
-  getRelatedArtists("1Qp56T7n950O3EGMsSl81D", dataframe = T)
-
-
 test_that("Check related artists", {
-  expect_match(suicide$name[1], "Chelsea Grin")
-  expect_match(ghost$name[1], "Mastodon")
+  expect_match(getRelatedArtists("6HZr7Fs2VfV1PYHIwo8Ylc", dataframe = T)$name[1], "Chelsea Grin")
+  expect_match(getRelatedArtists("1Qp56T7n950O3EGMsSl81D", dataframe = T)$name[1], "Mastodon")
   expect_error(getRelatedArtists("BADINPUT") , "400 : invalid id")
+  expect_error(getRelatedArtists("1Qp56T7n950O3EGMsSl81D", authentication_token = "BADTOKEN"), "401 : Invalid access token")
 })
 
 
 # Test getTopSongs
 
-grandson <-
-  getTopSongs("4ZgQDCtRqZlhLswVS6MHN4", output = "dataframe")
-giraffe <-
-  getTopSongs("1yqs45BSh7457Flyhmdv7f", output = "dataframe")
-
 test_that("Check top songs", {
-  expect_match(grandson$song[1], "Blood // Water")
-  expect_match(giraffe$song[1], "Honeybee")
+  expect_match(getTopSongs("4ZgQDCtRqZlhLswVS6MHN4", output = "dataframe")$song[1], "Blood // Water")
+  expect_match(getTopSongs("1yqs45BSh7457Flyhmdv7f", output = "dataframe")$song[1], "Honeybee")
+  expect_error(getTopSongs("BADINPUT") , "400 : invalid id")
+  expect_error(getTopSongs("1Qp56T7n950O3EGMsSl81D", authentication_token = "BADTOKEN"), "401 : Invalid access token")
 })
 

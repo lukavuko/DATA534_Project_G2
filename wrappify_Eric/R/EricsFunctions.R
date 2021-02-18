@@ -287,7 +287,8 @@ getTopSongs <- function(artistId, output =  "dataframe", region = "CA", authenti
       return(df)
     }
     
-    else{ # Only output left is 'graph'
+    # Only output left is 'graph'
+    else{ 
       plot <- df %>% ggplot(aes(x = popularity, y = reorder(song, popularity))) + 
         geom_bar(stat = "identity",  fill = "blue") +
         ggtitle(paste0(content$tracks[[1]]$artists[[1]]$name, "'s Most Popular Tracks"))+
