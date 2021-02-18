@@ -57,6 +57,7 @@ Commit 054fe6d372297cfcb6902be7f629d3f6846ee2f3
 Commit 054fe6d372297cfcb6902be7f629d3f6846ee2f3
 - Worked on CI.
 Commit 197bb3b1b101b6ecf63e50e567ddfb30e332c201
+- Wrote the license, code of conduct, and contributions documents
 
 
 
