@@ -37,19 +37,29 @@ devtools::install_github("adityasal/DATA534_Project_G2")
 ```
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
+This is a basic example that shows the intended workflow of wrappify.
+We start by loading our credentials from system variables and generate an authentication token.
 
-```{r example}
-library(wrappify)
+```{r}
+source("R/EricsFunctions.R")
+source("R/LukaFunctions.R")
+source("R/spotifyPodcastAPI.R")
+
 client_id <-  Sys.getenv('CLIENT_ID')
 secret_id <-  Sys.getenv('CLIENT_SECRET_ID')
 
 get_authentication_token(client_id, secret_id)
+```
 
+
+First, we have an artist we wish to know more about. That artist is the essential alternative metal band "Ghost". We query getArtistInfo.
+
+```{r example}
 ghost <- getArtistInfo("Ghost", byName = TRUE)
 ghost
 ```
 
+We see that Ghost is the second artist in the list. We pull out the Spotify ID and use it to get Ghost's top songs.
 ```{r}
 id <- ghost[2,]$id
 
@@ -57,15 +67,30 @@ ghostsongs <- getTopSongs(id)
 ghostsongs
 ```
 
+We are interested in knowing more about the song "Dance Macabre", so we pull out the song ID and use it to generate a graph of audio features.
 ```{r}
 dance <- ghostsongs[1,]$id
 getAudioFeatures(dance, output = "graph")
 ```
+We learn that we really like Ghost, and want to get some similar artists.
+
+```{r}
+getRelatedArtists(id)
+```
+And now we can choose one of these artists that look interesting and learn more about them as well.
+
+# LUKA
+
+We may also be interested in learning about new music which fits certain metrics and genre tags
+
+# ADITYA
+
+Or, if we would prefer to listen to a podcast, we can use wrappify as well.
 
 
 
 You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-date. `devtools::build_readme()` is handy for this. You could also use GitHub Actions to re-render `README.Rmd` every time you push. An example workflow can be found here: <https://github.com/r-lib/actions/tree/master/examples>.
 
-You can also embed plots, for example:
+
 
 
