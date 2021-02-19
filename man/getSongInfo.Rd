@@ -9,9 +9,7 @@ getSongInfo(
   byName = FALSE,
   dataframe = TRUE,
   lim = 10,
-  authentication_token = get_authentication_token(CLIENT_ID =
-    "7870a259411b4c8b8d2ad173b5a7ed73", CLIENT_SECRET =
-    "67ab42b91f224c3682ff8d5b2220f6aa")
+  authentication_token = getAuthenticationToken()
 )
 }
 \arguments{

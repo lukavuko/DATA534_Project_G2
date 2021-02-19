@@ -1,47 +1,3 @@
-#install.packages(c('jsonlite', 'httr', 'glue', 'stringr', 'tidyverse', 'devtools'))
-library(jsonlite)
-library(httr)
-library(glue)
-library(stringr)
-library(tidyverse)
-library(devtools)
-#search()
-#import:::from(httr, POST, GET, content, accept_json, authenticate, verbose, add_headers)
-#import:::from(glue, glue)
-#import:::from(stringr, str_replace_all)
-#import:::from(dplyr, collapse)
-
-#' Get an Authentication Token for the Spotify API
-#'
-#'Queries the API for a token and sets the token as a global variable
-#'
-#'A token will only remain valid for a few hours. If the package gives 401 errors, rerun this function.
-#'
-#' @param client_id Your client id. Can be found at https://developer.spotify.com/dashboard
-
-#' @param client_secret_id Similar to client id
-#'
-#' @return an authentication token, saved to global environments as auth_token
-#'
-#' @examples
-#' get_authentication_token(client_id, client_secret_id)
-#'
-#' @export
-get_authentication_token <- function(client_id, client_secret_id) {
-  # Aditya wrote most of this function, and I copied it for ease of use
-  response = POST(
-    'https://accounts.spotify.com/api/token',
-    accept_json(),
-    authenticate(client_id, client_secret_id),
-    body = list(grant_type = 'client_credentials'),
-    encode = 'form',
-    verbose()
-  )
-  authentication_token = content(response)$access_token
-  auth_token <<- authentication_token
-  return(auth_token)
-}
-
 #' Get Data on a Spotify Artist
 #'
 #' Search using either an artists name or Spotify id code.
@@ -58,17 +14,17 @@ get_authentication_token <- function(client_id, client_secret_id) {
 #' @examples
 #' getArtistInfo("Ghost", byName = TRUE, dataframe = TRUE)
 #'
-getArtistInfo <- function(artist, byName = FALSE, dataframe = TRUE, lim = 10, authentication_token = get_authentication_token(CLIENT_ID = "7870a259411b4c8b8d2ad173b5a7ed73",
-                                                                                                                              CLIENT_SECRET = "67ab42b91f224c3682ff8d5b2220f6aa")){
+getArtistInfo <- function(artist, byName = FALSE, dataframe = TRUE, lim = 10, authentication_token = getAuthenticationToken()){
   # This runs if the user searches a specific Id, and the API can pull one artist knowing
   # it is the intended one.
   if (byName == FALSE){
     url <- "https://api.spotify.com/v1/artists/"
     query <- artist
-    response <- GET(paste0(url, query),
-                    add_headers(Accept = "application/json",
+    response <- httr::GET(paste0(url, query),
+                          httr::add_headers(Accept = "application/json",
                                 Authorization = paste("Bearer", authentication_token)))
-    content <- content(response)
+
+    content <- httr::content(response)
 
     # Ensure the response code indicates success. If not return the error
     if(response$status_code != 200){
@@ -96,10 +52,10 @@ getArtistInfo <- function(artist, byName = FALSE, dataframe = TRUE, lim = 10, au
   }
   # Run this if user searches by name. The function returns a list of the top matches.
   if (byName == TRUE){
-    url <- glue('https://api.spotify.com/v1/search?q={artist}&type=artist&limit={lim}')
-    response <- GET(url, add_headers(q = artist, type = "artist", Accept = "application/json",
+    url <- glue::glue('https://api.spotify.com/v1/search?q={artist}&type=artist&limit={lim}')
+    response <- httr::GET(url, httr::add_headers(q = artist, type = "artist", Accept = "application/json",
                                      Authorization = paste("Bearer", authentication_token)))
-    content <- content(response)
+    content <- httr::content(response)
 
     if(response$status_code != 200){
       stop(paste(response$status_code,":", content$error$message))
@@ -153,16 +109,15 @@ getArtistInfo <- function(artist, byName = FALSE, dataframe = TRUE, lim = 10, au
 #' @examples
 #' getSongInfo("Motormouth", byName = T, dataframe = T)
 #'
-getSongInfo <- function(song, byName = FALSE, dataframe = TRUE, lim = 10, authentication_token = get_authentication_token(CLIENT_ID = "7870a259411b4c8b8d2ad173b5a7ed73",
-                                                                                                                          CLIENT_SECRET = "67ab42b91f224c3682ff8d5b2220f6aa")){
+getSongInfo <- function(song, byName = FALSE, dataframe = TRUE, lim = 10, authentication_token = getAuthenticationToken()){
   # User searches by song Id, and teh function returns info on that specific song
   if(byName == FALSE){
     url <- "https://api.spotify.com/v1/tracks/"
     query <- song
-    response <- GET(paste0(url, query),
-                    add_headers(Accept = "application/json",
+    response <- httr::GET(paste0(url, query),
+                          httr::add_headers(Accept = "application/json",
                                 Authorization = paste("Bearer", authentication_token)))
-    content <- content(response)
+    content <- httr::content(response)
 
     if(response$status_code != 200){
       stop(paste(response$status_code,":", content$error$message))
@@ -182,10 +137,10 @@ getSongInfo <- function(song, byName = FALSE, dataframe = TRUE, lim = 10, authen
 
   else{
     # User searches by name, so the function returns a list of matches
-    url <- glue("https://api.spotify.com/v1/search?q={song}&type=track&limit={lim}")
-    response <- GET(url, add_headers(q = song, type = "track", Accept = "application/json",
+    url <- glue::glue("https://api.spotify.com/v1/search?q={song}&type=track&limit={lim}")
+    response <- httr::GET(url, httr::add_headers(q = song, type = "track", Accept = "application/json",
                                      Authorization = paste("Bearer", authentication_token)))
-    content <- content(response)
+    content <- httr::content(response)
 
     if(response$status_code != 200){
       stop(paste(response$status_code,":", content$error$message))
@@ -228,12 +183,11 @@ getSongInfo <- function(song, byName = FALSE, dataframe = TRUE, lim = 10, authen
 #' @examples
 #' getRelatedArtists(artistId = "1Qp56T7n950O3EGMsSl81D", dataframe = TRUE)
 #'
-getRelatedArtists <- function(artistId, dataframe =  TRUE, authentication_token = get_authentication_token(CLIENT_ID = "7870a259411b4c8b8d2ad173b5a7ed73",
-                                                                                                           CLIENT_SECRET = "67ab42b91f224c3682ff8d5b2220f6aa")){
-  url <- glue("https://api.spotify.com/v1/artists/{artistId}/related-artists")
-  response <- GET(url, add_headers(Accept = "application/json",
+getRelatedArtists <- function(artistId, dataframe =  TRUE, authentication_token = getAuthenticationToken()){
+  url <- glue::glue("https://api.spotify.com/v1/artists/{artistId}/related-artists")
+  response <- httr::GET(url, httr::add_headers(Accept = "application/json",
                                    Authorization = paste("Bearer", authentication_token)))
-  content <- content(response)
+  content <- httr::content(response)
 
   if(response$status_code != 200){
     stop(paste(response$status_code,":", content$error$message))
@@ -267,17 +221,19 @@ getRelatedArtists <- function(artistId, dataframe =  TRUE, authentication_token 
 #'
 #' @examples
 #' getTopSongs("3WPKDlucMsXH6FC1XaclZC", output = "dataframe", region = "CA")
-getTopSongs <- function(artistId, output =  "dataframe", region = "CA", authentication_token = get_authentication_token(CLIENT_ID = "7870a259411b4c8b8d2ad173b5a7ed73",
-                                                                                                                        CLIENT_SECRET = "67ab42b91f224c3682ff8d5b2220f6aa")){
-  if (output != "json" & output != "dataframe" & output != "graph"){
+getTopSongs <- function(artistId, output =  "dataframe", region = "CA", authentication_token = getAuthenticationToken()){
+
+  if (output != "json" & output != "dataframe" & output != "graph") {
     stop("output parameter must be one of json, dataframe, graph")
   }
-  url <- glue("https://api.spotify.com/v1/artists/{artistId}/top-tracks?market={region}")
-  response <- GET(url, add_headers(Accept = "application/json",
-                                   Authorization = paste("Bearer", authentication_token)))
-  content <- content(response)
+  url <- glue::glue("https://api.spotify.com/v1/artists/{artistId}/top-tracks?market={region}")
 
-  if(response$status_code != 200){
+  response <- httr::GET(url, httr::add_headers(Accept = "application/json",
+                                   Authorization = paste("Bearer", authentication_token)))
+
+  content <- httr::content(response)
+
+  if (response$status_code != 200) {
     stop(paste(response$status_code,":", content$error$message))
   }
 
@@ -298,12 +254,12 @@ getTopSongs <- function(artistId, output =  "dataframe", region = "CA", authenti
 
     # Only output left is 'graph'
     else{
-      plot <- df %>% ggplot(aes(x = popularity, y = reorder(song, popularity))) +
-        geom_bar(stat = "identity",  fill = "blue") +
-        ggtitle(paste0(content$tracks[[1]]$artists[[1]]$name, "'s Most Popular Tracks"))+
-        ylab("Song Name")+
-        xlab("Popularity") +
-        xlim(c(0,100))
+      plot <- df %>% ggplot2::ggplot(aes(x = popularity, y = reorder(song, popularity))) +
+        ggplot2::geom_bar(stat = "identity",  fill = "blue") +
+        ggplot2::ggtitle(paste0(content$tracks[[1]]$artists[[1]]$name, "'s Most Popular Tracks"))+
+        ggplot2::ylab("Song Name")+
+        ggplot2::xlab("Popularity") +
+        ggplot2::xlim(c(0,100))
       return(plot)
     }
   }
@@ -327,15 +283,17 @@ getTopSongs <- function(artistId, output =  "dataframe", region = "CA", authenti
 #'
 #' @examples
 #' getAudioFeatures("68ngtC3pGiTjXcFwxYCJ7Z", output = "graph")
-getAudioFeatures <- function(songId, output =  "dataframe", authentication_token = get_authentication_token(CLIENT_ID = "7870a259411b4c8b8d2ad173b5a7ed73",
-                                                                                                            CLIENT_SECRET = "67ab42b91f224c3682ff8d5b2220f6aa")){
-  if (output != "json" & output != "dataframe" & output != "graph"){
+getAudioFeatures <- function(songId, output =  "dataframe", authentication_token = getAuthenticationToken()){
+
+  if (output != "json" & output != "dataframe" & output != "graph") {
     stop("output parameter must be one of json, dataframe, graph")
   }
-  url <- glue("https://api.spotify.com/v1/audio-features/{songId}")
-  response <- GET(url, add_headers(Accept = "application/json",
+
+  url <- glue::glue("https://api.spotify.com/v1/audio-features/{songId}")
+
+  response <- httr::GET(url, httr::add_headers(Accept = "application/json",
                                    Authorization = paste("Bearer", authentication_token)))
-  content <- content(response)
+  content <- httr::content(response)
 
   if(response$status_code != 200){
     stop(paste(response$status_code,":", content$error$message))
@@ -356,12 +314,12 @@ getAudioFeatures <- function(songId, output =  "dataframe", authentication_token
 
     # Only output left is 'graph'
     else{
-      plot <- df %>% head(7) %>% ggplot(aes(y = metric, x = value)) +
-        geom_point(fill = "blue") +
-        ggtitle(paste0(songname, "'s Metrics"))+
-        ylab("Song Metric")+
-        xlab("Value") +
-        xlim(c(0,1))
+      plot <- df %>% head(7) %>% ggplot2::ggplot(aes(y = metric, x = value)) +
+        ggplot2::geom_point(fill = "blue") +
+        ggplot2::ggtitle(paste0(songname, "'s Metrics"))+
+        ggplot2::ylab("Song Metric")+
+        ggplot2::xlab("Value") +
+        ggplot2::xlim(c(0,1))
       return(plot)
     }
   }

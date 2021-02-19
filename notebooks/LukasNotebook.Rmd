@@ -1,0 +1,61 @@
+---
+title: "Project Notebook"
+author: "Luka Vukovic"
+date: "12/02/2021"
+output: html_document
+---
+
+## Feb 8 2021
+- Begun working on how to call the API
+- Created and registered a spotify application providing client credentials
+- Used .gitignore to hide client credentials
+  767ed3a32f932307c632eba835d9e97b629a190b
+- Begun writing out the song recommender function
+
+## Feb 10 2021
+- Finished a rough primitive song recommender, authentication function, and
+  query assembler to help procress all 47 potential arguments to the song recommender
+  eb4e3b734e10ace067ccc0deef247486cd2e3dcd
+  
+## Feb 14 2021
+- Decided to add an artist to ID and track to ID conversion function to let
+  users more easily take advantage of the song recommender. They no longer
+  need to manually search for IDs to use in the song recommender. Hopefully
+  these ID converters can be integrated into the song recommender.
+  bf0a9cdb2bb03adec28dec87de73545bb753dd1a
+
+## Feb 16 2021
+- Updated project structure by creating an .Rproj file for package structuring.
+  07c062e0f11d43003fc41ee6069a349ea7aba188
+- Added documentation to my functions and wrote a description for the package.
+  07c062e0f11d43003fc41ee6069a349ea7aba188
+  
+## Feb 17 2021
+- Test writing complete. Users no longer need to use artist IDs in the song
+  recommender, it will automatically find the artist ID based on the name(s)
+  used.
+  e304d7bd6febbbcc2a56eaedb14b6af02f984a33
+- Added many error handling aspects to my functions so they can deal with:
+  - invalid or rundefined authentication tokens
+  - no search returns for artist ID, track ID, and song recommendations
+  e304d7bd6febbbcc2a56eaedb14b6af02f984a33
+  
+## Feb 18 2021
+- Decided collectively to hardcode in the API credentials since tests scripts
+  were unable to run API calls outside of testthat statements. Now every function
+  call will call on get_athentication_token using the hardcoded credentials. This
+  also eliminates the possibility for undefined or expired tokens since they're
+  always called fresh. I updated Erics and Adityas test scripts and R scripts
+  to account for this.
+  a990618f63785f68680a5e75991c9d3ffc524e97
+- Fixed errors in testscript formatting.
+  110dc75c4846876adb5682b9b40b5396956cc08a
+- Updated names of package scripts to better reflect their functionality
+  fe964d450d7b3d4f448b2a9ecbb0b31b28f4200c
+  
+## Feb 19 2021
+- Reviewed all our code, split my functions and tests into multiple scripts
+  for easy reference. Removed library calls in scripts for everyone and
+  replaced it with inline library calling (package::function()). Edited tests
+  and cleaned up functions so there's no reducndancy across our code base.
+  

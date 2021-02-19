@@ -1,54 +1,3 @@
-#### Loading Dependencies ####
-
-library(httr)
-library(glue)
-library(stringr)
-library(ggplot2)
-library(jsonlite)
-library(utils)
-
-#import:::from(httr, POST, GET, content, accept_json, authenticate, verbose, add_headers)
-#import:::from(glue, glue)
-#import:::from(stringr, str_replace_all)
-#import:::from(dplyr, collapse)
-#import:::from(ggplot2, ggplot)
-
-#### Authentication Function ####
-
-#' Authentication Token
-#'
-#' Get an Authentication Token for the Spotify API.
-#' A token is only valid for a few hours. If a 401
-#' error is raised rerun the function to get a new
-#' token.
-#'
-#' @param client_id string: (Visit https://developer.spotify.com/dashboard for more information)
-#' @param client_secret_id string: (Visit https://developer.spotify.com/dashboard for more information)
-#'
-#' @return authentication token saved to a global variable authentication_token
-#' @export
-#'
-#' @examples
-#' getAuthenticationToken(client_id, client_secret_id)
-
-getAuthenticationToken <- function(client_id, client_secret_id){
-  if (is.character(client_id) == FALSE | is.character(client_secret_id) == FALSE){
-    stop('Client ID/Client Secret ID must be a string value')
-  }
-  response = POST('https://accounts.spotify.com/api/token',
-                  accept_json(),
-                  authenticate(client_id, client_secret_id),
-                  body = list(grant_type = 'client_credentials'),
-                  encode = 'form',
-                  verbose())
-  if(response$status_code != 200){
-    stop(paste(response$status_code,":", content(response)$error$message))
-  }
-  authentication_token <<- content(response)$access_token
-  return (authentication_token)
-}
-
-
 #' Get Show ID
 #'
 #' Retrieves a podcast ID from a general name search query
@@ -63,33 +12,32 @@ getAuthenticationToken <- function(client_id, client_secret_id){
 #' getPodcastID('Philosophize This!', market='US')
 #' getPodcastID('Philosophize This!')
 
-getPodcastID <- function(query, market='US', authentication_token = getAuthenticationToken(client_id = "7870a259411b4c8b8d2ad173b5a7ed73",
-                                                                                           client_secret_id = "67ab42b91f224c3682ff8d5b2220f6aa")){
+getPodcastID <- function(query, market='US', authentication_token = getAuthenticationToken()){
 
 
-  if (is.character(market)==TRUE & nchar(market)!=2){
+  if (is.character(market)==TRUE & nchar(market)!=2) {
     stop('Only ISO 3166-1 alpha-2 country codes are accepted at the moment!')
   }
 
-  if (is.character(market)==FALSE){
+  if (is.character(market)==FALSE) {
     stop('Please enter an ISO 3166-1 alpha-2 country code!')
   }
 
   base_url = 'https://api.spotify.com/v1/search'
-  response <- GET(base_url,
-                  query = list(q = enc2utf8(query),
+  response <- httr::GET(base_url,
+                    query = list(q = enc2utf8(query),
                                type = 'show',
                                market=market),
-                  add_headers(Accept = 'application/json',
+                    httr::add_headers(Accept = 'application/json',
                               Authorization = paste('Bearer', authentication_token)))
 
+  content <- httr::content(response)
+
   if(response$status_code != 200){
-    stop(paste(response$status_code,":", content(response)$error$message))
+    stop(paste(response$status_code,":", content$error$message))
   }
 
-
-  response = content(response)
-  return (response$shows$items[[1]]$id)
+  return (content$shows$items[[1]]$id)
 
 }
 
@@ -112,8 +60,7 @@ getPodcastID <- function(query, market='US', authentication_token = getAuthentic
 #' searchForPodcast('History', language='es', market='ES', explicit=FALSE)
 #' searchForPodcast('History', language='es', market='ES', explicit=FALSE, limit=10)
 
-searchForPodcast <- function(keywords, language = 'en', market='US', explicit = TRUE, limit=5, authentication_token = getAuthenticationToken(client_id = "7870a259411b4c8b8d2ad173b5a7ed73",
-                                                                                                                                             client_secret_id = "67ab42b91f224c3682ff8d5b2220f6aa")){
+searchForPodcast <- function(keywords, language = 'en', market='US', explicit = TRUE, limit=5, authentication_token = getAuthenticationToken()){
 
   if (is.logical(explicit)==FALSE){
     stop('Incorrect filter! Please select TRUE or FALSE')
@@ -136,15 +83,17 @@ searchForPodcast <- function(keywords, language = 'en', market='US', explicit = 
   }
 
   base_url = 'https://api.spotify.com/v1/search'
-  response <- GET(base_url,
+  response <- httr::GET(base_url,
                   query = list(q = enc2utf8(keywords),
                                type = 'show',
                                market=market),
-                  add_headers(Accept = 'application/json',
+                  httr::add_headers(Accept = 'application/json',
                               Authorization = paste('Bearer', authentication_token)))
 
+  content <- httr::content(response)
+
   if(response$status_code != 200){
-    stop(paste(response$status_code,":", content(response)$error$message))
+    stop(paste(response$status_code,":", content$error$message))
   }
 
 
@@ -153,17 +102,16 @@ searchForPodcast <- function(keywords, language = 'en', market='US', explicit = 
   podcast_id = list()
   explicit_content = list()
   podcast_language = list()
-  response = content(response)
 
-  search_limit = response$shows$limit
+  search_limit = content$shows$limit
 
 
   for (i in 1:search_limit){
-    podcast_name[[i]] <- response$shows$items[[i]]$name
-    podcast_publisher[[i]] <- response$shows$items[[i]]$publisher
-    podcast_id[[i]] <- response$shows$items[[i]]$id
-    explicit_content[[i]] <- response$shows$items[[i]]$explicit
-    podcast_language[[i]] <- str_sub(tolower(response$shows$items[[i]]$language[[1]]),-2)
+    podcast_name[[i]] <- content$shows$items[[i]]$name
+    podcast_publisher[[i]] <- content$shows$items[[i]]$publisher
+    podcast_id[[i]] <- content$shows$items[[i]]$id
+    explicit_content[[i]] <- content$shows$items[[i]]$explicit
+    podcast_language[[i]] <- stringr::str_sub(tolower(content$shows$items[[i]]$language[[1]]),-2)
   }
 
   podcast_search = data.frame(unlist(podcast_name),
@@ -201,8 +149,8 @@ searchForPodcast <- function(keywords, language = 'en', market='US', explicit = 
 #' @examples
 #' getRecentEpisodes('5RdShpOtxKO3ZWohR2M6Sv')
 
-getRecentEpisodes <- function(podcast_id, explicit = TRUE, limit=5, market='US', duration=NA, authentication_token = getAuthenticationToken(client_id = "7870a259411b4c8b8d2ad173b5a7ed73",
-                                                                                                                                            client_secret_id = "67ab42b91f224c3682ff8d5b2220f6aa")){
+getRecentEpisodes <- function(podcast_id, explicit = TRUE, limit=5, market='US', duration=NA, authentication_token = getAuthenticationToken()){
+
   if (is.logical(explicit)==FALSE){
     stop('Incorrect filter! Please select TRUE or FALSE')
   }
@@ -224,18 +172,19 @@ getRecentEpisodes <- function(podcast_id, explicit = TRUE, limit=5, market='US',
   }
 
 
-  base_url = glue('https://api.spotify.com/v1/shows/{podcast_id}/episodes')
-  response <- GET(base_url,
+  base_url = glue::glue('https://api.spotify.com/v1/shows/{podcast_id}/episodes')
+  response <- httr::GET(base_url,
                   query = list(limit=50,
                                market = market),
-                  add_headers(Accept = 'application/json',
+                  httr::add_headers(Accept = 'application/json',
                               Authorization = paste('Bearer', authentication_token)))
 
+  content <- httr::content(response)
+
   if(response$status_code != 200){
-    stop(paste(response$status_code,":", content(response)$error$message))
+    stop(paste(response$status_code,":", content$error$message))
   }
 
-  response = content(response)
 
   episode_name = list()
   release_date = list()
@@ -243,15 +192,15 @@ getRecentEpisodes <- function(podcast_id, explicit = TRUE, limit=5, market='US',
   explicit_content = list()
   episode_id = list()
 
-  search_limit = response$limit
+  search_limit = content$limit
 
 
   for (i in 1:search_limit){
-    episode_name[[i]] <- response$item[[i]]$name
-    release_date[[i]] <- response$item[[i]]$release_date
-    episode_duration[[i]] <- round((response$item[[i]]$duration_ms)/(1000*60),0)
-    explicit_content[[i]] <- response$item[[i]]$explicit
-    episode_id[[i]] <- response$item[[i]]$id
+    episode_name[[i]] <- content$item[[i]]$name
+    release_date[[i]] <- content$item[[i]]$release_date
+    episode_duration[[i]] <- round((content$item[[i]]$duration_ms)/(1000*60),0)
+    explicit_content[[i]] <- content$item[[i]]$explicit
+    episode_id[[i]] <- content$item[[i]]$id
   }
 
 
@@ -300,8 +249,7 @@ getRecentEpisodes <- function(podcast_id, explicit = TRUE, limit=5, market='US',
 #' @examples
 #' episode_id('4nRWJ76Tu0ceXJj3uJc4D7')
 
-getEpisodeInformation <- function(episode_id, market='US', authentication_token = getAuthenticationToken(client_id = "7870a259411b4c8b8d2ad173b5a7ed73",
-                                                                                                         client_secret_id = "67ab42b91f224c3682ff8d5b2220f6aa")){
+getEpisodeInformation <- function(episode_id, market='US', authentication_token = getAuthenticationToken()){
 
   if (is.character(episode_id)==FALSE){
     stop('episode_id must be a string')
@@ -315,20 +263,20 @@ getEpisodeInformation <- function(episode_id, market='US', authentication_token 
     stop('Please enter an ISO 3166-1 alpha-2 country code!')
   }
 
-  base_url = glue('https://api.spotify.com/v1/episodes/{episode_id}')
-  response <- GET(base_url,
+  base_url = glue::glue('https://api.spotify.com/v1/episodes/{episode_id}')
+  response <- httr::GET(base_url,
                   query = list(market = market),
-                  add_headers(Accept = 'application/json',
+                  httr::add_headers(Accept = 'application/json',
                               Authorization = paste('Bearer', authentication_token)))
 
+  content <- httr::content(response)
+
   if(response$status_code != 200){
-    stop(paste(response$status_code,":", content(response)$error$message))
+    stop(paste(response$status_code,":", content$error$message))
   }
 
-  response = content(response)
-
-  episode_name = response$name
-  episode_description = response$show$description
+  episode_name = content$name
+  episode_description = content$show$description
   episode_information = data.frame(episode_name, episode_description)
 
   return (episode_information)
@@ -350,12 +298,14 @@ getEpisodeInformation <- function(episode_id, market='US', authentication_token 
 #' @examples
 #' getBasicStats('2FLQbu3SLMIrRIDM0CaiHG')
 #'
-getBasicStats <- function(podcast_id, limit=50, authentication_token = getAuthenticationToken(client_id = "7870a259411b4c8b8d2ad173b5a7ed73",
-                                                                                              client_secret_id = "67ab42b91f224c3682ff8d5b2220f6aa")){
+getBasicStats <- function(podcast_id, limit=50, authentication_token = getAuthenticationToken()){
+
   response <- getRecentEpisodes(podcast_id, limit = limit)
-  ggplot(response,
-         aes(as.Date(`Release Date`),
-             Duration)) + geom_line() + labs(title='Duartion of Episodes Over Time',
-                                             x='Release Date',
-                                             y='Duration (minutes)')
+
+  ggplot2::ggplot(response,
+                  aes(as.Date(`Release Date`), Duration)) +
+    geom_line() +
+    labs(title='Duartion of Episodes Over Time',
+         x='Release Date',
+         y='Duration (minutes)')
 }

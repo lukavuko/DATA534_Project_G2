@@ -1,15 +1,6 @@
-# source('R/spotifyPodcastAPI.R')
-
-
-#### Testing getAuthenticationToken Function ####
-
-test_that('A test to check if an error is raised on entering an invalid client or secret ID',
-          {
-            expect_error(getAuthenticationToken('abcd',1))
-            expect_error(getAuthenticationToken('abcd','abcd'))
-          })
-
-#### Testing searchForPodcast ####
+#############################
+## Testing searchForPodcast
+#############################
 
 test_that('A test to check if an error is raised on entering invalid arguments',
           {

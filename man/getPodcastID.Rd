@@ -7,9 +7,7 @@
 getPodcastID(
   query,
   market = "US",
-  authentication_token = getAuthenticationToken(client_id =
-    "7870a259411b4c8b8d2ad173b5a7ed73", client_secret_id =
-    "67ab42b91f224c3682ff8d5b2220f6aa")
+  authentication_token = getAuthenticationToken()
 )
 }
 \arguments{

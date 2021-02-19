@@ -1,8 +1,6 @@
-#source("R/EricsFunctions.R")
-
-context("Testing functions written by Eric")
-
-# Test getArtist
+#############################
+## Test getArtist
+#############################
 
 test_that("Gets correct artists", {
   expect_match(getArtistInfo("1Qp56T7n950O3EGMsSl81D", dataframe = TRUE)$name, "Ghost")
