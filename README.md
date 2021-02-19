@@ -6,7 +6,6 @@
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/adityasal/DATA534_Project_G2/workflows/R-CMD-check/badge.svg)](https://github.com/adityasal/DATA534_Project_G2/actions)
-[![Devtools-test](https://github.com/adityasal/DATA534_Project_G2/workflows/y/badge.svg)](https://github.com/adityasal/DATA534_Project_G2/actions)
 
 <!-- badges: end -->
 
