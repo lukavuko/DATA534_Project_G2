@@ -1,11 +1,15 @@
-library(tidyverse)
+#install.packages(c('jsonlite', 'httr', 'glue', 'stringr', 'tidyverse', 'devtools'))
 library(jsonlite)
 library(httr)
 library(glue)
 library(stringr)
-library(roxygen2)
+library(tidyverse)
 library(devtools)
-
+#search()
+#import:::from(httr, POST, GET, content, accept_json, authenticate, verbose, add_headers)
+#import:::from(glue, glue)
+#import:::from(stringr, str_replace_all)
+#import:::from(dplyr, collapse)
 
 #' Get an Authentication Token for the Spotify API
 #'
@@ -54,7 +58,8 @@ get_authentication_token <- function(client_id, client_secret_id) {
 #' @examples
 #' getArtistInfo("Ghost", byName = TRUE, dataframe = TRUE)
 #'
-getArtistInfo <- function(artist, byName = FALSE, dataframe = TRUE, lim = 10, authentication_token = auth_token){
+getArtistInfo <- function(artist, byName = FALSE, dataframe = TRUE, lim = 10, authentication_token = get_authentication_token(CLIENT_ID = "7870a259411b4c8b8d2ad173b5a7ed73",
+                                                                                                                              CLIENT_SECRET = "67ab42b91f224c3682ff8d5b2220f6aa")){
   # This runs if the user searches a specific Id, and the API can pull one artist knowing
   # it is the intended one.
   if (byName == FALSE){
@@ -148,7 +153,8 @@ getArtistInfo <- function(artist, byName = FALSE, dataframe = TRUE, lim = 10, au
 #' @examples
 #' getSongInfo("Motormouth", byName = T, dataframe = T)
 #'
-getSongInfo <- function(song, byName = FALSE, dataframe = TRUE, lim = 10, authentication_token = auth_token){
+getSongInfo <- function(song, byName = FALSE, dataframe = TRUE, lim = 10, authentication_token = get_authentication_token(CLIENT_ID = "7870a259411b4c8b8d2ad173b5a7ed73",
+                                                                                                                          CLIENT_SECRET = "67ab42b91f224c3682ff8d5b2220f6aa")){
   # User searches by song Id, and teh function returns info on that specific song
   if(byName == FALSE){
     url <- "https://api.spotify.com/v1/tracks/"
@@ -222,7 +228,8 @@ getSongInfo <- function(song, byName = FALSE, dataframe = TRUE, lim = 10, authen
 #' @examples
 #' getRelatedArtists(artistId = "1Qp56T7n950O3EGMsSl81D", dataframe = TRUE)
 #'
-getRelatedArtists <- function(artistId, dataframe =  TRUE, authentication_token = auth_token){
+getRelatedArtists <- function(artistId, dataframe =  TRUE, authentication_token = get_authentication_token(CLIENT_ID = "7870a259411b4c8b8d2ad173b5a7ed73",
+                                                                                                           CLIENT_SECRET = "67ab42b91f224c3682ff8d5b2220f6aa")){
   url <- glue("https://api.spotify.com/v1/artists/{artistId}/related-artists")
   response <- GET(url, add_headers(Accept = "application/json",
                                    Authorization = paste("Bearer", authentication_token)))
@@ -260,7 +267,8 @@ getRelatedArtists <- function(artistId, dataframe =  TRUE, authentication_token 
 #'
 #' @examples
 #' getTopSongs("3WPKDlucMsXH6FC1XaclZC", output = "dataframe", region = "CA")
-getTopSongs <- function(artistId, output =  "dataframe", region = "CA", authentication_token = auth_token){
+getTopSongs <- function(artistId, output =  "dataframe", region = "CA", authentication_token = get_authentication_token(CLIENT_ID = "7870a259411b4c8b8d2ad173b5a7ed73",
+                                                                                                                        CLIENT_SECRET = "67ab42b91f224c3682ff8d5b2220f6aa")){
   if (output != "json" & output != "dataframe" & output != "graph"){
     stop("output parameter must be one of json, dataframe, graph")
   }
@@ -319,7 +327,8 @@ getTopSongs <- function(artistId, output =  "dataframe", region = "CA", authenti
 #'
 #' @examples
 #' getAudioFeatures("68ngtC3pGiTjXcFwxYCJ7Z", output = "graph")
-getAudioFeatures <- function(songId, output =  "dataframe", authentication_token = auth_token){
+getAudioFeatures <- function(songId, output =  "dataframe", authentication_token = get_authentication_token(CLIENT_ID = "7870a259411b4c8b8d2ad173b5a7ed73",
+                                                                                                            CLIENT_SECRET = "67ab42b91f224c3682ff8d5b2220f6aa")){
   if (output != "json" & output != "dataframe" & output != "graph"){
     stop("output parameter must be one of json, dataframe, graph")
   }

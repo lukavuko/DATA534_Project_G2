@@ -16,7 +16,7 @@ authentication token saved to a global variable authentication_token
 }
 \description{
 Get an Authentication Token for the Spotify API.
-A token is only valid for a few hours. If a 401 
+A token is only valid for a few hours. If a 401
 error is raised rerun the function to get a new
 token.
 }

@@ -24,12 +24,15 @@
 #    }
 #  }
 #)
+library(httr)
+library(glue)
+library(stringr)
+library(dplyr)
 
-library('httr')
-library('jsonlite')
-library('glue')
-library('stringr')
-library('roxygen2')
+#import:::from(httr, POST, GET, content, accept_json, authenticate, verbose, add_headers)
+#import:::from(glue, glue)
+#import:::from(stringr, str_replace_all)
+#import:::from(dplyr, collapse)
 
 
 

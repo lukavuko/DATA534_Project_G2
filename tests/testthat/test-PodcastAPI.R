@@ -1,12 +1,5 @@
 # source('R/spotifyPodcastAPI.R')
-library(testthat)
 
-#### Initializing Authentication Token ####
-
-client_id = Sys.getenv('CLIENT_ID')
-client_secret_id = Sys.getenv('CLIENT_SECRET_ID')
-authentication_token = getAuthenticationToken(client_id = client_id,
-                                              client_secret_id = client_secret_id)
 
 #### Testing getAuthenticationToken Function ####
 

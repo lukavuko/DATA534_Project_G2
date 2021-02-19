@@ -1,11 +1,6 @@
 #source("R/EricsFunctions.R")
 
-#library(testthat)
 context("Testing functions written by Eric")
-
-client_id <-  Sys.getenv('CLIENT_ID')
-client_secret_id <-  Sys.getenv('CLIENT_SECRET_ID')
-get_authentication_token(client_id, client_secret_id)
 
 # Test getArtist
 
