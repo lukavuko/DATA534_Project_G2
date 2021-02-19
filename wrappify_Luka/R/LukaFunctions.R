@@ -13,17 +13,25 @@
 #install.packages("pacman")
 #pacman::p_load(httr, jsonlite, glue, stringr, roxygen2)
 
-packages = c('httr', 'jsonlite', 'glue', 'stringr', 'roxygen2')
+#packages = c('httr', 'jsonlite', 'glue', 'stringr', 'roxygen2')
 
-package.check <- lapply(
-  packages,
-  FUN = function(x) {
-    if (!require(x, character.only = TRUE)) {
-      install.packages(x, dependencies = TRUE)
-      library(x, character.only = TRUE)
-    }
-  }
-)
+#package.check <- lapply(
+#  packages,
+#  FUN = function(x) {
+#    if (!require(x, character.only = TRUE)) {
+#      install.packages(x, dependencies = TRUE)
+#      library(x, character.only = TRUE)
+#    }
+#  }
+#)
+
+library('httr')
+library('jsonlite')
+library('glue')
+library('stringr')
+library('roxygen2')
+
+
 
 ######################################
 # 1 - Authentication Function
@@ -41,7 +49,6 @@ package.check <- lapply(
 #' @examples
 #' get_authentication_token(CLIENT_ID, CLIENT_SECRET)
 get_authentication_token <- function (CLIENT_ID, CLIENT_SECRET) {
-
 
   ## Get response using user defined Client ID and Client Secret
   response = POST('https://accounts.spotify.com/api/token',
@@ -82,7 +89,8 @@ get_authentication_token <- function (CLIENT_ID, CLIENT_SECRET) {
 #' @examples
 #' getArtist_ID('alt j')
 getArtist_ID <- function (artist = NA,
-                           authentication_token = auth_token) {
+                          authentication_token = get_authentication_token(CLIENT_ID = "7870a259411b4c8b8d2ad173b5a7ed73",
+                                                                          CLIENT_SECRET = "67ab42b91f224c3682ff8d5b2220f6aa")) {
 
   # Check if an input was provided
   if (is.na(artist)) {
@@ -162,7 +170,8 @@ getArtist_ID <- function (artist = NA,
 #' @examples
 #' getTrack_ID('breeze blocks')
 getTrack_ID <- function(track = NA, limit = 5,
-                         authentication_token = auth_token) {
+                         authentication_token = get_authentication_token(CLIENT_ID = "7870a259411b4c8b8d2ad173b5a7ed73",
+                                                                         CLIENT_SECRET = "67ab42b91f224c3682ff8d5b2220f6aa")) {
 
   # Check if an input was provided
   if (is.na(track)) {
@@ -304,7 +313,8 @@ getTrack_ID <- function(track = NA, limit = 5,
 #' Then Input Artist, Genre, and track ID parameters to retrieve song recommendations
 #' get_track_recommendations(c('kanye west', 'chance the rapper', 'kendrick'), c('hip hop', 'rap'), '6fTdcGsjxlAD9PSkoPaLMX')
 getTrackRecommendations <- function(seed_artists = NA, seed_genres = NA, seed_tracks = NA,
-                                      authentication_token = auth_token,
+                                      authentication_token = get_authentication_token(CLIENT_ID = "7870a259411b4c8b8d2ad173b5a7ed73",
+                                                                                      CLIENT_SECRET = "67ab42b91f224c3682ff8d5b2220f6aa"),
 
                                       ## Optional bleow
                                       limit=NA, market=NA,
@@ -600,3 +610,4 @@ queryAssembler <- function(seed_artists, seed_genres, seed_tracks, limit, market
 
   return (assembled_query)
 }
+

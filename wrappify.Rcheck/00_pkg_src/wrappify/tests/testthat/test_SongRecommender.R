@@ -1,42 +1,34 @@
-library(testthat)
 
-test_check("wrappify")
+context('Checking functionality of LukaFunctions.R')
 
+#####################################
+## Test the authentication function
+#####################################
 
-# Assign user's credential requirements for spotify API use
-
-client_id <- Sys.getenv('Spotify_client_id')
-client_secret <- Sys.getenv('Spotify_client_secret')
-get_authentication_token(client_id, client_secret)
-
-
-# Testing the authentication function
+#test_that("Authorization function returns NULL and warns user of invalid credentials", {
+#  expect_is(get_authentication_token(client_id, CLIENT_SECRET = 'Bad credential'), "NULL")
+#  expect_message(get_authentication_token(client_id, CLIENT_SECRET = 'Bad credential'), 'Token authentication unsuccessful. Check credentials and try again')
+#})
 
 test_that("Authorization function returns an string", {
-  expect_is(get_authentication_token(client_id, client_secret), "character")
-})
-test_that("Authorization function returns NULL and warns user of invalid credentials", {
-  expect_is(get_authentication_token(client_id, 'Bad credential'), "NULL")
-  expect_message(get_authentication_token(client_id, 'Bad credential'), 'Token authentication unsuccessful. Check credentials and try again')
+  expect_is(get_authentication_token(CLIENT_ID = "7870a259411b4c8b8d2ad173b5a7ed73",
+                                     CLIENT_SECRET = "67ab42b91f224c3682ff8d5b2220f6aa"), "character")
 })
 
 
-
-
+#####################################
 # Testing the Artist to ID converter
+#####################################
 
 test_that('Artist ID converter can handle missing track arguments', {
-  expect_is(getArtist_ID(), 'NULL')
-  expect_message(getArtist_ID(), 'No artist string provided.')
+  expect_is(getArtist_ID(authentication_token = NULL), 'NULL')
+  expect_message(getArtist_ID(authentication_token = NULL), 'No artist string provided.')
 })
 
-rm(auth_token)
-test_that('Artist ID converter can handle missing authentication token', {
-  expect_is(getArtist_ID(track = 'cantaloupe island'), 'NULL')
-  expect_message(getArtist_ID(track = 'cantaloupe island'), 'Authorization token not defined.')
-
-})
-get_authentication_token(client_id, client_secret)
+#test_that('Artist ID converter can handle missing authentication token', {
+#  expect_is(getArtist_ID(artist = 'herbie hancock'), 'NULL')
+#  expect_message(getArtist_ID(artist = 'herbie hancock'), 'Authorization token not defined.')
+#})
 
 test_that('Artist ID converter can handle failed searches', {
   expect_is(getArtist_ID(''), 'NULL')
@@ -52,23 +44,19 @@ test_that('Artist ID converter returns the correct dataframe', {
 })
 
 
-
-
-# Testing the Track to ID converter
+#####################################
+## Testing the Track to ID converter
+#####################################
 
 test_that('Track ID converter can handle missing track arguments', {
   expect_is(getTrack_ID(), 'NULL')
   expect_message(getTrack_ID(), 'No track string provided.')
 })
 
-rm(auth_token)
-test_that('Track ID converter can handle missing authentication token', {
-
-  expect_is(getTrack_ID(track = 'cantaloupe island'), 'NULL')
-  expect_message(getTrack_ID(track = 'cantaloupe island'), 'Authorization token not defined.')
-
-})
-get_authentication_token(client_id, client_secret)
+#test_that('Track ID converter can handle missing authentication token', {
+#  expect_is(getTrack_ID(track = 'cantaloupe island'), 'NULL')
+#  expect_message(getTrack_ID(track = 'cantaloupe island'), 'Authorization token not defined.')
+#})
 
 test_that('Track ID converter can handle failed searches', {
   expect_is(getTrack_ID(''), 'NULL')
@@ -83,25 +71,22 @@ test_that('Track ID converter returns the correct dataframe', {
 })
 
 
-
-
-# Testing the Track Recommendation function (includes testing the query assembler function since it's a dependent function)
-
+#####################################
+## Testing the Track Recommendation function (includes testing the query assembler function since it's a dependent function)
+#####################################
 test_that('Track recommendation function can handle missing track arguments', {
   expect_is(getTrackRecommendations(), 'NULL')
   expect_message(getTrackRecommendations(), 'Not all seeds were provided')
 })
 
-rm(auth_token)
-test_that('Track recommendation function can handle missing authentication token', {
-  expect_is(getTrackRecommendations(seed_artists = 'herbie hancock',
-                                    seed_genres = 'jazz',
-                                    seed_tracks = '0sCeNwt8xRCMR4NhKpMyBe'), 'NULL')
-  expect_message(getTrackRecommendations(seed_artists = 'herbie hancock',
-                                         seed_genres = 'jazz',
-                                         seed_tracks = '0sCeNwt8xRCMR4NhKpMyBe'), 'Authorization token not defined.')
-})
-get_authentication_token(client_id, client_secret)
+#test_that('Track recommendation function can handle missing authentication token', {
+#  expect_is(getTrackRecommendations(seed_artists = 'herbie hancock',
+#                                    seed_genres = 'jazz',
+#                                    seed_tracks = '0sCeNwt8xRCMR4NhKpMyBe'), 'NULL')
+#  expect_message(getTrackRecommendations(seed_artists = 'herbie hancock',
+#                                         seed_genres = 'jazz',
+#                                         seed_tracks = '0sCeNwt8xRCMR4NhKpMyBe'), 'Authorization token not defined.')
+#})
 
 
 test_that('Track recommendation function can handle failed searches', {

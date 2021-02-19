@@ -1,0 +1,9 @@
+* installing *source* package 'wrappify' ...
+** using staged installation
+** R
+** byte-compile and prepare package for lazy loading
+Error in library(tidyverse) : there is no package called 'tidyverse'
+Error: unable to load R code in package 'wrappify'
+Execution halted
+ERROR: lazy loading failed for package 'wrappify'
+* removing 'C:/Users/Luka/ONEDRI~2/DATA_5~3/DATA53~1/WRAPPI~1.RCH/wrappify'
