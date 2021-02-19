@@ -23,6 +23,8 @@ searchForPodcast(
 \item{explicit}{logical: (optional, defaults to TRUE) To enable the filter set explict to FALSE}
 
 \item{limit}{integer: (optional, defaults to 5, min = 1, max = 50) Number of shows to be returned}
+
+\item{authentication_token}{Predefined argument which runs getAuthenticationToken()}
 }
 \value{
 Dataframe containing the podcast name, publisher, language, explicit content filter and podcast ID

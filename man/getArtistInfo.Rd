@@ -21,7 +21,7 @@ getArtistInfo(
 
 \item{lim}{The number of results to return if searched by name.}
 
-\item{authentication_token}{The users authentication token. Defaults to the value returned by get_authentication_token.}
+\item{authentication_token}{Predefined argument which runs getAuthenticationToken()}
 }
 \value{
 A dataframe or json object containing an artists information.
@@ -31,5 +31,4 @@ Search using either an artists name or Spotify id code.
 }
 \examples{
 getArtistInfo("Ghost", byName = TRUE, dataframe = TRUE)
-
 }

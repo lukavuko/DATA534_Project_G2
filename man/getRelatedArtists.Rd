@@ -15,7 +15,7 @@ getRelatedArtists(
 
 \item{dataframe}{Boolean. TRUE returns data in a cleaned dataframe, FALSE returns raw JSON object.}
 
-\item{authentication_token}{The users authentication token. Defaults to the value returned by get_authentication_token.}
+\item{authentication_token}{Predefined argument which runs getAuthenticationToken()}
 }
 \value{
 Ten artists related to the speccified artist.
@@ -25,5 +25,4 @@ Get an Artists Related Artists
 }
 \examples{
 getRelatedArtists(artistId = "1Qp56T7n950O3EGMsSl81D", dataframe = TRUE)
-
 }

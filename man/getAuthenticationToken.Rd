@@ -23,5 +23,5 @@ The function is called when the API is called so
 expired tokens are refreshed when needed automatically
 }
 \examples{
-getAuthenticationToken(CLIENT_ID, CLIENT_SECRET)
+getAuthenticationToken()
 }

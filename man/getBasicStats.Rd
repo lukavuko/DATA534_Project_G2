@@ -14,6 +14,8 @@ getBasicStats(
 \item{podcast_id}{The show's ID}
 
 \item{limit}{integer: (optional, defaults to 5, min = 1, max = 50) Number of episodes to be returned}
+
+\item{authentication_token}{Predefined argument which runs getAuthenticationToken()}
 }
 \value{
 a plot
@@ -23,5 +25,4 @@ In this release the function plots the duration of episodes over time. More func
 }
 \examples{
 getBasicStats('2FLQbu3SLMIrRIDM0CaiHG')
-
 }

@@ -23,6 +23,8 @@ getRecentEpisodes(
 \item{market}{string: (optional, defaults to US) Returns shows that are available in that market}
 
 \item{duration}{numeric: (optional, defaults to NA) Returns episodes under that are under the specified duration (in minutes)}
+
+\item{authentication_token}{Predefined argument which runs getAuthenticationToken()}
 }
 \value{
 Dataframe containing the episode name, release date, duration, explicit content filter and ID

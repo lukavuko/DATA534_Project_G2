@@ -21,7 +21,7 @@ getSongInfo(
 
 \item{lim}{The number of results to return if searched by name.}
 
-\item{authentication_token}{The users authentication token. Defaults to the value returned by get_authentication_token.}
+\item{authentication_token}{Predefined argument which runs getAuthenticationToken()}
 }
 \value{
 A dataframe or json object of song information.
@@ -30,6 +30,5 @@ A dataframe or json object of song information.
 Search using either a songs name or Spotify id code.
 }
 \examples{
-getSongInfo("Motormouth", byName = T, dataframe = T)
-
+getSongInfo("Motormouth", byName = TRUE)
 }

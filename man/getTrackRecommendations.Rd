@@ -159,7 +159,6 @@ A list containing 1) a dataframe with columns for track name, artist name, track
 Track recommendation function based on seed artists, seed genres, and seed tracks
 }
 \examples{
-First find song IDs using as an example: get_track_ID('sunday candy')
-Then Input Artist, Genre, and track ID parameters to retrieve song recommendations
-getTrackRecommendations(c('kanye west', 'chance the rapper', 'kendrick'), c('hip hop', 'rap'), '6fTdcGsjxlAD9PSkoPaLMX')
+getTrackID('sunday candy chance the rapper')
+getTrackRecommendations(c('kanye west', 'chance the rapper', 'kendrick'), 'rap', '6fTdcGsjxlAD9PSkoPaLMX')
 }

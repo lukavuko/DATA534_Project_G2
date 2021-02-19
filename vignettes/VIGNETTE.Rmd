@@ -1,29 +1,29 @@
 ---
-title: "Testing Eric's Functions"
-author: "Eric Baxter"
-date: "13/02/2021"
-output: html_document
+title: "VIGNETTE"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{VIGNETTE}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
 ```
 
-```{r}
-setwd("~/Documents/Masters/block4/534_cloud/wrappify/wrappify")
-source('R/EricsFunctions.R')
+```{r setup}
+library(wrappify)
 ```
 
-```{r}
-client_id <-  Sys.getenv('CLIENT_ID')
-secret_id <-  Sys.getenv('CLIENT_SECRET_ID')
-
-get_authentication_token(client_id, secret_id)
-```
+## Spotify INFO Functions
 ```{r}
 ghost_json <- getArtistInfo("1Qp56T7n950O3EGMsSl81D", dataframe = F)
 ghost_json
 ```
+
 ```{r}
 ghost_df <- getArtistInfo("Ghost", byName = TRUE, dataframe = T, lim = 7)
 ghost_df
@@ -47,7 +47,7 @@ ghost_top_songs
 ```{r}
 getTopSongs("1Qp56T7n950O3EGMsSl81D", output = "graph")
 ```
+
 ```{r}
 getAudioFeatures("68ngtC3pGiTjXcFwxYCJ7Z", output = "graph")
 ```
-

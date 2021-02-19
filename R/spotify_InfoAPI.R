@@ -6,14 +6,13 @@
 #' @param byName Boolean. TRUE searches artist by name, FALSE searches by id.
 #' @param dataframe Boolean. TRUE returns data cleaned in a dataframe, FALSE returns raw json.
 #' @param lim The number of results to return if searched by name.
-#' @param authentication_token The users authentication token. Defaults to the value returned by get_authentication_token.
+#' @param authentication_token Predefined argument which runs getAuthenticationToken()
 #'
 #' @return A dataframe or json object containing an artists information.
 #' @export
 #'
 #' @examples
 #' getArtistInfo("Ghost", byName = TRUE, dataframe = TRUE)
-#'
 getArtistInfo <- function(artist, byName = FALSE, dataframe = TRUE, lim = 10, authentication_token = getAuthenticationToken()){
   # This runs if the user searches a specific Id, and the API can pull one artist knowing
   # it is the intended one.
@@ -101,14 +100,14 @@ getArtistInfo <- function(artist, byName = FALSE, dataframe = TRUE, lim = 10, au
 #' @param byName Boolean. TRUE searches by name, FALSE searches by id.
 #' @param dataframe Boolean. TRUE returns data in a dataframe, FALSE returns raw JSON object.
 #' @param lim The number of results to return if searched by name.
-#' @param authentication_token The users authentication token. Defaults to the value returned by get_authentication_token.
+#' @param authentication_token Predefined argument which runs getAuthenticationToken()
+#'
 #'
 #' @return A dataframe or json object of song information.
 #' @export
 #'
 #' @examples
-#' getSongInfo("Motormouth", byName = T, dataframe = T)
-#'
+#' getSongInfo("Motormouth", byName = TRUE)
 getSongInfo <- function(song, byName = FALSE, dataframe = TRUE, lim = 10, authentication_token = getAuthenticationToken()){
   # User searches by song Id, and teh function returns info on that specific song
   if(byName == FALSE){
@@ -175,14 +174,14 @@ getSongInfo <- function(song, byName = FALSE, dataframe = TRUE, lim = 10, authen
 #'
 #' @param artistId The Spotify ID of an artist.
 #' @param dataframe Boolean. TRUE returns data in a cleaned dataframe, FALSE returns raw JSON object.
-#' @param authentication_token The users authentication token. Defaults to the value returned by get_authentication_token.
+#' @param authentication_token Predefined argument which runs getAuthenticationToken()
+#'
 #'
 #' @return Ten artists related to the speccified artist.
 #' @export
 #'
 #' @examples
 #' getRelatedArtists(artistId = "1Qp56T7n950O3EGMsSl81D", dataframe = TRUE)
-#'
 getRelatedArtists <- function(artistId, dataframe =  TRUE, authentication_token = getAuthenticationToken()){
   url <- glue::glue("https://api.spotify.com/v1/artists/{artistId}/related-artists")
   response <- httr::GET(url, httr::add_headers(Accept = "application/json",
@@ -214,7 +213,8 @@ getRelatedArtists <- function(artistId, dataframe =  TRUE, authentication_token 
 #' @param artistId The Spotify ID of an artist.
 #' @param output How to output data. acceptable values are "json", "dataframe", or "graph".
 #' @param region The two letter code of the market region to check. Default is "CA" for Canada.
-#' @param authentication_token The users authentication token. Defaults to the value returned by get_authentication_token.
+#' @param authentication_token Predefined argument which runs getAuthenticationToken()
+#'
 #'
 #' @return An object of chosen type containing info on an artists top songs.
 #' @export
@@ -254,7 +254,7 @@ getTopSongs <- function(artistId, output =  "dataframe", region = "CA", authenti
 
     # Only output left is 'graph'
     else{
-      plot <- df %>% ggplot2::ggplot(aes(x = popularity, y = reorder(song, popularity))) +
+      plot <- ggplot2::ggplot(df, ggplot2::aes(x = popularity, y = stats::reorder(song, popularity))) +
         ggplot2::geom_bar(stat = "identity",  fill = "blue") +
         ggplot2::ggtitle(paste0(content$tracks[[1]]$artists[[1]]$name, "'s Most Popular Tracks"))+
         ggplot2::ylab("Song Name")+
@@ -276,7 +276,8 @@ getTopSongs <- function(artistId, output =  "dataframe", region = "CA", authenti
 #'
 #' @param songId The Id of a song to search
 #' @param output Output type. "json", "dataframe", or "graph"
-#' @param authentication_token the users authentication token for the Spotify API. Defaults to the value saved when get_authentication_token is run.
+#' @param authentication_token Predefined argument which runs getAuthenticationToken()
+#'
 #'
 #' @return A json object, dataframe, or graph describing song features
 #' @export
@@ -285,7 +286,7 @@ getTopSongs <- function(artistId, output =  "dataframe", region = "CA", authenti
 #' getAudioFeatures("68ngtC3pGiTjXcFwxYCJ7Z", output = "graph")
 getAudioFeatures <- function(songId, output =  "dataframe", authentication_token = getAuthenticationToken()){
 
-  if (output != "json" & output != "dataframe" & output != "graph") {
+  if (output %in% c("json", "dataframe", "graph") == FALSE) {
     stop("output parameter must be one of json, dataframe, graph")
   }
 
@@ -295,11 +296,11 @@ getAudioFeatures <- function(songId, output =  "dataframe", authentication_token
                                    Authorization = paste("Bearer", authentication_token)))
   content <- httr::content(response)
 
-  if(response$status_code != 200){
+  if (response$status_code != 200) {
     stop(paste(response$status_code,":", content$error$message))
   }
 
-  if(output != "json"){
+  if (output != "json") {
     songname <- getSongInfo(songId, dataframe = TRUE)$trackName
     df <- data.frame(metric = c("danceability", "energy", "speechiness", "acousticness",
                                 "instrumentalness", "liveness", "valence", "tempo", "time_signature",
@@ -308,13 +309,13 @@ getAudioFeatures <- function(songId, output =  "dataframe", authentication_token
                                content$acousticness, content$instrumentalness, content$liveness, content$valence,
                                content$tempo, content$time_signature, content$duration_ms, content$loudness))
 
-    if (output == "dataframe"){
+    if (output == "dataframe") {
       return(df)
     }
 
     # Only output left is 'graph'
-    else{
-      plot <- df %>% head(7) %>% ggplot2::ggplot(aes(y = metric, x = value)) +
+    else {
+      plot <- ggplot2::ggplot(df, ggplot2::aes(y = metric, x = value)) +
         ggplot2::geom_point(fill = "blue") +
         ggplot2::ggtitle(paste0(songname, "'s Metrics"))+
         ggplot2::ylab("Song Metric")+
@@ -322,8 +323,7 @@ getAudioFeatures <- function(songId, output =  "dataframe", authentication_token
         ggplot2::xlim(c(0,1))
       return(plot)
     }
-  }
-  else{ # User requested json
+  } else { # User requested json
     return(content)
   }
 }

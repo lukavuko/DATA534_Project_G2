@@ -14,6 +14,8 @@ getPodcastID(
 \item{query}{string: The show to search for}
 
 \item{market}{string: (optional, defaults to US) A string returning shows that are available in that market}
+
+\item{authentication_token}{Predefined argument which runs getAuthenticationToken()}
 }
 \value{
 A string containing the show's ID

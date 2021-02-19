@@ -148,8 +148,6 @@ queryAssembler(
 \item{max_valence}{Optional argument (default = NA) ranges from (0-1)}
 
 \item{target_valence}{Optional argument (default = NA) ranges from (0-1)}
-
-\item{authentication_token}{Predefined argument after running get_authentication_token()}
 }
 \value{
 A formatted string query to use in track recommendation API calls

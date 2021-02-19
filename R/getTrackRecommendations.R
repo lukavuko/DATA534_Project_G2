@@ -53,9 +53,8 @@
 #' @export
 #'
 #' @examples
-#' First find song IDs using as an example: get_track_ID('sunday candy')
-#' Then Input Artist, Genre, and track ID parameters to retrieve song recommendations
-#' getTrackRecommendations(c('kanye west', 'chance the rapper', 'kendrick'), c('hip hop', 'rap'), '6fTdcGsjxlAD9PSkoPaLMX')
+#' getTrackID('sunday candy chance the rapper')
+#' getTrackRecommendations(c('kanye west', 'chance the rapper', 'kendrick'), 'rap', '6fTdcGsjxlAD9PSkoPaLMX')
 getTrackRecommendations <- function(seed_artists = NA, seed_genres = NA, seed_tracks = NA,
                                     authentication_token = getAuthenticationToken(),
 
@@ -76,7 +75,7 @@ getTrackRecommendations <- function(seed_artists = NA, seed_genres = NA, seed_tr
                                     min_time_signature=NA, max_time_signature=NA, target_time_signature=NA,
                                     min_valence=NA, max_valence=NA, target_valence=NA) {
   # Check if an input was provided
-  if (is.na(seed_artists) | is.na(seed_genres) | is.na(seed_tracks)) {
+  if (anyNA(seed_artists) | anyNA(seed_genres) | anyNA(seed_tracks)) {
     message('Not all seeds were provided')
     return(NULL)
   }
@@ -221,7 +220,7 @@ getTrackRecommendations <- function(seed_artists = NA, seed_genres = NA, seed_tr
   # Provide a data visualization metric for explicit content
   slices <- c(length(tracks_found[5][tracks_found[5] == TRUE]), length(tracks_found[5][tracks_found[5] == FALSE]))
   labs <- c(glue::glue('Explicit ({slices[1]})'), glue::glue('Clean ({slices[2]})'))
-  pi <- pie(slices, labels = labs, main = 'Proportion of Returned Tracks\nwith Explicit Content')
+  pi <- graphics::pie(slices, labels = labs, main = 'Proportion of Returned Tracks\nwith Explicit Content')
 
   return(list(tracks_found, pi))
 }
@@ -237,7 +236,6 @@ getTrackRecommendations <- function(seed_artists = NA, seed_genres = NA, seed_tr
 #' @param seed_artists Required artist string or vector of comma separated artist strings
 #' @param seed_genres Required genre string or vector of comma separated genre strings from spotify's available genre seeds
 #' @param seed_tracks Required track ID as a string or vector of comma separated track IDs as strings
-#' @param authentication_token Predefined argument after running get_authentication_token()
 #' @param limit Optional argument (default = 10) for the number of tracks to recommend
 #' @param market Optional argument (default = NA) for the ISO 3166-1 alpha-2 country code or the string from auth_token
 #' @param min_acousticness Optional argument (default = NA) ranges from (0-1)
@@ -336,7 +334,7 @@ queryAssembler <- function(seed_artists, seed_genres, seed_tracks, limit, market
              min_valence, max_valence, target_valence))
 
   # Unspecified arguments need to be removed
-  specified_args <- na.omit(arguments)
+  specified_args <- stats::na.omit(arguments)
 
   # Format the specified arguments into Spotify call structure
   # Structure: 'var' --> 'var={var}&'

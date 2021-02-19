@@ -18,7 +18,7 @@ getTopSongs(
 
 \item{region}{The two letter code of the market region to check. Default is "CA" for Canada.}
 
-\item{authentication_token}{The users authentication token. Defaults to the value returned by get_authentication_token.}
+\item{authentication_token}{Predefined argument which runs getAuthenticationToken()}
 }
 \value{
 An object of chosen type containing info on an artists top songs.

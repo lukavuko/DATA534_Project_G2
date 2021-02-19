@@ -4,6 +4,7 @@
 #'
 #' @param query string: The show to search for
 #' @param market string: (optional, defaults to US) A string returning shows that are available in that market
+#' @param authentication_token Predefined argument which runs getAuthenticationToken()
 #'
 #' @return A string containing the show's ID
 #' @export
@@ -11,7 +12,6 @@
 #' @examples
 #' getPodcastID('Philosophize This!', market='US')
 #' getPodcastID('Philosophize This!')
-
 getPodcastID <- function(query, market='US', authentication_token = getAuthenticationToken()){
 
 
@@ -49,6 +49,7 @@ getPodcastID <- function(query, market='US', authentication_token = getAuthentic
 #' @param market string: (optional, defaults to US) Returns shows that are available in that market
 #' @param explicit logical: (optional, defaults to TRUE) To enable the filter set explict to FALSE
 #' @param limit integer: (optional, defaults to 5, min = 1, max = 50) Number of shows to be returned
+#' @param authentication_token Predefined argument which runs getAuthenticationToken()
 #'
 #' @return Dataframe containing the podcast name, publisher, language, explicit content filter and podcast ID
 #' @export
@@ -59,7 +60,6 @@ getPodcastID <- function(query, market='US', authentication_token = getAuthentic
 #' searchForPodcast('History', language='es', market='ES')
 #' searchForPodcast('History', language='es', market='ES', explicit=FALSE)
 #' searchForPodcast('History', language='es', market='ES', explicit=FALSE, limit=10)
-
 searchForPodcast <- function(keywords, language = 'en', market='US', explicit = TRUE, limit=5, authentication_token = getAuthenticationToken()){
 
   if (is.logical(explicit)==FALSE){
@@ -124,12 +124,12 @@ searchForPodcast <- function(keywords, language = 'en', market='US', explicit = 
 
   if (explicit == FALSE){
     podcast_df <- subset(podcast_search, Explicit == FALSE & Language == tolower(language))
-    return(head(podcast_df, limit))
+    return(podcast_df[1:limit, ])
   }
 
   else{
     podcast_df <- subset(podcast_search, Language == tolower(language))
-    return(head(podcast_df, limit))
+    return(podcast_df[1:limit, ])
   }
 
 }
@@ -142,13 +142,13 @@ searchForPodcast <- function(keywords, language = 'en', market='US', explicit = 
 #' @param limit integer: (optional, defaults to 5, min = 1, max = 50) Number of episodes to be returned
 #' @param market string: (optional, defaults to US) Returns shows that are available in that market
 #' @param duration numeric: (optional, defaults to NA) Returns episodes under that are under the specified duration (in minutes)
+#' @param authentication_token Predefined argument which runs getAuthenticationToken()
 #'
 #' @return Dataframe containing the episode name, release date, duration, explicit content filter and ID
 #' @export
 #'
 #' @examples
 #' getRecentEpisodes('5RdShpOtxKO3ZWohR2M6Sv')
-
 getRecentEpisodes <- function(podcast_id, explicit = TRUE, limit=5, market='US', duration=NA, authentication_token = getAuthenticationToken()){
 
   if (is.logical(explicit)==FALSE){
@@ -217,10 +217,10 @@ getRecentEpisodes <- function(podcast_id, explicit = TRUE, limit=5, market='US',
     recent_episodes_df <- subset(recent_episodes, Explicit == FALSE)
     if (is.na(duration) == FALSE){
       recent_episodes_df <- subset(recent_episodes_df, Duration <= duration)
-      return(head(recent_episodes_df,limit))
+      return(recent_episodes_df[1:limit, ])
     }
     else{
-      return(head(recent_episodes_df, limit))
+      return(recent_episodes_df[1:limit, ])
     }
 
   }
@@ -228,10 +228,10 @@ getRecentEpisodes <- function(podcast_id, explicit = TRUE, limit=5, market='US',
   else{
     if (is.na(duration) == FALSE){
       recent_episodes_df <- subset(recent_episodes, Duration <= duration)
-      return(head(recent_episodes_df, limit))
+      return(recent_episodes_df[1:limit, ])
     }
     else{
-      return(head(recent_episodes, limit))
+      return(recent_episodes[1:limit, ])
     }
   }
 
@@ -242,13 +242,13 @@ getRecentEpisodes <- function(podcast_id, explicit = TRUE, limit=5, market='US',
 #'
 #' @param episode_id string: The episode's ID
 #' @param market string: string: (optional, defaults to US) Returns shows that are available in that market
+#' @param authentication_token Predefined argument which runs getAuthenticationToken()
 #'
 #' @return a DataFrame that contains the name and a brief discription of the episode.
 #' @export
 #'
 #' @examples
-#' episode_id('4nRWJ76Tu0ceXJj3uJc4D7')
-
+#' getEpisodeInformation('4nRWJ76Tu0ceXJj3uJc4D7')
 getEpisodeInformation <- function(episode_id, market='US', authentication_token = getAuthenticationToken()){
 
   if (is.character(episode_id)==FALSE){
@@ -291,21 +291,21 @@ getEpisodeInformation <- function(episode_id, market='US', authentication_token 
 #'
 #' @param podcast_id The show's ID
 #' @param limit integer: (optional, defaults to 5, min = 1, max = 50) Number of episodes to be returned
+#' @param authentication_token Predefined argument which runs getAuthenticationToken()
 #'
 #' @return a plot
 #' @export
 #'
 #' @examples
 #' getBasicStats('2FLQbu3SLMIrRIDM0CaiHG')
-#'
 getBasicStats <- function(podcast_id, limit=50, authentication_token = getAuthenticationToken()){
 
   response <- getRecentEpisodes(podcast_id, limit = limit)
 
   ggplot2::ggplot(response,
-                  aes(as.Date(`Release Date`), Duration)) +
-    geom_line() +
-    labs(title='Duartion of Episodes Over Time',
-         x='Release Date',
-         y='Duration (minutes)')
+                  ggplot2::aes(as.Date(`Release Date`), Duration)) +
+    ggplot2::geom_line() +
+    ggplot2::labs(title='Duartion of Episodes Over Time',
+                  x='Release Date',
+                  y='Duration (minutes)')
 }

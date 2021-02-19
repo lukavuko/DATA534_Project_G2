@@ -15,7 +15,7 @@ getAudioFeatures(
 
 \item{output}{Output type. "json", "dataframe", or "graph"}
 
-\item{authentication_token}{the users authentication token for the Spotify API. Defaults to the value saved when get_authentication_token is run.}
+\item{authentication_token}{Predefined argument which runs getAuthenticationToken()}
 }
 \value{
 A json object, dataframe, or graph describing song features

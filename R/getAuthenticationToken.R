@@ -11,7 +11,7 @@
 #' @export
 #'
 #' @examples
-#' getAuthenticationToken(CLIENT_ID, CLIENT_SECRET)
+#' getAuthenticationToken()
 getAuthenticationToken <- function (CLIENT_ID = "7870a259411b4c8b8d2ad173b5a7ed73",
                                     CLIENT_SECRET = "67ab42b91f224c3682ff8d5b2220f6aa") {
 
@@ -37,7 +37,7 @@ getAuthenticationToken <- function (CLIENT_ID = "7870a259411b4c8b8d2ad173b5a7ed7
     message('Error description: ', content$error_description)
     return(NULL)
   } else {
-    auth_token <<- content$access_token
+    auth_token <- content$access_token ## Reverted from <<- since the function is called every api call
     return(auth_token)
   }
 }

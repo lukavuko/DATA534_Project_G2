@@ -14,6 +14,8 @@ getEpisodeInformation(
 \item{episode_id}{string: The episode's ID}
 
 \item{market}{string: string: (optional, defaults to US) Returns shows that are available in that market}
+
+\item{authentication_token}{Predefined argument which runs getAuthenticationToken()}
 }
 \value{
 a DataFrame that contains the name and a brief discription of the episode.
@@ -22,5 +24,5 @@ a DataFrame that contains the name and a brief discription of the episode.
 Get Episode Information
 }
 \examples{
-episode_id('4nRWJ76Tu0ceXJj3uJc4D7')
+getEpisodeInformation('4nRWJ76Tu0ceXJj3uJc4D7')
 }
