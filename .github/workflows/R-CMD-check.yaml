@@ -68,6 +68,11 @@ jobs:
         run: |
           remotes::install_deps(dependencies = TRUE)
           remotes::install_cran("rcmdcheck")
+          remotes::install_cran("glue")
+          remotes::install_cran("httr")
+          remotes::install_cran("stringr")
+          remotes::install_cran("devtools")
+          remotes::install_cran("testthat")
         shell: Rscript {0}
 
       - name: Check
