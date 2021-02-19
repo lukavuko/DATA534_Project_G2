@@ -6,8 +6,8 @@
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/adityasal/DATA534_Project_G2/workflows/R-CMD-check/badge.svg)](https://github.com/adityasal/DATA534_Project_G2/actions)
-[![codecov.io](https://codecov.io/github/adityasal/DATA534_Project_G2/coverage.svg?branch=master)]
-(https://codecov.io/github/adityasal/DATA534_Project_G2?branch=master)
+[![codecov.io][(https://codecov.io/github/lukavuko/wrappify/branch/master/graphs/badge.svg)](https://codecov.io/github/lukavuko/wrappify)
+[![Build Status](https://img.shields.io/travis/codecov/example-r/master.svg)](https://travis-ci.org/codecov/example-r)
 <!-- badges: end -->
 
 Wrappify is an API wrapper for the Spotify API in R. Currently, there is
