@@ -1,0 +1,20 @@
+language: r
+
+sudo: required
+
+env: _R_CHECK_CRAN_INCOMING_=FALSE
+
+r_packages:
+  - covr
+  - devtools
+  - httr
+  - glue
+  - stringr
+  - ggplot2
+  - stats
+
+r_github_packages:
+  - codecov/example-r
+
+after_success:
+  - Rscript -e 'library(covr);codecov()'
