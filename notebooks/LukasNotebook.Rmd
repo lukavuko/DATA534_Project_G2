@@ -14,7 +14,7 @@ output: html_document
 
 ## Feb 10 2021
 - Finished a rough primitive song recommender, authentication function, and
-  query assembler to help procress all 47 potential arguments to the song recommender
+  query assembler to help process all 47 potential arguments to the song recommender
   eb4e3b734e10ace067ccc0deef247486cd2e3dcd
   
 ## Feb 14 2021
@@ -43,9 +43,9 @@ output: html_document
 ## Feb 18 2021
 - Decided collectively to hardcode in the API credentials since tests scripts
   were unable to run API calls outside of testthat statements. Now every function
-  call will call on get_athentication_token using the hardcoded credentials. This
+  call will call on get_authentication_token using the hard-coded credentials. This
   also eliminates the possibility for undefined or expired tokens since they're
-  always called fresh. I updated Erics and Adityas test scripts and R scripts
+  always called fresh. I updated Eric's and Aditya's test scripts and R scripts
   to account for this.
   a990618f63785f68680a5e75991c9d3ffc524e97
 - Fixed errors in testscript formatting.

@@ -1,17 +1,39 @@
 # Eric Baxter
 
-- Wrote getArtistInfo, getSongInfo, getRelatedArtists, getTopSongs, and getAudioFeatures functions, along with all documentation and tests for those.
-- Worked on CI.
-- Did initial work on unittest structure.
-- Built the final package structure.
-- Wrote the code of conduct and description files.
+- Will Write functions to get artist and song information from a keyword query or Spotify Id
+
+- Will write a function to get a list of related artists. 
+
+- Will write a function to get a list of an artists top songs. 
+
+- Will write a function to get a set of audio features for a given song. 
+
+- Will test and document all of these functions. 
+
+- Will integrate visualizations into at least two of these functions.
+
+- Will Work on CI.
+
+- Will discover the syntax for unit tests in R.
+
+- Will set up the final package structure.
+
+- Will write the code of conduct, description, and license.
 
 
 # Aditya Saluja
 
 # Luka Vukovic
 
-- Wrote API wrapper functions and their tests: getArtist_ID, getTrack_ID, getTrackRecommendations, queryAssembler
-- Debugged all Rscripts and roxygen2 documentation examples so that checks can pass
-- Setup CI using github actions and travis
-- Setup code coverage using CodeCov.io
+- Will write API wrapper functions to return a track or artist ID from a query.
+
+- Will write a function to return a list of song recommendations based on a set of parameters. 
+- Will test ad document these functions. 
+
+- Will be in charge of integration testing.
+
+- Will setup CI using github actions and travis.
+
+- Will setup code coverage using CodeCov.io
+
+- Will name the package.

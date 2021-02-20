@@ -55,17 +55,25 @@ getTrackID('Love whitney houston')
 ## Spotify Functions for Track and Artist Information
 
 ```{r}
+# We can search for an artist by their Spotify id
 getArtistInfo("1Qp56T7n950O3EGMsSl81D", dataframe = T)
 ```
 
 ```{r}
+# If we don't know that, we can use their name as a search query
 getArtistInfo("Ghost", byName = TRUE, dataframe = T, lim = 7)
 
 ```
 
 ```{r}
-motormouth <- getSongInfo("Motormouth", byName = T, dataframe = T)
-motormouth
+# And then use the ID we find through this for other functions.
+ghostid <- getArtistInfo("Ghost", byName = TRUE, dataframe = T, lim = 7)[2,]$id
+topsongs <- getTopSongs(ghostid)
+topsongs
+```
+
+```{r}
+getSongInfo(topsongs[1,]$id, byName = F, dataframe = T)
 ```
 
 ```{r}
@@ -74,18 +82,11 @@ similar_to_ghost
 ```
 
 ```{r}
-ghost_top_songs <- getTopSongs("1Qp56T7n950O3EGMsSl81D", output = "dataframe")
-ghost_top_songs
-```
-
-```{r}
 getTopSongs("1Qp56T7n950O3EGMsSl81D", output = "graph")
 ```
 
 ```{r}
-## This function has a bug: $ operator not valid for atomic vectors
-## Please fix, it's a beautiful function when it works
-#getAudioFeatures("1E2WTcYLP1dFe1tiGDwRmT", output = "graph")
+getAudioFeatures(topsongs[1,]$id, output = "graph")
 ```
 
 
