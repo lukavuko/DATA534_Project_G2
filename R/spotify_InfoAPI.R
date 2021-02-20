@@ -283,7 +283,6 @@ getTopSongs <- function(artistId, output =  "dataframe", region = "CA", authenti
 #' @export
 #'
 #' @examples
-#' getAudioFeatures("68ngtC3pGiTjXcFwxYCJ7Z", output = "graph")
 getAudioFeatures <- function(songId, output =  "dataframe", authentication_token = getAuthenticationToken()){
 
   if (output %in% c("json", "dataframe", "graph") == FALSE) {
