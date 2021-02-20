@@ -23,6 +23,3 @@ A json object, dataframe, or graph describing song features
 \description{
 Spotify automatically generates a number of audio features for each song.
 }
-\examples{
-getAudioFeatures("68ngtC3pGiTjXcFwxYCJ7Z", output = "graph")
-}

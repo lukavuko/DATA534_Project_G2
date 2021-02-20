@@ -11,8 +11,7 @@
 
 # Luka Vukovic
 
-- Wrote spotify_TrackRecommender script (functinos written include getArtist_ID, getTrack_ID, getTrackRecommendations, queryAssembler)
-- Wrote tests for the script
-- Modified all scripts so that all can run properly
-- Worked on CI
-- Wrote
+- Wrote API wrapper functions and their tests: getArtist_ID, getTrack_ID, getTrackRecommendations, queryAssembler
+- Debugged all Rscripts and roxygen2 documentation examples so that checks can pass
+- Setup CI using github actions and travis
+- Setup code coverage using CodeCov.io

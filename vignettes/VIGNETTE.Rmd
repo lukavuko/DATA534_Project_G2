@@ -18,15 +18,49 @@ knitr::opts_chunk$set(
 library(wrappify)
 ```
 
-## Spotify INFO Functions
+## Seamless Conversion of Artist/Song names to their IDs
+
+Spotify works exclusively through object IDs, but as people of culture we know
+our favourite artists, tracks, and podcasts by their names, not IDs. As such, we
+need to be able to convert these names into their IDs as seamlessly as possible.
+
+Note that artist and track names do not need to be formatted or spelled correctly to
+yield valid search results!
+
 ```{r}
-ghost_json <- getArtistInfo("1Qp56T7n950O3EGMsSl81D", dataframe = F)
-ghost_json
+# One artist, mispelled
+getArtistID('sanTanana')
+
+
+# Multiple artists, seamlessly
+artists_of_interest <- c('alt j', 'vulfpeck', 'herbie hancock0')
+
+do.call(rbind, lapply(artists_of_interest, getArtistID))
+```
+
+When searching for tracks you can also include artist names to narrow down
+what track you're looking for!
+```{r}
+# Song limit defaults to 5
+getTrackID('Love')
+
+# User can increase limits
+getTrackID('Love', limit = 10)
+
+# User can search with artist name in the string for more precise results
+getTrackID('Love whitney houston')
+```
+
+
+## Spotify Functions for Track and Artist Information
+
+```{r}
+getArtistInfo("1Qp56T7n950O3EGMsSl81D", dataframe = T)
 ```
 
 ```{r}
-ghost_df <- getArtistInfo("Ghost", byName = TRUE, dataframe = T, lim = 7)
-ghost_df
+getArtistInfo("Ghost", byName = TRUE, dataframe = T, lim = 7)
+
 ```
 
 ```{r}
@@ -49,5 +83,43 @@ getTopSongs("1Qp56T7n950O3EGMsSl81D", output = "graph")
 ```
 
 ```{r}
-getAudioFeatures("68ngtC3pGiTjXcFwxYCJ7Z", output = "graph")
+## This function has a bug: $ operator not valid for atomic vectors
+## Please fix, it's a beautiful function when it works
+#getAudioFeatures("1E2WTcYLP1dFe1tiGDwRmT", output = "graph")
 ```
+
+
+
+
+## Exploring New Tracks
+
+Artist to ID conversion is built into the getTrackRecommendations function
+so we can directly type names into the function.
+
+Track to ID conversion is not yet implemented so we can use track seeds from
+earlier to find new song recommendations. There seem to be some issues with
+track seeds as vectors so we'll use only single tracks as our seeds.
+
+Genres can be types as a vector if wanting multiple genres. Most genre tags you
+can think of exist in the Spotify API search, but in case there's no return
+try using other genre names.
+
+```{r}
+# I want more songs like 'Higher Love' by Kygo and Whitney Houston
+getTrackRecommendations(seed_artists = c('kygo', 'whitney houston'),
+                        seed_genres = c('tropical house', 'edm'),
+                        seed_tracks = '6oJ6le65B3SEqPwMRNXWjY')
+```
+Say we aren't satisfied with our list. We can use other parameters to better
+guide Spotify's recommendation API like so:
+```{r}
+getTrackRecommendations(seed_artists = c('kygo', 'whitney houston'),
+                        seed_genres = c('tropical house', 'edm'),
+                        seed_tracks = '6oJ6le65B3SEqPwMRNXWjY',
+                        limit = 12,
+                        market = 'US',
+                        min_popularity = 70,
+                        target_valence = 75)
+```
+## Wrapper Functions for Spotify Podcasts
+

@@ -57,5 +57,8 @@ output: html_document
 - Reviewed all our code, split my functions and tests into multiple scripts
   for easy reference. Removed library calls in scripts for everyone and
   replaced it with inline library calling (package::function()). Edited tests
-  and cleaned up functions so there's no reducndancy across our code base.
+  and cleaned up functions so there's no redundancy across our code base.
+- Debugged all script code and example code to get github actions and travis
+  builds to be passing. Added code coverage feature in the repo.
+- Created a vignette for my functions.
   

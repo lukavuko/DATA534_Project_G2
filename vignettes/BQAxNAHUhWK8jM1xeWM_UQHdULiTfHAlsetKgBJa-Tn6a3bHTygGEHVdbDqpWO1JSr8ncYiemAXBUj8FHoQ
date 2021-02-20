@@ -1,0 +1,253 @@
+
+
+
+
+
+
+
+
+NULL
+
+
+
+
+
+
+
+
+
+
+
+NULL
+
+
+
+[[1]]
+
+[[2]]
+NULL
+
+
+
+
+NULL
+
+
+
+NULL
+
+
+
+[[1]]
+
+[[2]]
+NULL
+
+
+
+
+NULL
+
+
+
+[[1]]
+
+[[2]]
+NULL
+
+
+
+
+[[1]]
+
+[[2]]
+NULL
+
+
+
+
+NULL
+
+
+
+[[1]]
+
+[[2]]
+NULL
+
+
+
+
+NULL
+
+
+
+[[1]]
+
+[[2]]
+NULL
+
+
+$external_urls
+$external_urls$spotify
+[1] "https://open.spotify.com/artist/1Qp56T7n950O3EGMsSl81D"
+
+
+$followers
+$followers$href
+NULL
+
+$followers$total
+[1] 1009279
+
+
+$genres
+$genres[[1]]
+[1] "hard rock"
+
+$genres[[2]]
+[1] "metal"
+
+
+$href
+[1] "https://api.spotify.com/v1/artists/1Qp56T7n950O3EGMsSl81D"
+
+$id
+[1] "1Qp56T7n950O3EGMsSl81D"
+
+$images
+$images[[1]]
+$images[[1]]$height
+[1] 640
+
+$images[[1]]$url
+[1] "https://i.scdn.co/image/64cb0eeaf93d7d8ef06e13bdbf8c460ed7e964b0"
+
+$images[[1]]$width
+[1] 640
+
+
+$images[[2]]
+$images[[2]]$height
+[1] 320
+
+$images[[2]]$url
+[1] "https://i.scdn.co/image/8bf219c9ee19706a9685b62d62062ad5de13e0e7"
+
+$images[[2]]$width
+[1] 320
+
+
+$images[[3]]
+$images[[3]]$height
+[1] 160
+
+$images[[3]]$url
+[1] "https://i.scdn.co/image/3e1bad373a716569d896b249ae58e7b404d5daae"
+
+$images[[3]]$width
+[1] 160
+
+
+
+$name
+[1] "Ghost"
+
+$popularity
+[1] 69
+
+$type
+[1] "artist"
+
+$uri
+[1] "spotify:artist:1Qp56T7n950O3EGMsSl81D"
+
+$external_urls
+$external_urls$spotify
+[1] "https://open.spotify.com/artist/1Qp56T7n950O3EGMsSl81D"
+
+
+$followers
+$followers$href
+NULL
+
+$followers$total
+[1] 1009279
+
+
+$genres
+$genres[[1]]
+[1] "hard rock"
+
+$genres[[2]]
+[1] "metal"
+
+
+$href
+[1] "https://api.spotify.com/v1/artists/1Qp56T7n950O3EGMsSl81D"
+
+$id
+[1] "1Qp56T7n950O3EGMsSl81D"
+
+$images
+$images[[1]]
+$images[[1]]$height
+[1] 640
+
+$images[[1]]$url
+[1] "https://i.scdn.co/image/64cb0eeaf93d7d8ef06e13bdbf8c460ed7e964b0"
+
+$images[[1]]$width
+[1] 640
+
+
+$images[[2]]
+$images[[2]]$height
+[1] 320
+
+$images[[2]]$url
+[1] "https://i.scdn.co/image/8bf219c9ee19706a9685b62d62062ad5de13e0e7"
+
+$images[[2]]$width
+[1] 320
+
+
+$images[[3]]
+$images[[3]]$height
+[1] 160
+
+$images[[3]]$url
+[1] "https://i.scdn.co/image/3e1bad373a716569d896b249ae58e7b404d5daae"
+
+$images[[3]]$width
+[1] 160
+
+
+
+$name
+[1] "Ghost"
+
+$popularity
+[1] 69
+
+$type
+[1] "artist"
+
+$uri
+[1] "spotify:artist:1Qp56T7n950O3EGMsSl81D"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
