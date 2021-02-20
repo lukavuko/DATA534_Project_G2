@@ -1,3 +1,7 @@
+.travis.yml
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^LICENSE\.md$
+
+# ignore pictures for readme.md
+^.*\.png$
