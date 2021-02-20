@@ -11,26 +11,35 @@ test_that('A test to check if an error is raised on entering invalid arguments',
             expect_error(searchForPodcast('EPL',language = 'GGGGG'))
           })
 
-test_response_elm <- searchForPodcast(keywords = 'History',
-                                      language = 'ES',
-                                      market = 'ES',
-                                      explicit = FALSE)
+#test_response_elm <- searchForPodcast(keywords = 'History',
+#                                      language = 'ES',
+#                                      market = 'ES',
+#                                      explicit = FALSE)
 
-test_response_el_t <- searchForPodcast(keywords = 'History',
-                                       explicit = TRUE,
-                                       limit = 10)
+#test_response_el_t <- searchForPodcast(keywords = 'History',
+#                                       explicit = TRUE,
+#                                       limit = 10)
 
 
 test_that('Checking whether the output is of type data.frame',
           {
-            expect_equal(class(test_response_elm),'data.frame')
+            expect_equal(class(searchForPodcast(keywords = 'History',
+                                                language = 'ES',
+                                                market = 'ES',
+                                                explicit = FALSE)),'data.frame')
           })
 
 
 test_that('Checking filters',
           {
-            expect_false(any(test_response_elm$Explicit==TRUE))
-            expect_false(any(test_response_elm$language!='es'))
+            expect_false(any(searchForPodcast(keywords = 'History',
+                                              language = 'ES',
+                                              market = 'ES',
+                                              explicit = FALSE)$Explicit==TRUE))
+            expect_false(any(searchForPodcast(keywords = 'History',
+                                              language = 'ES',
+                                              market = 'ES',
+                                              explicit = FALSE)$language!='es'))
             expect_equal(nrow(searchForPodcast(keywords = 'History',
                                                limit = 5)),5)
           })
@@ -62,25 +71,29 @@ test_that('A test to check if an error is raised on entering invalid arguments',
             expect_error(getRecentEpisodes('2Shpxw7dPoxRJCdfFXTWLE',duration = 'TwentyMinutes'))
           })
 
-test_response_eld_t <- getRecentEpisodes(podcast_id = '2FLQbu3SLMIrRIDM0CaiHG',
-                                         duration = 40)
+#test_response_eld_t <- getRecentEpisodes(podcast_id = '2FLQbu3SLMIrRIDM0CaiHG',
+#                                         duration = 40)
 
-test_response_e_f <- getRecentEpisodes(podcast_id = '2FLQbu3SLMIrRIDM0CaiHG',
-                                       explicit = FALSE)
+#test_response_e_f <- getRecentEpisodes(podcast_id = '2FLQbu3SLMIrRIDM0CaiHG',
+#                                       explicit = FALSE)
 
 test_that('Checking whether the output is of type data.frame',
           {
           expect_equal(class(getRecentEpisodes(podcast_id = '2FLQbu3SLMIrRIDM0CaiHG')),'data.frame')
-            })
+
+          })
 
 
 test_that('Checking filters',
           {
-            #expect_false(any(test_response_e_f$Explicit==TRUE))##### Aditya please check this
-            expect_true(any(test_response_eld_t$Explicit==TRUE))
-            expect_false(any(test_response_eld_t$Duration>40))
+            #expect_false(any(test_response_e_f$Explicit==TRUE)) ##### please check this function
+
+            expect_true(any(getRecentEpisodes(podcast_id = '2FLQbu3SLMIrRIDM0CaiHG',
+                                              duration = 40)$Explicit==TRUE))
+            expect_false(any(getRecentEpisodes(podcast_id = '2FLQbu3SLMIrRIDM0CaiHG',
+                                               duration = 40)$Duration>40))
             expect_equal(nrow(getRecentEpisodes(podcast_id = '2FLQbu3SLMIrRIDM0CaiHG',
-                                            limit = 5)),5)
+                                                limit = 5)),5)
           })
 
 #### Testing getEpisodeInformation Function ####
