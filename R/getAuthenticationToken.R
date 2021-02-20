@@ -89,6 +89,7 @@ getAuthenticationToken <- function (CLIENT_ID = "7870a259411b4c8b8d2ad173b5a7ed7
       } else {
 
         auth_token <<- content$access_token
+        Sys.sleep(0.5)
         return(auth_token)
 
       }
