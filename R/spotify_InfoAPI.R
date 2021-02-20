@@ -301,7 +301,7 @@ getAudioFeatures <- function(songId, output =  "dataframe", authentication_token
 
   # Sometimes the Spotify API will just return an empty list on a valid call, and just
   # running the function again th same way will make it work.
-  if (length(content) < 6){
+  if (length(content) != 18){
     stop("Something unexpected went wrong. Please try again.")
   }
 
@@ -320,7 +320,8 @@ getAudioFeatures <- function(songId, output =  "dataframe", authentication_token
 
     # Only output left is 'graph'
     else {
-      plot <- ggplot2::ggplot(df, ggplot2::aes(y = metric, x = value)) +
+      dfsub <- df[-c(8,9,10,11),]
+      plot <- ggplot2::ggplot(dfsub, ggplot2::aes(y = metric, x = value)) +
         ggplot2::geom_point(fill = "blue") +
         ggplot2::ggtitle(paste0(songname, "'s Metrics"))+
         ggplot2::ylab("Song Metric")+
