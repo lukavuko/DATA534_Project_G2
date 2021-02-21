@@ -27,16 +27,21 @@ Wrappify is an API wrapper for the Spotify API in R. Currently, there is functio
 
 You can install the released version of wrappify from [CRAN](https://CRAN.R-project.org) with:
 
-``` r
+```r
 install.packages("wrappify")
 ```
 
 And the development version from [GitHub](https://github.com/) with:
 
-``` r
+```r
 # install.packages("devtools")
 devtools::install_github("lukavuko/wrappify")
 ```
+```{r include=FALSE}
+library(wrappify)
+```
+
+
 ## Example 1: Obtaining Song and Artist Information
 
 This is a basic example that shows the intended workflow of wrappify.

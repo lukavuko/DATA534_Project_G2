@@ -6,6 +6,9 @@
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/adityasal/DATA534_Project_G2/workflows/R-CMD-check/badge.svg)](https://github.com/adityasal/DATA534_Project_G2/actions)
+[![Build
+Status](https://travis-ci.org/lukavuko/wrappify.svg?branch=main)](https://travis-ci.org/lukavuko/wrappify)
+[![codecov](https://codecov.io/gh/lukavuko/wrappify/branch/main/graph/badge.svg?token=3XUUH12N1B)](https://codecov.io/gh/lukavuko/wrappify)
 <!-- badges: end -->
 
 Wrappify is an API wrapper for the Spotify API in R. Currently, there is
@@ -25,20 +28,18 @@ And the development version from [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("adityasal/DATA534_Project_G2")
+devtools::install_github("lukavuko/wrappify")
 ```
 
-## Example
+## Example 1: Obtaining Song and Artist Information
 
-This is a basic example that shows the intended workflow of wrappify. 
+This is a basic example that shows the intended workflow of wrappify.
 
 First, we have an artist we wish to know more about. That artist is the
 essential alternative metal band “Ghost”. We query getArtistInfo.
 
 ``` r
 ghost <- getArtistInfo("Ghost", byName = TRUE)
-#> Token: Is defined
-#> Token Validity: Valid
 ghost
 #>                    name popularity              genres followers
 #> 1            Ghostemane         78           dark trap   1743756
@@ -132,9 +133,414 @@ getRelatedArtists(id)
 And now we can choose one of these artists that look interesting and
 learn more about them as well.
 
-# LUKA
+## Example 2: Conversion of Artist/Song names to their IDs
+
+Spotify works exclusively through object IDs, but as people of culture
+we know our favourite artists, tracks, and podcasts by their names, not
+their IDs. As such, we need to be able to convert these names into their
+IDs as seamlessly as possible.
+
+Note that artist and track names do not need to be formatted or spelled
+correctly to yield valid search results\!
+
+``` r
+# One artist, mispelled
+getArtistID('sanTanana')
+#> Searching artist: sanTanana
+#> Token: Is defined
+#> Token Validity: Valid
+#> Artist Found:  Santana
+#>   Artist.name              Artist.ID Artist.Popularity
+#> 1     Santana 6GI52t8N5F02MxU0g5U69P                74
+#>                                                 Genres
+#> 1 blues rock, classic rock, mexican classic rock, rock
 
 
+# Multiple artists, seamlessly
+artists_of_interest <- c('alt j', 'vulfpeck', 'herbie hancock0')
+
+do.call(rbind, lapply(artists_of_interest, getArtistID))
+#> Searching artist: alt j
+#> Token: Is defined
+#> Token Validity: Valid
+#> Artist Found:  alt-J
+#> Searching artist: vulfpeck
+#> Token: Is defined
+#> Token Validity: Valid
+#> Artist Found:  Vulfpeck
+#> Searching artist: herbie hancock0
+#> Token: Is defined
+#> Token Validity: Valid
+#> Artist Found:  Herbie Hancock
+#>      Artist.name              Artist.ID Artist.Popularity
+#> 1          alt-J 3XHO7cRUPCLOr6jwp8vsx5                75
+#> 2       Vulfpeck 7pXu47GoqSYRajmBCjxdD6                66
+#> 3 Herbie Hancock 2ZvrvbQNrHKwjT7qfGFFUW                63
+#>                                                                                                                        Genres
+#> 1                                                                                                     indie rock, modern rock
+#> 2                                                                               ann arbor indie, funk rock, instrumental funk
+#> 3 bebop, contemporary post-bop, cool jazz, funk, instrumental funk, jazz, jazz funk, jazz fusion, jazz piano, soul, soul jazz
+```
+
+When searching for tracks you can also include artist names to narrow
+down what track you’re looking for\!
+
+``` r
+# Song limit defaults to 5
+getTrackID('Love')
+#> Searching track: Love
+#> Token: Is defined
+#> Token Validity: Valid
+#>                         Track.Name          Track.Artist               Track.ID
+#> 1                                                                              
+#> 2    Love Story (Taylor’s Version)          Taylor Swift 3CeCwYWvdfXbZLXFhBrbnf
+#> 3             lovely (with Khalid) Billie Eilish, Khalid 0u2P5u6lvoDfwTYjAADbn4
+#> 4          What You Know Bout Love             Pop Smoke 1tkg4EHVoqnhR6iFEXb60y
+#> 5 Love Galore (feat. Travis Scott)     SZA, Travis Scott 0q75NwOoFiARAVp4EXU4Bs
+#> 6                      WITHOUT YOU         The Kid LAROI 27OeeYzk6klgBh83TSvGMA
+#>   Track.Popularity
+#> 1                 
+#> 2               85
+#> 3               87
+#> 4               91
+#> 5               79
+#> 6               93
+
+# User can increase limits
+getTrackID('Love', limit = 10)
+#> Searching track: Love
+#> Token: Is defined
+#> Token Validity: Valid
+#>                          Track.Name           Track.Artist
+#> 1                                                         
+#> 2     Love Story (Taylor’s Version)           Taylor Swift
+#> 3              lovely (with Khalid)  Billie Eilish, Khalid
+#> 4           What You Know Bout Love              Pop Smoke
+#> 5  Love Galore (feat. Travis Scott)      SZA, Travis Scott
+#> 6                       WITHOUT YOU          The Kid LAROI
+#> 7                     love language          Ariana Grande
+#> 8                 Someone You Loved          Lewis Capaldi
+#> 9                         Love Sosa             Chief Keef
+#> 10                    Electric Love                  BØRNS
+#> 11              LOVE. FEAT. ZACARI. Kendrick Lamar, Zacari
+#>                  Track.ID Track.Popularity
+#> 1                                         
+#> 2  3CeCwYWvdfXbZLXFhBrbnf               85
+#> 3  0u2P5u6lvoDfwTYjAADbn4               87
+#> 4  1tkg4EHVoqnhR6iFEXb60y               91
+#> 5  0q75NwOoFiARAVp4EXU4Bs               79
+#> 6  27OeeYzk6klgBh83TSvGMA               93
+#> 7  3HwtjYXnBkhsD2gBwyiIHR                0
+#> 8  7qEHsqek33rTcFNT9PFqLf               89
+#> 9  4IowQDUOzUvNtp72HMDcKO               74
+#> 10 2GiJYvgVaD2HtM8GqD9EgQ               84
+#> 11 6PGoSes0D9eUDeeAafB2As               77
+
+# User can search with artist name in the string for more precise results
+getTrackID('Love whitney houston')
+#> Searching track: Love whitney houston
+#> Token: Is defined
+#> Token Validity: Valid
+#>                                   Track.Name          Track.Artist
+#> 1                                                                 
+#> 2                                Higher Love Kygo, Whitney Houston
+#> 3 I Wanna Dance with Somebody (Who Loves Me)       Whitney Houston
+#> 4                     Love Will Save the Day       Whitney Houston
+#> 5                                Higher Love Kygo, Whitney Houston
+#> 6                     I Will Always Love You       Whitney Houston
+#>                 Track.ID Track.Popularity
+#> 1                                        
+#> 2 6oJ6le65B3SEqPwMRNXWjY               80
+#> 3 2tUBqZG2AbRi7Q0BIrVrEj               81
+#> 4 4gDBc1RxPAvinJrZzZ9nYX               42
+#> 5 1kKYjjfNYxE0YYgLa7vgVY               67
+#> 6 4eHbdreAnSOrDDsFfc4Fpm               76
+```
+
+## Example 3: Exploring New Tracks
+
+We may also be interested in searching for new music based on certain
+song metrics (danceability, energy, valence, etc.), artist styles, genre
+tags, and even songs themselves. For this we have the
+`getTrackRecommendations()` function.
+
+Artist to ID conversion is built into the `getTrackRecommendations`
+function so we can directly type names into the function.
+
+Track to ID conversion is not yet implemented so we will use track seeds
+from earlier to find new song recommendations. There seem to be some
+issues with track seeds as vectors so we’ll use only single tracks as
+our seed.
+
+Genres can be types as a vector if wanting multiple genres. Most genre
+tags you can think of exist in the Spotify API search, but in case
+there’s no return try using other genre names.
+
+``` r
+# I want more songs like 'Higher Love' by Kygo and Whitney Houston
+getTrackRecommendations(seed_artists = c('kygo', 'whitney houston'),
+                        seed_genres = c('tropical house', 'edm'),
+                        seed_tracks = '6oJ6le65B3SEqPwMRNXWjY')
+#> Searching artist: kygo
+#> Token: Is defined
+#> Token Validity: Valid
+#> Artist Found:  Kygo
+#> Searching artist: whitney houston
+#> Token: Is defined
+#> Token Validity: Valid
+#> Artist Found:  Whitney Houston
+#> Token: Is defined
+#> Token Validity: Valid
+```
+
+<img src="man/figures/README-unnamed-chunk-8-1.png" width="100%" />
+
+    #> [[1]]
+    #>                                                                     Track.Name
+    #> 1                                                                             
+    #> 2                                                                         Girl
+    #> 3                                               Bigfoot - Dillon Francis Remix
+    #> 4                                                             Peaceblaster '08
+    #> 5                                                         My Name Is Not Susan
+    #> 6                                                                 Never Change
+    #> 7                           Where Them Girls At (feat. Nicki Minaj & Flo Rida)
+    #> 8                                                              Across the Pond
+    #> 9                                                What's Love Got to Do with It
+    #> 10                                                                     Ride It
+    #> 11                                                               Call You Mine
+    #> 12                                                              September Song
+    #> 13                                                         Scared to Be Lonely
+    #> 14                                                              Together Again
+    #> 15                                         Stranger Things (feat. OneRepublic)
+    #> 16                                                                 Think Twice
+    #> 17                                       Ain't Thinkin Bout You (feat. Louisa)
+    #> 18                                                   Everyday - (Netsky Remix)
+    #> 19                                                               I'll Be There
+    #> 20 Dancing In The Moonlight (feat. NEIMY) - PBH & Jack Sunset Remix Radio Edit
+    #> 21                                                               I'll Be There
+    #>                    Track.Artist               Track.ID Track.Popularity
+    #> 1                                                                      
+    #> 2               Destiny's Child 3s2MyU2YCwNNwcSokt0jXD               63
+    #> 3                           W&W 4SQfQuxYQx8DJQB88sQmVT               25
+    #> 4                          STS9 5ctnrRh81WicuT6prsCHYc                0
+    #> 5               Whitney Houston 7623p8KZ24WTeO0NeIb4tV               44
+    #> 6                    Don Diablo 1SG6r7daFfpzPcU15luVqB               65
+    #> 7                  David Guetta 7ks6AZmFcm3Y6PGGxGSmlB               71
+    #> 8                        Ianick 5dKjrBLRbu2knbRC3K4OG5                0
+    #> 9             Kygo, Tina Turner 3Be7CLdHZpyzsVijme39cW               77
+    #> 10                       Regard 2tnVG71enUj33Ic2nFN6kZ               85
+    #> 11 The Chainsmokers, Bebe Rexha 2oejEp50ZzPuQTQ6v54Evp               77
+    #> 12                    JP Cooper 0zbzrhfVS9S2TszW3wLQZ7               71
+    #> 13      Martin Garrix, Dua Lipa 3ebXMykcMXOcLeJ9xZ17XH               78
+    #> 14                Janet Jackson 1GrikfH0jDejDvrxo84n4P               67
+    #> 15            Kygo, OneRepublic 4sJqSKPc5fZ5OZ8JiVI44N               61
+    #> 16                  Céline Dion 5T0VoskNbpJIqm2RSPU2Xt               59
+    #> 17   KREAM, Eden Prince, Louisa 1tjxQYoB2OS2fRZS43ODLQ               54
+    #> 18                        Rusko 4JJb5x4qGaKXYaxCahGbEq                0
+    #> 19                 Mariah Carey 5rp1lVuLQKe13KTXbmGxE1               56
+    #> 20     Jubël, NEIMY, PBH & JACK 2E82VLSCocIcymHDHoMHyr               50
+    #> 21                  Jess Glynne 083Qf6hn6sFL6xiOHlZUyn               67
+    #>    Explicit.Status                                            Track.Link
+    #> 1                                                                       
+    #> 2            FALSE https://open.spotify.com/track/3s2MyU2YCwNNwcSokt0jXD
+    #> 3            FALSE https://open.spotify.com/track/4SQfQuxYQx8DJQB88sQmVT
+    #> 4            FALSE https://open.spotify.com/track/5ctnrRh81WicuT6prsCHYc
+    #> 5            FALSE https://open.spotify.com/track/7623p8KZ24WTeO0NeIb4tV
+    #> 6            FALSE https://open.spotify.com/track/1SG6r7daFfpzPcU15luVqB
+    #> 7             TRUE https://open.spotify.com/track/7ks6AZmFcm3Y6PGGxGSmlB
+    #> 8            FALSE https://open.spotify.com/track/5dKjrBLRbu2knbRC3K4OG5
+    #> 9            FALSE https://open.spotify.com/track/3Be7CLdHZpyzsVijme39cW
+    #> 10           FALSE https://open.spotify.com/track/2tnVG71enUj33Ic2nFN6kZ
+    #> 11           FALSE https://open.spotify.com/track/2oejEp50ZzPuQTQ6v54Evp
+    #> 12           FALSE https://open.spotify.com/track/0zbzrhfVS9S2TszW3wLQZ7
+    #> 13           FALSE https://open.spotify.com/track/3ebXMykcMXOcLeJ9xZ17XH
+    #> 14           FALSE https://open.spotify.com/track/1GrikfH0jDejDvrxo84n4P
+    #> 15           FALSE https://open.spotify.com/track/4sJqSKPc5fZ5OZ8JiVI44N
+    #> 16           FALSE https://open.spotify.com/track/5T0VoskNbpJIqm2RSPU2Xt
+    #> 17            TRUE https://open.spotify.com/track/1tjxQYoB2OS2fRZS43ODLQ
+    #> 18           FALSE https://open.spotify.com/track/4JJb5x4qGaKXYaxCahGbEq
+    #> 19           FALSE https://open.spotify.com/track/5rp1lVuLQKe13KTXbmGxE1
+    #> 20           FALSE https://open.spotify.com/track/2E82VLSCocIcymHDHoMHyr
+    #> 21           FALSE https://open.spotify.com/track/083Qf6hn6sFL6xiOHlZUyn
+    #> 
+    #> [[2]]
+    #> NULL
+
+Say we aren’t satisfied with our list. We can use other parameters to
+better guide Spotify’s recommendation API like so:
+
+``` r
+getTrackRecommendations(seed_artists = c('kygo', 'whitney houston'),
+                        seed_genres = c('tropical house', 'edm'),
+                        seed_tracks = '6oJ6le65B3SEqPwMRNXWjY',
+                        limit = 12,
+                        market = 'US',
+                        min_popularity = 70,
+                        target_valence = 1)
+#> Searching artist: kygo
+#> Token: Is defined
+#> Token Validity: Valid
+#> Artist Found:  Kygo
+#> Searching artist: whitney houston
+#> Token: Is defined
+#> Token Validity: Valid
+#> Artist Found:  Whitney Houston
+#> Token: Is defined
+#> Token Validity: Valid
+```
+
+<img src="man/figures/README-unnamed-chunk-9-1.png" width="100%" />
+
+    #> [[1]]
+    #>                                                Track.Name
+    #> 1                                                        
+    #> 2                              Tick Tock (feat. 24kGoldn)
+    #> 3                                           Family Affair
+    #> 4                              Feel So Close - Radio Edit
+    #> 5                                     Running Back To You
+    #> 6                                                  Nobody
+    #> 7                                               Instagram
+    #> 8                                                  Sucker
+    #> 9                            God Is A Dancer (with Mabel)
+    #> 10                     This Will Be (An Everlasting Love)
+    #> 11 Feels (feat. Pharrell Williams, Katy Perry & Big Sean)
+    #> 12                                              Lush Life
+    #> 13                                                Ride It
+    #>                                                                                                 Track.Artist
+    #> 1                                                                                                           
+    #> 2                                                                              Clean Bandit, Mabel, 24kGoldn
+    #> 3                                                                                              Mary J. Blige
+    #> 4                                                                                              Calvin Harris
+    #> 5                                                                    Martin Jensen, Alle Farben, Nico Santos
+    #> 6                                                                                              NOTD, Catello
+    #> 7  Dimitri Vegas & Like Mike, David Guetta, Daddy Yankee, Afro Bros, Natti Natasha, Dimitri Vegas, Like Mike
+    #> 8                                                                                             Jonas Brothers
+    #> 9                                                                                              Tiësto, Mabel
+    #> 10                                                                                              Natalie Cole
+    #> 11                                          Calvin Harris, Pharrell Williams, Katy Perry, Big Sean, Funk Wav
+    #> 12                                                                                              Zara Larsson
+    #> 13                                                                                                    Regard
+    #>                  Track.ID Track.Popularity Explicit.Status
+    #> 1                                                         
+    #> 2  27u7t9d7ZQoyjsCROHuZJ3               82           FALSE
+    #> 3  3aw9iWUQ3VrPQltgwvN9Xu               70           FALSE
+    #> 4  1gihuPhrLraKYrJMAEONyc               79           FALSE
+    #> 5  7feeLzB9KdKJ2ha3OvJ0SZ               70           FALSE
+    #> 6  7GiozRoMk95aFl1WbrDdjX               72           FALSE
+    #> 7  0U6bQIAh6MCGo1xjbIIx2S               72            TRUE
+    #> 8  22vgEDb5hykfaTwLuskFGD               81           FALSE
+    #> 9  6fenHIxXuuzKB55wY4WCHP               71           FALSE
+    #> 10 0PDCewmZCp0P5s00bptcdd               71           FALSE
+    #> 11 5bcTCxgc7xVfSaMV3RuVke               73            TRUE
+    #> 12 1rIKgCH4H52lrvDcz50hS8               75           FALSE
+    #> 13 2tnVG71enUj33Ic2nFN6kZ               85           FALSE
+    #>                                               Track.Link
+    #> 1                                                       
+    #> 2  https://open.spotify.com/track/27u7t9d7ZQoyjsCROHuZJ3
+    #> 3  https://open.spotify.com/track/3aw9iWUQ3VrPQltgwvN9Xu
+    #> 4  https://open.spotify.com/track/1gihuPhrLraKYrJMAEONyc
+    #> 5  https://open.spotify.com/track/7feeLzB9KdKJ2ha3OvJ0SZ
+    #> 6  https://open.spotify.com/track/7GiozRoMk95aFl1WbrDdjX
+    #> 7  https://open.spotify.com/track/0U6bQIAh6MCGo1xjbIIx2S
+    #> 8  https://open.spotify.com/track/22vgEDb5hykfaTwLuskFGD
+    #> 9  https://open.spotify.com/track/6fenHIxXuuzKB55wY4WCHP
+    #> 10 https://open.spotify.com/track/0PDCewmZCp0P5s00bptcdd
+    #> 11 https://open.spotify.com/track/5bcTCxgc7xVfSaMV3RuVke
+    #> 12 https://open.spotify.com/track/1rIKgCH4H52lrvDcz50hS8
+    #> 13 https://open.spotify.com/track/2tnVG71enUj33Ic2nFN6kZ
+    #> 
+    #> [[2]]
+    #> NULL
+
+For user interest, a pie chart is provided to view what proportion of
+returned content is explicit. In the future we would like to integrate
+optional plot parameters, and other optional plots that can highlight
+song popularity and general genre music metrics such as their energy,
+acousticness, liveness, and so forth.
+
+``` r
+getTrackRecommendations(seed_artists = c('kygo', 'whitney houston'),
+                        seed_genres = c('tropical house', 'edm'),
+                        seed_tracks = '6oJ6le65B3SEqPwMRNXWjY',
+                        limit = 12,
+                        market = 'US',
+                        target_energy = 0.8,
+                        target_danceability = 1,
+                        target_valence = 1)
+#> Searching artist: kygo
+#> Token: Is defined
+#> Token Validity: Valid
+#> Artist Found:  Kygo
+#> Searching artist: whitney houston
+#> Token: Is defined
+#> Token Validity: Valid
+#> Artist Found:  Whitney Houston
+#> Token: Is defined
+#> Token Validity: Valid
+```
+
+<img src="man/figures/README-unnamed-chunk-10-1.png" width="100%" />
+
+    #> [[1]]
+    #>                                                Track.Name
+    #> 1                                                        
+    #> 2                                              Like Sugar
+    #> 3          When the Going Gets Tough, The Tough Get Going
+    #> 4  Feels (feat. Pharrell Williams, Katy Perry & Big Sean)
+    #> 5                                           Family Affair
+    #> 6                                                  Nobody
+    #> 7                                     Jump (Original Mix)
+    #> 8                                                Emotions
+    #> 9                                                  Sucker
+    #> 10                                                Ride It
+    #> 11                                      Every Little Step
+    #> 12                                          Keep You Mine
+    #> 13                                              Your Song
+    #>                                                        Track.Artist
+    #> 1                                                                  
+    #> 2                                                        Chaka Khan
+    #> 3                                                       Billy Ocean
+    #> 4  Calvin Harris, Pharrell Williams, Katy Perry, Big Sean, Funk Wav
+    #> 5                                                     Mary J. Blige
+    #> 6                                                     NOTD, Catello
+    #> 7                                               The Pointer Sisters
+    #> 8                                                      Mariah Carey
+    #> 9                                                    Jonas Brothers
+    #> 10                                                           Regard
+    #> 11                                                      Bobby Brown
+    #> 12                                                 NOTD, SHY Martin
+    #> 13                                                         Rita Ora
+    #>                  Track.ID Track.Popularity Explicit.Status
+    #> 1                                                         
+    #> 2  0lWEatZXBBYUzEQX5aMeSj               58           FALSE
+    #> 3  5UU5FbITNm5OunvHQdsKME               63           FALSE
+    #> 4  5bcTCxgc7xVfSaMV3RuVke               73            TRUE
+    #> 5  3aw9iWUQ3VrPQltgwvN9Xu               70           FALSE
+    #> 6  7GiozRoMk95aFl1WbrDdjX               72           FALSE
+    #> 7  1kIu9zpYtWjgrLlsactlna               64           FALSE
+    #> 8  0cELvuwJW1acISUHYB6suj               62           FALSE
+    #> 9  22vgEDb5hykfaTwLuskFGD               81           FALSE
+    #> 10 2tnVG71enUj33Ic2nFN6kZ               85           FALSE
+    #> 11 0s6e7ZafqOAUBDoQYGmxrc               55           FALSE
+    #> 12 0OJN2A3Qyvd7pwSF0AIteC               67           FALSE
+    #> 13 4c2W3VKsOFoIg2SFaO6DY5               66           FALSE
+    #>                                               Track.Link
+    #> 1                                                       
+    #> 2  https://open.spotify.com/track/0lWEatZXBBYUzEQX5aMeSj
+    #> 3  https://open.spotify.com/track/5UU5FbITNm5OunvHQdsKME
+    #> 4  https://open.spotify.com/track/5bcTCxgc7xVfSaMV3RuVke
+    #> 5  https://open.spotify.com/track/3aw9iWUQ3VrPQltgwvN9Xu
+    #> 6  https://open.spotify.com/track/7GiozRoMk95aFl1WbrDdjX
+    #> 7  https://open.spotify.com/track/1kIu9zpYtWjgrLlsactlna
+    #> 8  https://open.spotify.com/track/0cELvuwJW1acISUHYB6suj
+    #> 9  https://open.spotify.com/track/22vgEDb5hykfaTwLuskFGD
+    #> 10 https://open.spotify.com/track/2tnVG71enUj33Ic2nFN6kZ
+    #> 11 https://open.spotify.com/track/0s6e7ZafqOAUBDoQYGmxrc
+    #> 12 https://open.spotify.com/track/0OJN2A3Qyvd7pwSF0AIteC
+    #> 13 https://open.spotify.com/track/4c2W3VKsOFoIg2SFaO6DY5
+    #> 
+    #> [[2]]
+    #> NULL
 
 # ADITYA
 
@@ -202,7 +608,7 @@ getBasicStats('5RdShpOtxKO3ZWohR2M6Sv')
 #> Token Validity: Valid
 ```
 
-<img src="man/figures/README-unnamed-chunk-9-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-14-1.png" width="100%" />
 
 Craving for more use our `searchForPodcast` to find a new show. How
 about a child-friendly Spanish podcast on history? Type in `history`,

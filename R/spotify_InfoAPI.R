@@ -318,7 +318,7 @@ getAudioFeatures <- function(songId, output =  "dataframe", authentication_token
 
     return(content)
 
-  } else if (output == "dataframe") {
+  } else {
 
     metrics <- c("danceability", "energy", "speechiness", "acousticness",
                 "instrumentalness", "liveness", "valence", "tempo",
@@ -331,10 +331,7 @@ getAudioFeatures <- function(songId, output =  "dataframe", authentication_token
                                content$acousticness, content$instrumentalness, content$liveness, content$valence,
                                content$tempo, content$time_signature, content$duration_ms, content$loudness))
 
-    return(df)
-
-    # Only output left is 'graph'
-  } else {
+    if (output == 'graph') {
 
       dfsub <- df[-c(8,9,10,11),]
 
@@ -348,4 +345,9 @@ getAudioFeatures <- function(songId, output =  "dataframe", authentication_token
       return(plot)
 
     }
+
+    return(df)
+
+  }
+
 }
