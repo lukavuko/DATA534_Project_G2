@@ -1,0 +1,70 @@
+---
+title: "Project Notebook"
+author: "Aditya Saluja"
+date: "19/02/2021"
+output: html_document
+---
+
+## Feb 3 2021
+
+- Had our first group meeting and discussed potential ideas. Several API's were considered, finally the Spotify API was selected. 
+
+- Created project repository 
+commit f464fdb43c30e962b30ae89974d842105106b8b2
+
+## Feb 9 2021
+
+- Read through the documentation and registered a spotify application to obtain
+client credentials
+
+- Wrote a function to get the authentication token based on client credentials.
+
+- Wrote a function to get episode details for a podcast 
+
+commit 46fc9987df4cb6146d76f413b0987cf49daf1546
+
+
+## Feb 15 2021
+
+- Wrote a function to search for a new podcast 
+
+commit 69fd58a31d49f1a3bcc817d50f76d45e30b4c198
+commit 69fd58a31d49f1a3bcc817d50f76d45e30b4c198
+
+- Created a function to get recent episodes and updated existing functions 
+commit b970b8fdebfec8ff8253023eb9a3ffaeaf74d5d6
+
+
+## Feb 16 2021
+
+- Updated search for podcast function to include an explicit, language and market 
+filter 
+
+commit 32353edd040781669b8fe61340511fcf938ffa58
+
+- Wrote a function to plot basic statistics for a podcast 
+commit d59fa5a8bb50e1697adc3e1fc82717c1fa387fac
+
+- Exceptions were added to handle errors gracefully 
+commit cd655a189a09497d7f0f092fab33355b73d30552
+
+- Test cases were added and updated  
+commit c04cf571fff8a32b03762d47726e15cc8e50f43e
+commit 90c2b0a7c5306ecacee20ad19ece91b417c4ce4c
+commit 36f80b1c773df15b5527dc31040482766acf3704
+commit 42e34e1f218a58d8629f4f83f5e13c9effe21f0c
+
+## Feb 17 2021
+
+- Exceptions were updated and test cases were modified to increase coverage 
+commit 362bef872dc5cc0930de6985b07663963a03b6c4
+commit 362bef872dc5cc0930de6985b07663963a03b6c4
+
+- Files were restructured and roxygen comments were added 
+commit dc128cb6a71af62be035916ce94ddd15a1e2ca64
+
+
+## Feb 20 2021
+
+- Edited contributions.md
+- Worked on vignettes and README.rmd
