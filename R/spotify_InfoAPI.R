@@ -308,12 +308,6 @@ getAudioFeatures <- function(songId, output =  "dataframe", authentication_token
     stop(paste(response$status_code,":", content$error$message))
   }
 
-  # Sometimes the Spotify API will just return an empty list on a valid call, and just
-  # running the function again th same way will make it work.
-  #if (length(content) != 18){
-  #  stop("Something unexpected went wrong. Please try again.")
-  #}
-
   if (output == "json") {
 
     return(content)

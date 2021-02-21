@@ -81,10 +81,19 @@ Commit 78c72509d2043a3bfa59ab79e59b1851f240bf8f
 ## Feb 20 2021
 
 - Added some more error catching functionality to getAudioFeatures
+Commit 28491dd84a8e63bb0a3daf2160bc9eb459a842be
 
 - Edited vignettes and `README.rmd`
+Commit 28491dd84a8e63bb0a3daf2160bc9eb459a842be
 
 - Edited `contributions.md`
+Commit 28491dd84a8e63bb0a3daf2160bc9eb459a842be
 
 - Proofread everything for typos
+Commit 42bd538f26c959aa7d64a0d238409ac793600cb6
 
+## Feb 21 2021
+
+- Further proofreading and made language of written documents parallel.
+
+- Upload to CRAN.

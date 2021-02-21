@@ -1,4 +1,5 @@
 ---
+title: Wrappify
 output: github_document
 ---
 
@@ -13,7 +14,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# wrappify
+Note: All OS tests will sometimes pass or fail when CI is run and we can't figure out why. We believe that sometimes tests will run on a remote server in a location where the API is region locked, causing the tests to fail.
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/adityasal/DATA534_Project_G2/workflows/R-CMD-check/badge.svg)](https://github.com/adityasal/DATA534_Project_G2/actions)
@@ -75,12 +76,10 @@ And now we can choose one of these artists that look interesting and learn more 
 
 ## Example 2: Conversion of Artist/Song names to their IDs
 
-Spotify works exclusively through object IDs, but as people of culture we know
-our favourite artists, tracks, and podcasts by their names, not their IDs. As such, we
-need to be able to convert these names into their IDs as seamlessly as possible.
+Spotify has a ID code associated with each object in its database which acts as a unique identifier. Human beings, however, know their favourite artists, tracks, and podcasts by  name, not abstract IDs. As such, functionality is needed to convert names into IDs for use in other functions.
 
 Note that artist and track names do not need to be formatted or spelled correctly to
-yield valid search results!
+yield valid search results. We have a list of artists we want to use in other functions:
 
 ```{r}
 # One artist, mispelled
@@ -154,42 +153,35 @@ getTrackRecommendations(seed_artists = c('kygo', 'whitney houston'),
                         target_danceability = 1,
                         target_valence = 1)
 ```
-# ADITYA
+## Example 3: Podcasts
 
-Or, if we would prefer to listen to a podcast, we can use wrappify as well.
+If we would prefer information on podcasts, we can use wrappify as well.
 
-Looking for recent episodes from your favorite podcaster but can't seem to remember their ID, don't worry use `getPodcastID` to do just that.
+Podcasts, like songs and artists, are uniquely identified by their Spotify ID. We can convert key words into this ID using getPodcastID.
 
 ```{r}
 getPodcastID('conspiracy theory')
 ```
 
-
+A list of recent episodes can be generated using this ID.
 ```{r}
 getRecentEpisodes('5RdShpOtxKO3ZWohR2M6Sv', limit=5)
 ```
-Fancy a shorter episode, use the duration filter and...
+If we only have 30 minutes to spare, the duration filter can be used.
 
 ```{r}
 getRecentEpisodes('5RdShpOtxKO3ZWohR2M6Sv', duration = 30, limit=5)
 ```
-That should do it.
 
-You could also check out some basic stats. In this release, you can plot the duration of episodes over time, but don't worry; we will add more functionality to this function in the future! Just enter the podcast ID and ...
+We can also check out some basic stats. Right now, duration of episodes can be plotted over time. However, more graphical functionality is planned in the future.
 
 ```{r}
 getBasicStats('5RdShpOtxKO3ZWohR2M6Sv')
 ```
 
-Craving for more use our `searchForPodcast` to find a new show. How about a child-friendly Spanish podcast on history? Type in `history`, change the language to `es` and change `explicit to `FALSE`.
+`searchForPodcast` can be used  to find a new show. How about a child-friendly Spanish podcast on history? Type in `history`, change the language to `es` and change `explicit` to `FALSE` .
 
 ```{r}
 searchForPodcast('history', language = 'es', market = 'ES', explicit = FALSE)
 ```
-
-
-You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-date. `devtools::build_readme()` is handy for this. You could also use GitHub Actions to re-render `README.Rmd` every time you push. An example workflow can be found here: <https://github.com/r-lib/actions/tree/master/examples>.
-
-
-
 

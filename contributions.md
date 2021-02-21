@@ -20,6 +20,8 @@
 
 - Will write the code of conduct, description, and license.
 
+- Will proofread written documents.
+
 
 # Aditya Saluja
 
@@ -34,6 +36,7 @@
 - Will write a function to get information about a specific episode using episode ID
 
 - Will document and test these function and aid in CI
+
 
 # Luka Vukovic
 

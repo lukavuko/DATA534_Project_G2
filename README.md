@@ -1,7 +1,12 @@
+Wrappify
+================
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# wrappify
+Note: All OS tests will sometimes pass or fail when CI is run and we
+can’t figure out why. We believe that sometimes tests will run on a
+remote server in a location where the API is region locked, causing the
+tests to fail.
 
 <!-- badges: start -->
 
@@ -43,7 +48,7 @@ ghost <- getArtistInfo("Ghost", byName = TRUE)
 ghost
 #>                    name popularity              genres followers
 #> 1            Ghostemane         78           dark trap   1743756
-#> 2                 Ghost         69           hard rock   1009697
+#> 2                 Ghost         70           hard rock   1009697
 #> 3       KIDS SEE GHOSTS         67             hip hop    726385
 #> 4      Ghostface Killah         66 alternative hip hop    585101
 #> 5            Ghostluvme         56             Unknown     10106
@@ -85,7 +90,7 @@ ghostsongs
 #> 7              Ritual 5ZiTzbMB53mIiP3I4uQCmt         50      4.479100
 #> 8               He Is 4ExR43GqMe2KwWM3VPGUmO         46      4.219550
 #> 9  If You Have Ghosts 1sNSlzvQ5jPir46X5X1TeH         51      3.581333
-#> 10          Year Zero 1YBf7Tq9bpcVwvnlP8YbQS         50      5.836433
+#> 10          Year Zero 1YBf7Tq9bpcVwvnlP8YbQS         51      5.836433
 ```
 
 We are interested in knowing more about the song “Dance Macabre”, so we
@@ -135,13 +140,15 @@ learn more about them as well.
 
 ## Example 2: Conversion of Artist/Song names to their IDs
 
-Spotify works exclusively through object IDs, but as people of culture
-we know our favourite artists, tracks, and podcasts by their names, not
-their IDs. As such, we need to be able to convert these names into their
-IDs as seamlessly as possible.
+Spotify has a ID code associated with each object in its database which
+acts as a unique identifier. Human beings, however, know their favourite
+artists, tracks, and podcasts by name, not abstract IDs. As such,
+functionality is needed to convert names into IDs for use in other
+functions.
 
 Note that artist and track names do not need to be formatted or spelled
-correctly to yield valid search results\!
+correctly to yield valid search results. We have a list of artists we
+want to use in other functions:
 
 ``` r
 # One artist, mispelled
@@ -178,12 +185,12 @@ do.call(rbind, lapply(artists_of_interest, getArtistID))
 #> 3 Herbie Hancock 2ZvrvbQNrHKwjT7qfGFFUW                63
 #>                                                                                                                        Genres
 #> 1                                                                                                     indie rock, modern rock
-#> 2                                                                               ann arbor indie, funk rock, instrumental funk
+#> 2                                                                         ann arbor indie, funk, funk rock, instrumental funk
 #> 3 bebop, contemporary post-bop, cool jazz, funk, instrumental funk, jazz, jazz funk, jazz fusion, jazz piano, soul, soul jazz
 ```
 
 When searching for tracks you can also include artist names to narrow
-down what track you’re looking for\!
+down what track you’re looking for!
 
 ``` r
 # Song limit defaults to 5
@@ -230,7 +237,7 @@ getTrackID('Love', limit = 10)
 #> 4  1tkg4EHVoqnhR6iFEXb60y               91
 #> 5  0q75NwOoFiARAVp4EXU4Bs               79
 #> 6  27OeeYzk6klgBh83TSvGMA               93
-#> 7  3HwtjYXnBkhsD2gBwyiIHR                0
+#> 7  4iIrJ94pkIEnGZWv1MhIRC               48
 #> 8  7qEHsqek33rTcFNT9PFqLf               89
 #> 9  4IowQDUOzUvNtp72HMDcKO               74
 #> 10 2GiJYvgVaD2HtM8GqD9EgQ               84
@@ -296,72 +303,94 @@ getTrackRecommendations(seed_artists = c('kygo', 'whitney houston'),
 <img src="man/figures/README-unnamed-chunk-8-1.png" width="100%" />
 
     #> [[1]]
-    #>                                                                     Track.Name
-    #> 1                                                                             
-    #> 2                                                                         Girl
-    #> 3                                               Bigfoot - Dillon Francis Remix
-    #> 4                                                             Peaceblaster '08
-    #> 5                                                         My Name Is Not Susan
-    #> 6                                                                 Never Change
-    #> 7                           Where Them Girls At (feat. Nicki Minaj & Flo Rida)
-    #> 8                                                              Across the Pond
-    #> 9                                                What's Love Got to Do with It
-    #> 10                                                                     Ride It
-    #> 11                                                               Call You Mine
-    #> 12                                                              September Song
-    #> 13                                                         Scared to Be Lonely
-    #> 14                                                              Together Again
-    #> 15                                         Stranger Things (feat. OneRepublic)
-    #> 16                                                                 Think Twice
-    #> 17                                       Ain't Thinkin Bout You (feat. Louisa)
-    #> 18                                                   Everyday - (Netsky Remix)
-    #> 19                                                               I'll Be There
-    #> 20 Dancing In The Moonlight (feat. NEIMY) - PBH & Jack Sunset Remix Radio Edit
-    #> 21                                                               I'll Be There
-    #>                    Track.Artist               Track.ID Track.Popularity
-    #> 1                                                                      
-    #> 2               Destiny's Child 3s2MyU2YCwNNwcSokt0jXD               63
-    #> 3                           W&W 4SQfQuxYQx8DJQB88sQmVT               25
-    #> 4                          STS9 5ctnrRh81WicuT6prsCHYc                0
-    #> 5               Whitney Houston 7623p8KZ24WTeO0NeIb4tV               44
-    #> 6                    Don Diablo 1SG6r7daFfpzPcU15luVqB               65
-    #> 7                  David Guetta 7ks6AZmFcm3Y6PGGxGSmlB               71
-    #> 8                        Ianick 5dKjrBLRbu2knbRC3K4OG5                0
-    #> 9             Kygo, Tina Turner 3Be7CLdHZpyzsVijme39cW               77
-    #> 10                       Regard 2tnVG71enUj33Ic2nFN6kZ               85
-    #> 11 The Chainsmokers, Bebe Rexha 2oejEp50ZzPuQTQ6v54Evp               77
-    #> 12                    JP Cooper 0zbzrhfVS9S2TszW3wLQZ7               71
-    #> 13      Martin Garrix, Dua Lipa 3ebXMykcMXOcLeJ9xZ17XH               78
-    #> 14                Janet Jackson 1GrikfH0jDejDvrxo84n4P               67
-    #> 15            Kygo, OneRepublic 4sJqSKPc5fZ5OZ8JiVI44N               61
-    #> 16                  Céline Dion 5T0VoskNbpJIqm2RSPU2Xt               59
-    #> 17   KREAM, Eden Prince, Louisa 1tjxQYoB2OS2fRZS43ODLQ               54
-    #> 18                        Rusko 4JJb5x4qGaKXYaxCahGbEq                0
-    #> 19                 Mariah Carey 5rp1lVuLQKe13KTXbmGxE1               56
-    #> 20     Jubël, NEIMY, PBH & JACK 2E82VLSCocIcymHDHoMHyr               50
-    #> 21                  Jess Glynne 083Qf6hn6sFL6xiOHlZUyn               67
-    #>    Explicit.Status                                            Track.Link
-    #> 1                                                                       
-    #> 2            FALSE https://open.spotify.com/track/3s2MyU2YCwNNwcSokt0jXD
-    #> 3            FALSE https://open.spotify.com/track/4SQfQuxYQx8DJQB88sQmVT
-    #> 4            FALSE https://open.spotify.com/track/5ctnrRh81WicuT6prsCHYc
-    #> 5            FALSE https://open.spotify.com/track/7623p8KZ24WTeO0NeIb4tV
-    #> 6            FALSE https://open.spotify.com/track/1SG6r7daFfpzPcU15luVqB
-    #> 7             TRUE https://open.spotify.com/track/7ks6AZmFcm3Y6PGGxGSmlB
-    #> 8            FALSE https://open.spotify.com/track/5dKjrBLRbu2knbRC3K4OG5
-    #> 9            FALSE https://open.spotify.com/track/3Be7CLdHZpyzsVijme39cW
-    #> 10           FALSE https://open.spotify.com/track/2tnVG71enUj33Ic2nFN6kZ
-    #> 11           FALSE https://open.spotify.com/track/2oejEp50ZzPuQTQ6v54Evp
-    #> 12           FALSE https://open.spotify.com/track/0zbzrhfVS9S2TszW3wLQZ7
-    #> 13           FALSE https://open.spotify.com/track/3ebXMykcMXOcLeJ9xZ17XH
-    #> 14           FALSE https://open.spotify.com/track/1GrikfH0jDejDvrxo84n4P
-    #> 15           FALSE https://open.spotify.com/track/4sJqSKPc5fZ5OZ8JiVI44N
-    #> 16           FALSE https://open.spotify.com/track/5T0VoskNbpJIqm2RSPU2Xt
-    #> 17            TRUE https://open.spotify.com/track/1tjxQYoB2OS2fRZS43ODLQ
-    #> 18           FALSE https://open.spotify.com/track/4JJb5x4qGaKXYaxCahGbEq
-    #> 19           FALSE https://open.spotify.com/track/5rp1lVuLQKe13KTXbmGxE1
-    #> 20           FALSE https://open.spotify.com/track/2E82VLSCocIcymHDHoMHyr
-    #> 21           FALSE https://open.spotify.com/track/083Qf6hn6sFL6xiOHlZUyn
+    #>                                        Track.Name
+    #> 1                                                
+    #> 2                                      The Middle
+    #> 3                                    Say You Will
+    #> 4                                  I Have Nothing
+    #> 5       What I Like About You (feat. Theresa Rex)
+    #> 6             You - Tiësto vs. Twoloud Radio Edit
+    #> 7    Bruised Not Broken (feat. MNEK & Kiana Ledé)
+    #> 8                                       Spotlight
+    #> 9       Tough Love (feat. Agnes, Vargas & Lagola)
+    #> 10                                        Forever
+    #> 11                                       Unpretty
+    #> 12                                    Do It To Me
+    #> 13                 In My Mind (Axwell Radio Edit)
+    #> 14                     Feel So Close - Nero Remix
+    #> 15                  Ain't No Mountain High Enough
+    #> 16 When the Going Gets Tough, The Tough Get Going
+    #> 17                    Back In Time - Extended Mix
+    #> 18                              It's All About Me
+    #> 19                                Say You, Say Me
+    #> 20                       Inside Out (feat. Griff)
+    #> 21                                         Chimes
+    #>                                Track.Artist               Track.ID
+    #> 1                                                                 
+    #> 2                  Zedd, Maren Morris, Grey 09IStsImFySgyp0pIQdqAc
+    #> 3        Kygo, Patrick Droney, Petey Martin 5vDjcNbN4m9fxWcrpR64Wu
+    #> 4                           Whitney Houston 31er9IGsfFbwqy1pH4aiTP
+    #> 5                   Jonas Blue, Theresa Rex 4NSW0Km5ZG60L8FthUebPJ
+    #> 6                 Galantis, Tiësto, Twoloud 5kC6r4q71XMzsuLAYesseb
+    #> 7                  Matoma, MNEK, Kiana Ledé 2ak79ho44RiDi9DFrqYgfq
+    #> 8                      Marshmello, Lil Peep 6VrCmhRBFnuGKmtNfk4jDs
+    #> 9            Avicii, Agnes, Vargas & Lagola 1yfyIdEw5U2bD5I6gxQCxW
+    #> 10                                     Pope 42prDRVUOkgzQsfSFL2mmL
+    #> 11                                      TLC 0BUoLE4o9eVahDHvTqak67
+    #> 12                            Lionel Richie 4tzqUn1y5GNrV0dKV9S5vC
+    #> 13 Ivan Gough & Feenixpawl feat. Georgi Kay 3bXptsvAsA4gLaaRKMHsr0
+    #> 14                            Calvin Harris 4vyEY2Nd22H4ErNjSv2qzq
+    #> 15                               Diana Ross 1KbuhBnzMHp4eq1q6flhWd
+    #> 16                              Billy Ocean 5UU5FbITNm5OunvHQdsKME
+    #> 17                               Don Diablo 3Bk2bWV7RLpzGea7EkZ8o7
+    #> 18                                      Mýa 4Wtk0YYWUcx1JYicaq5Jd0
+    #> 19                            Lionel Richie 17CPezzLWzvGfpZW6X8XT0
+    #> 20                              Zedd, Griff 6IiCb4PCrDgqLuDWgHhFi7
+    #> 21                           Hudson Mohawke 1U3oH5CRRcjT5TT69b6eYl
+    #>    Track.Popularity Explicit.Status
+    #> 1                                  
+    #> 2                81           FALSE
+    #> 3                58           FALSE
+    #> 4                72           FALSE
+    #> 5                69           FALSE
+    #> 6                38           FALSE
+    #> 7                58           FALSE
+    #> 8                74           FALSE
+    #> 9                62           FALSE
+    #> 10               19           FALSE
+    #> 11               61           FALSE
+    #> 12               57           FALSE
+    #> 13               49           FALSE
+    #> 14                0           FALSE
+    #> 15               57           FALSE
+    #> 16               63           FALSE
+    #> 17                0           FALSE
+    #> 18               55           FALSE
+    #> 19               69           FALSE
+    #> 20               69           FALSE
+    #> 21                3           FALSE
+    #>                                               Track.Link
+    #> 1                                                       
+    #> 2  https://open.spotify.com/track/09IStsImFySgyp0pIQdqAc
+    #> 3  https://open.spotify.com/track/5vDjcNbN4m9fxWcrpR64Wu
+    #> 4  https://open.spotify.com/track/31er9IGsfFbwqy1pH4aiTP
+    #> 5  https://open.spotify.com/track/4NSW0Km5ZG60L8FthUebPJ
+    #> 6  https://open.spotify.com/track/5kC6r4q71XMzsuLAYesseb
+    #> 7  https://open.spotify.com/track/2ak79ho44RiDi9DFrqYgfq
+    #> 8  https://open.spotify.com/track/6VrCmhRBFnuGKmtNfk4jDs
+    #> 9  https://open.spotify.com/track/1yfyIdEw5U2bD5I6gxQCxW
+    #> 10 https://open.spotify.com/track/42prDRVUOkgzQsfSFL2mmL
+    #> 11 https://open.spotify.com/track/0BUoLE4o9eVahDHvTqak67
+    #> 12 https://open.spotify.com/track/4tzqUn1y5GNrV0dKV9S5vC
+    #> 13 https://open.spotify.com/track/3bXptsvAsA4gLaaRKMHsr0
+    #> 14 https://open.spotify.com/track/4vyEY2Nd22H4ErNjSv2qzq
+    #> 15 https://open.spotify.com/track/1KbuhBnzMHp4eq1q6flhWd
+    #> 16 https://open.spotify.com/track/5UU5FbITNm5OunvHQdsKME
+    #> 17 https://open.spotify.com/track/3Bk2bWV7RLpzGea7EkZ8o7
+    #> 18 https://open.spotify.com/track/4Wtk0YYWUcx1JYicaq5Jd0
+    #> 19 https://open.spotify.com/track/17CPezzLWzvGfpZW6X8XT0
+    #> 20 https://open.spotify.com/track/6IiCb4PCrDgqLuDWgHhFi7
+    #> 21 https://open.spotify.com/track/1U3oH5CRRcjT5TT69b6eYl
     #> 
     #> [[2]]
     #> NULL
@@ -394,58 +423,58 @@ getTrackRecommendations(seed_artists = c('kygo', 'whitney houston'),
     #> [[1]]
     #>                                                Track.Name
     #> 1                                                        
-    #> 2                              Tick Tock (feat. 24kGoldn)
-    #> 3                                           Family Affair
+    #> 2                                                  Sucker
+    #> 3                              Tick Tock (feat. 24kGoldn)
     #> 4                              Feel So Close - Radio Edit
     #> 5                                     Running Back To You
-    #> 6                                                  Nobody
-    #> 7                                               Instagram
-    #> 8                                                  Sucker
-    #> 9                            God Is A Dancer (with Mabel)
-    #> 10                     This Will Be (An Everlasting Love)
-    #> 11 Feels (feat. Pharrell Williams, Katy Perry & Big Sean)
+    #> 6                                               Instagram
+    #> 7                                                  Nobody
+    #> 8                            God Is A Dancer (with Mabel)
+    #> 9                               Head & Heart (feat. MNEK)
+    #> 10 Feels (feat. Pharrell Williams, Katy Perry & Big Sean)
+    #> 11                                          Family Affair
     #> 12                                              Lush Life
     #> 13                                                Ride It
     #>                                                                                                 Track.Artist
     #> 1                                                                                                           
-    #> 2                                                                              Clean Bandit, Mabel, 24kGoldn
-    #> 3                                                                                              Mary J. Blige
+    #> 2                                                                                             Jonas Brothers
+    #> 3                                                                              Clean Bandit, Mabel, 24kGoldn
     #> 4                                                                                              Calvin Harris
     #> 5                                                                    Martin Jensen, Alle Farben, Nico Santos
-    #> 6                                                                                              NOTD, Catello
-    #> 7  Dimitri Vegas & Like Mike, David Guetta, Daddy Yankee, Afro Bros, Natti Natasha, Dimitri Vegas, Like Mike
-    #> 8                                                                                             Jonas Brothers
-    #> 9                                                                                              Tiësto, Mabel
-    #> 10                                                                                              Natalie Cole
-    #> 11                                          Calvin Harris, Pharrell Williams, Katy Perry, Big Sean, Funk Wav
+    #> 6  Dimitri Vegas & Like Mike, David Guetta, Daddy Yankee, Afro Bros, Natti Natasha, Dimitri Vegas, Like Mike
+    #> 7                                                                                              NOTD, Catello
+    #> 8                                                                                              Tiësto, Mabel
+    #> 9                                                                                           Joel Corry, MNEK
+    #> 10                                          Calvin Harris, Pharrell Williams, Katy Perry, Big Sean, Funk Wav
+    #> 11                                                                                             Mary J. Blige
     #> 12                                                                                              Zara Larsson
     #> 13                                                                                                    Regard
     #>                  Track.ID Track.Popularity Explicit.Status
     #> 1                                                         
-    #> 2  27u7t9d7ZQoyjsCROHuZJ3               82           FALSE
-    #> 3  3aw9iWUQ3VrPQltgwvN9Xu               70           FALSE
+    #> 2  22vgEDb5hykfaTwLuskFGD               81           FALSE
+    #> 3  27u7t9d7ZQoyjsCROHuZJ3               82           FALSE
     #> 4  1gihuPhrLraKYrJMAEONyc               79           FALSE
     #> 5  7feeLzB9KdKJ2ha3OvJ0SZ               70           FALSE
-    #> 6  7GiozRoMk95aFl1WbrDdjX               72           FALSE
-    #> 7  0U6bQIAh6MCGo1xjbIIx2S               72            TRUE
-    #> 8  22vgEDb5hykfaTwLuskFGD               81           FALSE
-    #> 9  6fenHIxXuuzKB55wY4WCHP               71           FALSE
-    #> 10 0PDCewmZCp0P5s00bptcdd               71           FALSE
-    #> 11 5bcTCxgc7xVfSaMV3RuVke               73            TRUE
+    #> 6  0U6bQIAh6MCGo1xjbIIx2S               72            TRUE
+    #> 7  7GiozRoMk95aFl1WbrDdjX               72           FALSE
+    #> 8  6fenHIxXuuzKB55wY4WCHP               72           FALSE
+    #> 9  6cx06DFPPHchuUAcTxznu9               89           FALSE
+    #> 10 5bcTCxgc7xVfSaMV3RuVke               73            TRUE
+    #> 11 3aw9iWUQ3VrPQltgwvN9Xu               70           FALSE
     #> 12 1rIKgCH4H52lrvDcz50hS8               75           FALSE
     #> 13 2tnVG71enUj33Ic2nFN6kZ               85           FALSE
     #>                                               Track.Link
     #> 1                                                       
-    #> 2  https://open.spotify.com/track/27u7t9d7ZQoyjsCROHuZJ3
-    #> 3  https://open.spotify.com/track/3aw9iWUQ3VrPQltgwvN9Xu
+    #> 2  https://open.spotify.com/track/22vgEDb5hykfaTwLuskFGD
+    #> 3  https://open.spotify.com/track/27u7t9d7ZQoyjsCROHuZJ3
     #> 4  https://open.spotify.com/track/1gihuPhrLraKYrJMAEONyc
     #> 5  https://open.spotify.com/track/7feeLzB9KdKJ2ha3OvJ0SZ
-    #> 6  https://open.spotify.com/track/7GiozRoMk95aFl1WbrDdjX
-    #> 7  https://open.spotify.com/track/0U6bQIAh6MCGo1xjbIIx2S
-    #> 8  https://open.spotify.com/track/22vgEDb5hykfaTwLuskFGD
-    #> 9  https://open.spotify.com/track/6fenHIxXuuzKB55wY4WCHP
-    #> 10 https://open.spotify.com/track/0PDCewmZCp0P5s00bptcdd
-    #> 11 https://open.spotify.com/track/5bcTCxgc7xVfSaMV3RuVke
+    #> 6  https://open.spotify.com/track/0U6bQIAh6MCGo1xjbIIx2S
+    #> 7  https://open.spotify.com/track/7GiozRoMk95aFl1WbrDdjX
+    #> 8  https://open.spotify.com/track/6fenHIxXuuzKB55wY4WCHP
+    #> 9  https://open.spotify.com/track/6cx06DFPPHchuUAcTxznu9
+    #> 10 https://open.spotify.com/track/5bcTCxgc7xVfSaMV3RuVke
+    #> 11 https://open.spotify.com/track/3aw9iWUQ3VrPQltgwvN9Xu
     #> 12 https://open.spotify.com/track/1rIKgCH4H52lrvDcz50hS8
     #> 13 https://open.spotify.com/track/2tnVG71enUj33Ic2nFN6kZ
     #> 
@@ -484,71 +513,70 @@ getTrackRecommendations(seed_artists = c('kygo', 'whitney houston'),
     #> [[1]]
     #>                                                Track.Name
     #> 1                                                        
-    #> 2                                              Like Sugar
-    #> 3          When the Going Gets Tough, The Tough Get Going
-    #> 4  Feels (feat. Pharrell Williams, Katy Perry & Big Sean)
-    #> 5                                           Family Affair
-    #> 6                                                  Nobody
-    #> 7                                     Jump (Original Mix)
-    #> 8                                                Emotions
-    #> 9                                                  Sucker
-    #> 10                                                Ride It
-    #> 11                                      Every Little Step
-    #> 12                                          Keep You Mine
-    #> 13                                              Your Song
+    #> 2  Feels (feat. Pharrell Williams, Katy Perry & Big Sean)
+    #> 3                                           Keep You Mine
+    #> 4                                                  Sucker
+    #> 5                                                 Ride It
+    #> 6          When the Going Gets Tough, The Tough Get Going
+    #> 7           Treat You Better - Purple Disco Machine Remix
+    #> 8                                               Your Song
+    #> 9                                                  Nobody
+    #> 10                                             Like Sugar
+    #> 11                                    Jump (Original Mix)
+    #> 12                                          Monkey Island
+    #> 13                                          Family Affair
     #>                                                        Track.Artist
     #> 1                                                                  
-    #> 2                                                        Chaka Khan
-    #> 3                                                       Billy Ocean
-    #> 4  Calvin Harris, Pharrell Williams, Katy Perry, Big Sean, Funk Wav
-    #> 5                                                     Mary J. Blige
-    #> 6                                                     NOTD, Catello
-    #> 7                                               The Pointer Sisters
-    #> 8                                                      Mariah Carey
-    #> 9                                                    Jonas Brothers
-    #> 10                                                           Regard
-    #> 11                                                      Bobby Brown
-    #> 12                                                 NOTD, SHY Martin
-    #> 13                                                         Rita Ora
+    #> 2  Calvin Harris, Pharrell Williams, Katy Perry, Big Sean, Funk Wav
+    #> 3                                                  NOTD, SHY Martin
+    #> 4                                                    Jonas Brothers
+    #> 5                                                            Regard
+    #> 6                                                       Billy Ocean
+    #> 7                                RÜFÜS DU SOL, Purple Disco Machine
+    #> 8                                                          Rita Ora
+    #> 9                                                     NOTD, Catello
+    #> 10                                                       Chaka Khan
+    #> 11                                              The Pointer Sisters
+    #> 12                                                          Dubmood
+    #> 13                                                    Mary J. Blige
     #>                  Track.ID Track.Popularity Explicit.Status
     #> 1                                                         
-    #> 2  0lWEatZXBBYUzEQX5aMeSj               58           FALSE
-    #> 3  5UU5FbITNm5OunvHQdsKME               63           FALSE
-    #> 4  5bcTCxgc7xVfSaMV3RuVke               73            TRUE
-    #> 5  3aw9iWUQ3VrPQltgwvN9Xu               70           FALSE
-    #> 6  7GiozRoMk95aFl1WbrDdjX               72           FALSE
-    #> 7  1kIu9zpYtWjgrLlsactlna               64           FALSE
-    #> 8  0cELvuwJW1acISUHYB6suj               62           FALSE
-    #> 9  22vgEDb5hykfaTwLuskFGD               81           FALSE
-    #> 10 2tnVG71enUj33Ic2nFN6kZ               85           FALSE
-    #> 11 0s6e7ZafqOAUBDoQYGmxrc               55           FALSE
-    #> 12 0OJN2A3Qyvd7pwSF0AIteC               67           FALSE
-    #> 13 4c2W3VKsOFoIg2SFaO6DY5               66           FALSE
+    #> 2  5bcTCxgc7xVfSaMV3RuVke               73            TRUE
+    #> 3  0OJN2A3Qyvd7pwSF0AIteC               67           FALSE
+    #> 4  22vgEDb5hykfaTwLuskFGD               81           FALSE
+    #> 5  2tnVG71enUj33Ic2nFN6kZ               85           FALSE
+    #> 6  5UU5FbITNm5OunvHQdsKME               63           FALSE
+    #> 7  6MLvUL2dYphJTwgiBvuJ1J               45           FALSE
+    #> 8  4c2W3VKsOFoIg2SFaO6DY5               66           FALSE
+    #> 9  7GiozRoMk95aFl1WbrDdjX               72           FALSE
+    #> 10 0lWEatZXBBYUzEQX5aMeSj               59           FALSE
+    #> 11 1kIu9zpYtWjgrLlsactlna               65           FALSE
+    #> 12 30sHxvIflGaWj7nnd3oSTo               35           FALSE
+    #> 13 3aw9iWUQ3VrPQltgwvN9Xu               70           FALSE
     #>                                               Track.Link
     #> 1                                                       
-    #> 2  https://open.spotify.com/track/0lWEatZXBBYUzEQX5aMeSj
-    #> 3  https://open.spotify.com/track/5UU5FbITNm5OunvHQdsKME
-    #> 4  https://open.spotify.com/track/5bcTCxgc7xVfSaMV3RuVke
-    #> 5  https://open.spotify.com/track/3aw9iWUQ3VrPQltgwvN9Xu
-    #> 6  https://open.spotify.com/track/7GiozRoMk95aFl1WbrDdjX
-    #> 7  https://open.spotify.com/track/1kIu9zpYtWjgrLlsactlna
-    #> 8  https://open.spotify.com/track/0cELvuwJW1acISUHYB6suj
-    #> 9  https://open.spotify.com/track/22vgEDb5hykfaTwLuskFGD
-    #> 10 https://open.spotify.com/track/2tnVG71enUj33Ic2nFN6kZ
-    #> 11 https://open.spotify.com/track/0s6e7ZafqOAUBDoQYGmxrc
-    #> 12 https://open.spotify.com/track/0OJN2A3Qyvd7pwSF0AIteC
-    #> 13 https://open.spotify.com/track/4c2W3VKsOFoIg2SFaO6DY5
+    #> 2  https://open.spotify.com/track/5bcTCxgc7xVfSaMV3RuVke
+    #> 3  https://open.spotify.com/track/0OJN2A3Qyvd7pwSF0AIteC
+    #> 4  https://open.spotify.com/track/22vgEDb5hykfaTwLuskFGD
+    #> 5  https://open.spotify.com/track/2tnVG71enUj33Ic2nFN6kZ
+    #> 6  https://open.spotify.com/track/5UU5FbITNm5OunvHQdsKME
+    #> 7  https://open.spotify.com/track/6MLvUL2dYphJTwgiBvuJ1J
+    #> 8  https://open.spotify.com/track/4c2W3VKsOFoIg2SFaO6DY5
+    #> 9  https://open.spotify.com/track/7GiozRoMk95aFl1WbrDdjX
+    #> 10 https://open.spotify.com/track/0lWEatZXBBYUzEQX5aMeSj
+    #> 11 https://open.spotify.com/track/1kIu9zpYtWjgrLlsactlna
+    #> 12 https://open.spotify.com/track/30sHxvIflGaWj7nnd3oSTo
+    #> 13 https://open.spotify.com/track/3aw9iWUQ3VrPQltgwvN9Xu
     #> 
     #> [[2]]
     #> NULL
 
-# ADITYA
+## Example 3: Podcasts
 
-Or, if we would prefer to listen to a podcast, we can use wrappify as
-well.
+If we would prefer information on podcasts, we can use wrappify as well.
 
-Looking for recent episodes from your favorite podcaster but can’t seem
-to remember their ID, don’t worry use `getPodcastID` to do just that.
+Podcasts, like songs and artists, are uniquely identified by their
+Spotify ID. We can convert key words into this ID using getPodcastID.
 
 ``` r
 getPodcastID('conspiracy theory')
@@ -556,6 +584,8 @@ getPodcastID('conspiracy theory')
 #> Token Validity: Valid
 #> [1] "5RdShpOtxKO3ZWohR2M6Sv"
 ```
+
+A list of recent episodes can be generated using this ID.
 
 ``` r
 getRecentEpisodes('5RdShpOtxKO3ZWohR2M6Sv', limit=5)
@@ -575,7 +605,7 @@ getRecentEpisodes('5RdShpOtxKO3ZWohR2M6Sv', limit=5)
 #> 5 4DEjNTTeQcxHgZMl1OhwWi
 ```
 
-Fancy a shorter episode, use the duration filter and…
+If we only have 30 minutes to spare, the duration filter can be used.
 
 ``` r
 getRecentEpisodes('5RdShpOtxKO3ZWohR2M6Sv', duration = 30, limit=5)
@@ -595,12 +625,9 @@ getRecentEpisodes('5RdShpOtxKO3ZWohR2M6Sv', duration = 30, limit=5)
 #> NA                   <NA>
 ```
 
-That should do it.
-
-You could also check out some basic stats. In this release, you can plot
-the duration of episodes over time, but don’t worry; we will add more
-functionality to this function in the future\! Just enter the podcast ID
-and …
+We can also check out some basic stats. Right now, duration of episodes
+can be plotted over time. However, more graphical functionality is
+planned in the future.
 
 ``` r
 getBasicStats('5RdShpOtxKO3ZWohR2M6Sv')
@@ -610,30 +637,24 @@ getBasicStats('5RdShpOtxKO3ZWohR2M6Sv')
 
 <img src="man/figures/README-unnamed-chunk-14-1.png" width="100%" />
 
-Craving for more use our `searchForPodcast` to find a new show. How
-about a child-friendly Spanish podcast on history? Type in `history`,
-change the language to `es` and change `explicit to`FALSE\`.
+`searchForPodcast` can be used to find a new show. How about a
+child-friendly Spanish podcast on history? Type in `history`, change the
+language to `es` and change `explicit` to `FALSE` .
 
 ``` r
 searchForPodcast('history', language = 'es', market = 'ES', explicit = FALSE)
 #> Token: Is defined
 #> Token Validity: Valid
 #>                                      Podcast Name          Podcast Publisher
-#> 1 Curiosidades de la Historia National Geographic National Geographic España
-#> 2            Historia de España para selectividad             Podium Podcast
-#> 3                        HISTORIAS DE LA HISTORIA                 VIVA RADIO
-#> 4                           Historia con el móvil             Podium Podcast
-#> 5                              Historias perdidas               Clío Podcast
+#> 1                                    SER Historia                 Cadena SER
+#> 2 Curiosidades de la Historia National Geographic National Geographic España
+#> 3            Historia de España para selectividad             Podium Podcast
+#> 4                        HISTORIAS DE LA HISTORIA                 VIVA RADIO
+#> 5                           Historia con el móvil             Podium Podcast
 #>   Explicit Language             Podcast ID
-#> 1    FALSE       es 5LpYg29KE8rckzwEj2JGmS
-#> 2    FALSE       es 1ukhoriiZiLoxTNW6ZQTeE
-#> 3    FALSE       es 39wGmvob0nYl6L1klXiew9
-#> 4    FALSE       es 55iNyxqAXcGiX9S1GlsVPn
-#> 5    FALSE       es 2juHTbUW50AdvN1sERHDSG
+#> 1    FALSE       es 0nFMjIf5dk2X4gfv9wnRNf
+#> 2    FALSE       es 5LpYg29KE8rckzwEj2JGmS
+#> 3    FALSE       es 1ukhoriiZiLoxTNW6ZQTeE
+#> 4    FALSE       es 39wGmvob0nYl6L1klXiew9
+#> 5    FALSE       es 55iNyxqAXcGiX9S1GlsVPn
 ```
-
-You’ll still need to render `README.Rmd` regularly, to keep `README.md`
-up-to-date. `devtools::build_readme()` is handy for this. You could also
-use GitHub Actions to re-render `README.Rmd` every time you push. An
-example workflow can be found here:
-<https://github.com/r-lib/actions/tree/master/examples>.

@@ -20,12 +20,10 @@ library(wrappify)
 
 ## Seamless Conversion of Artist/Song names to their IDs
 
-Spotify works exclusively through object IDs, but as people of culture we know
-our favourite artists, tracks, and podcasts by their names, not their IDs. As such, we
-need to be able to convert these names into their IDs as seamlessly as possible.
+Spotify has a ID code associated with each object in its database which acts as a unique identifier. Human beings, however, know their favourite artists, tracks, and podcasts by  name, not abstract IDs. As such, functionality is needed to convert names into IDs for use in other functions.
 
-Note that artist and track names do not need to be formatted or spelled correctly to
-yield valid search results!
+Artist and track names do not need to be formatted or spelled correctly to
+yield valid search results. Spotify will make an educated guess at the best match.
 
 ```{r}
 # One artist, mispelled
@@ -38,8 +36,7 @@ artists_of_interest <- c('alt j', 'vulfpeck', 'herbie hancock0')
 do.call(rbind, lapply(artists_of_interest, getArtistID))
 ```
 
-When searching for tracks you can also include artist names to narrow down
-what track you're looking for!
+When searching for tracks, artist names can be included to hone in on a specific track.
 ```{r}
 # Song limit defaults to 5
 getTrackID('Love')
@@ -54,69 +51,63 @@ getTrackID('Love whitney houston')
 
 ## Spotify Functions for Track and Artist Information
 
+Information on an artist can be found using their Spotify ID.
 ```{r}
-# We can search for an artist by their Spotify id
 getArtistInfo("1Qp56T7n950O3EGMsSl81D", dataframe = T)
 ```
 
+If the ID is not known, the artist name can be used as a search query. This will return the closest matches, out of which the desired artist can be chosen.
 ```{r}
-# If we don't know that, we can use their name as a search query
 getArtistInfo("Ghost", byName = TRUE, dataframe = T, lim = 7)
 
 ```
-
+Ghost is the second artist in this list. The ID can be pulled out of the dataframe for the desired artist and used to query other functions. The artist's top songs can be found using getTopSongs.
 ```{r}
-# And then use the ID we find through this for other functions.
 ghostid <- getArtistInfo("Ghost", byName = TRUE, dataframe = T, lim = 7)[2,]$id
 topsongs <- getTopSongs(ghostid)
 topsongs
 ```
-
-```{r}
-getSongInfo(topsongs[1,]$id, byName = F, dataframe = T)
-```
-
-```{r}
-similar_to_ghost <- getRelatedArtists(artistId = "1Qp56T7n950O3EGMsSl81D", dataframe = TRUE)
-similar_to_ghost
-```
-
+This can also be shown in a graphical format.
 ```{r}
 getTopSongs("1Qp56T7n950O3EGMsSl81D", output = "graph")
 ```
 
+If more information is desired for a specific song, the getSongInfo function can be used.
 ```{r}
-# This keeps breaking the CI checks for some reason
-#getAudioFeatures(topsongs[1,]$id, output = "graph")
+getSongInfo(topsongs[1,]$id, byName = F, dataframe = T)
 ```
 
+Similar artists can be found as well.
+```{r}
+similar_to_ghost <- getRelatedArtists(artistId = ghostid, dataframe = TRUE)
+similar_to_ghost
+```
 
+Finally, information on the audio features for specific tracks can be found as well. Definitions of the audio features can be found [here](https://developer.spotify.com/documentation/web-api/reference/#object-audiofeaturesobject).
+```{r}
+getAudioFeatures(topsongs[1,]$id, output = "graph")
+```
 
 
 ## Exploring New Tracks
 
-We may also be interested in searching for new music based on certain song metrics (danceability, energy, valence, etc.), artist styles, genre tags, and even songs themselves. For this we have the `getTrackRecommendations()` function.
+New music can be searched for based on [audio features](https://developer.spotify.com/documentation/web-api/reference/#object-audiofeaturesobject), artist styles, genre tags, or other songs. This is done using the `getTrackRecommendations()` function.
 
-Artist to ID conversion is built into the `getTrackRecommendations` function
-so we can directly type names into the function.
+Artist to ID conversion is built into the `getTrackRecommendations` function, which can be queried directly using artist names.
 
-Track to ID conversion is not yet implemented so we will use track seeds from
-earlier to find new song recommendations. There seem to be some issues with
-track seeds as vectors so we'll use only single tracks as our seed.
+Track to ID conversion is not yet implemented, but genre seeds and track IDs can be used as queries. There are some issues with track seeds as vectors so only single tracks can be used as a seed (for now).
 
-Genres can be types as a vector if wanting multiple genres. Most genre tags you
-can think of exist in the Spotify API search, but in case there's no return
-try using other genre names.
+Multiple genres can be seeded at once. Spotify has a massive collection of available genre tags, and most genres a user could imagine will be viable tags. If no recommendations are returned, the user may need to use less restrictive queries. 
 
 ```{r}
-# I want more songs like 'Higher Love' by Kygo and Whitney Houston
+# Search for songs similar to 'Higher Love' by Kygo and Whitney Houston
 getTrackRecommendations(seed_artists = c('kygo', 'whitney houston'),
                         seed_genres = c('tropical house', 'edm'),
                         seed_tracks = '6oJ6le65B3SEqPwMRNXWjY')
 ```
 
-Say we aren't satisfied with our list. We can use other parameters to better
-guide Spotify's recommendation API like so:
+If this list is not satisfactory, we can use other parameters to better
+guide Spotify's recommendation API.
 ```{r}
 getTrackRecommendations(seed_artists = c('kygo', 'whitney houston'),
                         seed_genres = c('tropical house', 'edm'),
@@ -140,17 +131,14 @@ getTrackRecommendations(seed_artists = c('kygo', 'whitney houston'),
 
 ## Wrapper Functions for Spotify Podcasts
 
-Looking for your favourite podcast, directly type the shows name into the 
-function to get their ID. If you are having troubles narrow, you search by 
-adding more keywords to your query. Do not worry if you misspelt the show; 
-our function takes care of that!
+Podcasts can be searched for by querying the getPodcastID function with show names, authors, or studios. Misspelled words are handled directly in the function.
 
 ```{r}
 getPodcastID('philosophise this, stephen west')
 ```
 
-Now that you know the shows ID, we could check out its latest release using 
-getRecentEpisodes. Next, check out the description of each episode using the 
+The shows ID can be used to check out its latest release using 
+getRecentEpisodes. We can also check out a description of each episode using 
 getEpisodeInformation.
 
 ```{r}
@@ -158,9 +146,7 @@ getRecentEpisodes('2Shpxw7dPoxRJCdfFXTWLE')
 getEpisodeInformation('5fE0bPigcmwSrrYxjJD4Sv')
 ```
 
-Looking for a new podcast, search for a topic using the searchForPodcast 
-function. Do not forget to enable the explicit filter if you are looking 
-for something suitable for kids!
+New podcasts can be discovered using searchForPodcast. Key words and genre tags can be used in the query, and a parameter can be set to filter out explicit shows. 
 
 ```{r}
 searchForPodcast('history', explicit = FALSE)
