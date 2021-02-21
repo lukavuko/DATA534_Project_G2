@@ -27,11 +27,11 @@
 
 - Will write a function to get podcast ID from a query 
 
-- Will write a function to search for new podcasts from a keyword and a list of filters  
+- Will write a function to search for new podcast from a keyword and a list of filters  
 
 - Will write a function to get a list of recent episodes using podcast ID
 
-- Will write a fucntion to get information about a specific episode usign episode ID
+- Will write a function to get information about a specific episode using episode ID
 
 - Will document and test these function and aid in CI
 
