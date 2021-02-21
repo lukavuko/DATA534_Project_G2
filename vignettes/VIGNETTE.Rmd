@@ -126,20 +126,27 @@ getTrackRecommendations(seed_artists = c('kygo', 'whitney houston'),
 
 ## Wrapper Functions for Spotify Podcasts
 
-Looking for your favourite podcast, directly type the shows name into the function to get their ID. If you are having troubles narrow, you search by adding more keywords to your query. Do not worry if you misspelt the show; our function takes care of that!
+Looking for your favourite podcast, directly type the shows name into the 
+function to get their ID. If you are having troubles narrow, you search by 
+adding more keywords to your query. Do not worry if you misspelt the show; 
+our function takes care of that!
 
 ```{r}
 getPodcastID('philosophise this, stephen west')
 ```
 
-Now that you know the shows ID, we could check out its latest release using getRecentEpisodes. Next, check out the description of each episode using the getEpisodeInformation.
+Now that you know the shows ID, we could check out its latest release using 
+getRecentEpisodes. Next, check out the description of each episode using the 
+getEpisodeInformation.
 
 ```{r}
 getRecentEpisodes('2Shpxw7dPoxRJCdfFXTWLE')
 getEpisodeInformation('5fE0bPigcmwSrrYxjJD4Sv')
 ```
 
-Looking for a new podcast, search for a topic using the searchForPodcast function. Do not forget to enable the explicit filter if you are looking for something suitable for kids!
+Looking for a new podcast, search for a topic using the searchForPodcast 
+function. Do not forget to enable the explicit filter if you are looking 
+for something suitable for kids!
 
 ```{r}
 searchForPodcast('history', explicit = FALSE)
