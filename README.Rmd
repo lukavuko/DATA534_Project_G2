@@ -40,15 +40,13 @@ devtools::install_github("adityasal/DATA534_Project_G2")
 This is a basic example that shows the intended workflow of wrappify.
 We start by loading our credentials from system variables and generate an authentication token.
 
-```{r}
-source("R/EricsFunctions.R")
-source("R/LukaFunctions.R")
-source("R/spotifyPodcastAPI.R")
+```{r, results='hide'}
+library(wrappify)
 
 client_id <-  Sys.getenv('CLIENT_ID')
 secret_id <-  Sys.getenv('CLIENT_SECRET_ID')
 
-get_authentication_token(client_id, secret_id)
+getAuthenticationToken(client_id, secret_id)
 ```
 
 
@@ -87,6 +85,34 @@ We may also be interested in learning about new music which fits certain metrics
 
 Or, if we would prefer to listen to a podcast, we can use wrappify as well.
 
+Looking for recent episodes from your favorite podcaster but can't seem to remember their ID, don't worry use `getPodcastID` to do just that.
+
+```{r}
+getPodcastID('conspiracy theory')
+```
+
+
+```{r}
+getRecentEpisodes('5RdShpOtxKO3ZWohR2M6Sv', limit=5)
+```
+Fancy a shorter episode, use the duration filter and...
+
+```{r}
+getRecentEpisodes('5RdShpOtxKO3ZWohR2M6Sv', duration = 30, limit=5)
+```
+That should do it.
+
+You could also check out some basic stats. In this release, you can plot the duration of episodes over time, but don't worry; we will add more functionality to this function in the future! Just enter the podcast ID and ...
+
+```{r}
+getBasicStats('5RdShpOtxKO3ZWohR2M6Sv')
+```
+
+Craving for more use our `searchForPodcast` to find a new show. How about a child-friendly Spanish podcast on history? Type in `history`, change the language to `es` and change `explicit to `FALSE`.
+
+```{r}
+searchForPodcast('history', language = 'es', market = 'ES', explicit = FALSE)
+```
 
 
 You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-date. `devtools::build_readme()` is handy for this. You could also use GitHub Actions to re-render `README.Rmd` every time you push. An example workflow can be found here: <https://github.com/r-lib/actions/tree/master/examples>.
