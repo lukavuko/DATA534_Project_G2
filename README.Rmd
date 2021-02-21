@@ -17,6 +17,8 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/adityasal/DATA534_Project_G2/workflows/R-CMD-check/badge.svg)](https://github.com/adityasal/DATA534_Project_G2/actions)
+[![Build Status](https://travis-ci.org/lukavuko/wrappify.svg?branch=main)](https://travis-ci.org/lukavuko/wrappify)
+[![codecov](https://codecov.io/gh/lukavuko/wrappify/branch/main/graph/badge.svg?token=3XUUH12N1B)](https://codecov.io/gh/lukavuko/wrappify)
 <!-- badges: end -->
 
 Wrappify is an API wrapper for the Spotify API in R. Currently, there is functionality only for the API functions which do not require access to an individuals data. 
@@ -33,24 +35,11 @@ And the development version from [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("adityasal/DATA534_Project_G2")
+devtools::install_github("lukavuko/wrappify")
 ```
-## Example
+## Example 1: Obtaining Song and Artist Information
 
 This is a basic example that shows the intended workflow of wrappify.
-We start by loading our credentials from system variables and generate an authentication token.
-
-```{r}
-source("R/EricsFunctions.R")
-source("R/LukaFunctions.R")
-source("R/spotifyPodcastAPI.R")
-
-client_id <-  Sys.getenv('CLIENT_ID')
-secret_id <-  Sys.getenv('CLIENT_SECRET_ID')
-
-get_authentication_token(client_id, secret_id)
-```
-
 
 First, we have an artist we wish to know more about. That artist is the essential alternative metal band "Ghost". We query getArtistInfo.
 
@@ -79,10 +68,87 @@ getRelatedArtists(id)
 ```
 And now we can choose one of these artists that look interesting and learn more about them as well.
 
-# LUKA
+## Example 2: Conversion of Artist/Song names to their IDs
 
-We may also be interested in learning about new music which fits certain metrics and genre tags
+Spotify works exclusively through object IDs, but as people of culture we know
+our favourite artists, tracks, and podcasts by their names, not their IDs. As such, we
+need to be able to convert these names into their IDs as seamlessly as possible.
 
+Note that artist and track names do not need to be formatted or spelled correctly to
+yield valid search results!
+
+```{r}
+# One artist, mispelled
+getArtistID('sanTanana')
+
+
+# Multiple artists, seamlessly
+artists_of_interest <- c('alt j', 'vulfpeck', 'herbie hancock0')
+
+do.call(rbind, lapply(artists_of_interest, getArtistID))
+```
+
+When searching for tracks you can also include artist names to narrow down
+what track you're looking for!
+```{r}
+# Song limit defaults to 5
+getTrackID('Love')
+
+# User can increase limits
+getTrackID('Love', limit = 10)
+
+# User can search with artist name in the string for more precise results
+getTrackID('Love whitney houston')
+```
+
+## Example 3: Exploring New Tracks
+
+We may also be interested in searching for new music based on certain song metrics (danceability, energy, valence, etc.), artist styles, genre tags, and even songs themselves. For this we have the `getTrackRecommendations()` function.
+
+Artist to ID conversion is built into the `getTrackRecommendations` function
+so we can directly type names into the function.
+
+Track to ID conversion is not yet implemented so we will use track seeds from
+earlier to find new song recommendations. There seem to be some issues with
+track seeds as vectors so we'll use only single tracks as our seed.
+
+Genres can be types as a vector if wanting multiple genres. Most genre tags you
+can think of exist in the Spotify API search, but in case there's no return
+try using other genre names.
+
+```{r}
+# I want more songs like 'Higher Love' by Kygo and Whitney Houston
+getTrackRecommendations(seed_artists = c('kygo', 'whitney houston'),
+                        seed_genres = c('tropical house', 'edm'),
+                        seed_tracks = '6oJ6le65B3SEqPwMRNXWjY')
+```
+
+Say we aren't satisfied with our list. We can use other parameters to better
+guide Spotify's recommendation API like so:
+```{r}
+getTrackRecommendations(seed_artists = c('kygo', 'whitney houston'),
+                        seed_genres = c('tropical house', 'edm'),
+                        seed_tracks = '6oJ6le65B3SEqPwMRNXWjY',
+                        limit = 12,
+                        market = 'US',
+                        min_popularity = 70,
+                        target_valence = 1)
+```
+For user interest, a pie chart is provided to view what proportion of returned
+content is explicit. In the future we would like to integrate optional plot
+parameters, and other optional plots that can highlight song popularity and
+general genre music metrics such as their energy, acousticness, liveness, and
+so forth.
+```{r}
+getTrackRecommendations(seed_artists = c('kygo', 'whitney houston'),
+                        seed_genres = c('tropical house', 'edm'),
+                        seed_tracks = '6oJ6le65B3SEqPwMRNXWjY',
+                        limit = 12,
+                        market = 'US',
+                        target_energy = 0.8,
+                        target_danceability = 1,
+                        target_valence = 1)
+```
 # ADITYA
 
 Or, if we would prefer to listen to a podcast, we can use wrappify as well.

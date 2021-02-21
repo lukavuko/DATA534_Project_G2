@@ -60,5 +60,16 @@ output: html_document
   and cleaned up functions so there's no redundancy across our code base.
 - Debugged all script code and example code to get github actions and travis
   builds to be passing. Added code coverage feature in the repo.
+  f2798d9e8f838adb58cbce918d591aaa843eed6f
 - Created a vignette for my functions.
+- Modified the `getAuthenticationToken` function to first check if the token is
+  valid before querying Spotify for the token again. This improved general
+  package runtime.
+  8e3f7aa3ede0225dd448a5b4d9308d9f8d2349c9
+  79f4b39713c670a11ed4c690da844df24193d9b4
+- Installed qpdf for vignette processing. Removed the warning that was causing
+  builds to fail on every push.
+
+## Feb 20 2021
+- Updated my section of the readme.Rmd
   

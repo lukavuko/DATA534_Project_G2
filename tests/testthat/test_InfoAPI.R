@@ -41,9 +41,6 @@ test_that("Check top songs", {
 
 test_that("Check Audio Features", {
   expect_error(getAudioFeatures("BADINPUT") , "400 : invalid request")
-  # These tests seem to break CI due to the fact that the Spotify API sometimes doesn't
-  # work randomly for this function.
-  #expect_equal(getAudioFeatures("3Vok4b8G2Yak5vaHOqKipV", output = "json")$valence, 0.355)
-  #expect_equal(getAudioFeatures("68ngtC3pGiTjXcFwxYCJ7Z", output = "json")$tempo, 121.016)
-
+  expect_equal(getAudioFeatures("3Vok4b8G2Yak5vaHOqKipV", output = "json")$valence, 0.355)
+  expect_equal(getAudioFeatures("68ngtC3pGiTjXcFwxYCJ7Z", output = "json")$tempo, 121.016)
 })

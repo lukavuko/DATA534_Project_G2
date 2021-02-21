@@ -21,7 +21,7 @@ library(wrappify)
 ## Seamless Conversion of Artist/Song names to their IDs
 
 Spotify works exclusively through object IDs, but as people of culture we know
-our favourite artists, tracks, and podcasts by their names, not IDs. As such, we
+our favourite artists, tracks, and podcasts by their names, not their IDs. As such, we
 need to be able to convert these names into their IDs as seamlessly as possible.
 
 Note that artist and track names do not need to be formatted or spelled correctly to
@@ -95,12 +95,14 @@ getTopSongs("1Qp56T7n950O3EGMsSl81D", output = "graph")
 
 ## Exploring New Tracks
 
-Artist to ID conversion is built into the getTrackRecommendations function
+We may also be interested in searching for new music based on certain song metrics (danceability, energy, valence, etc.), artist styles, genre tags, and even songs themselves. For this we have the `getTrackRecommendations()` function.
+
+Artist to ID conversion is built into the `getTrackRecommendations` function
 so we can directly type names into the function.
 
-Track to ID conversion is not yet implemented so we can use track seeds from
+Track to ID conversion is not yet implemented so we will use track seeds from
 earlier to find new song recommendations. There seem to be some issues with
-track seeds as vectors so we'll use only single tracks as our seeds.
+track seeds as vectors so we'll use only single tracks as our seed.
 
 Genres can be types as a vector if wanting multiple genres. Most genre tags you
 can think of exist in the Spotify API search, but in case there's no return
@@ -112,6 +114,7 @@ getTrackRecommendations(seed_artists = c('kygo', 'whitney houston'),
                         seed_genres = c('tropical house', 'edm'),
                         seed_tracks = '6oJ6le65B3SEqPwMRNXWjY')
 ```
+
 Say we aren't satisfied with our list. We can use other parameters to better
 guide Spotify's recommendation API like so:
 ```{r}
@@ -121,7 +124,18 @@ getTrackRecommendations(seed_artists = c('kygo', 'whitney houston'),
                         limit = 12,
                         market = 'US',
                         min_popularity = 70,
-                        target_valence = 75)
+                        target_valence = 1)
+```
+
+```{r}
+getTrackRecommendations(seed_artists = c('kygo', 'whitney houston'),
+                        seed_genres = c('tropical house', 'edm'),
+                        seed_tracks = '6oJ6le65B3SEqPwMRNXWjY',
+                        limit = 12,
+                        market = 'US',
+                        target_energy = 0.8,
+                        target_danceability = 1,
+                        target_valence = 1)
 ```
 
 ## Wrapper Functions for Spotify Podcasts

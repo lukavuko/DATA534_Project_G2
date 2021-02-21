@@ -32,40 +32,7 @@ devtools::install_github("adityasal/DATA534_Project_G2")
 
 ## Example
 
-This is a basic example that shows the intended workflow of wrappify. We
-start by loading our credentials from system variables and generate an
-authentication token.
-
-``` r
-source("R/EricsFunctions.R")
-#> -- Attaching packages --------------------------------------- tidyverse 1.3.0 --
-#> v ggplot2 3.3.2     v purrr   0.3.4
-#> v tibble  3.0.4     v dplyr   1.0.2
-#> v tidyr   1.1.2     v stringr 1.4.0
-#> v readr   1.4.0     v forcats 0.5.0
-#> -- Conflicts ------------------------------------------ tidyverse_conflicts() --
-#> x dplyr::filter() masks stats::filter()
-#> x dplyr::lag()    masks stats::lag()
-#> 
-#> Attaching package: 'jsonlite'
-#> The following object is masked from 'package:purrr':
-#> 
-#>     flatten
-#> 
-#> Attaching package: 'glue'
-#> The following object is masked from 'package:dplyr':
-#> 
-#>     collapse
-#> Loading required package: usethis
-source("R/LukaFunctions.R")
-source("R/spotifyPodcastAPI.R")
-
-client_id <-  Sys.getenv('CLIENT_ID')
-secret_id <-  Sys.getenv('CLIENT_SECRET_ID')
-
-get_authentication_token(client_id, secret_id)
-#> [1] "BQBpp09rJFnPBURkh9Ip4u7ZaPWcxu9kUk3H2RM4hgEf7Vw_-3_JeTO3b_TprXDxlMm5kZMFJ8Uu2k1fBmM"
-```
+This is a basic example that shows the intended workflow of wrappify. 
 
 First, we have an artist we wish to know more about. That artist is the
 essential alternative metal band “Ghost”. We query getArtistInfo.
@@ -159,8 +126,7 @@ learn more about them as well.
 
 # LUKA
 
-We may also be interested in learning about new music which fits certain
-metrics and genre tags
+
 
 # ADITYA
 

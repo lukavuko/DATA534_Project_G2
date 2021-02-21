@@ -293,7 +293,16 @@ getAudioFeatures <- function(songId, output =  "dataframe", authentication_token
 
   response <- httr::GET(url, httr::add_headers(Accept = "application/json",
                                    Authorization = paste("Bearer", authentication_token)))
+
   content <- httr::content(response)
+
+  # If the content returned is atomic, simply re-query the api
+  # for a recursive type vector. (Spotify sometimes fails to return data)
+  if (is.atomic(content) == TRUE) {
+    response <- httr::GET(url, httr::add_headers(Accept = "application/json",
+                                                 Authorization = paste("Bearer", authentication_token)))
+    content <- httr::content(response)
+  }
 
   if (response$status_code != 200) {
     stop(paste(response$status_code,":", content$error$message))
@@ -301,35 +310,42 @@ getAudioFeatures <- function(songId, output =  "dataframe", authentication_token
 
   # Sometimes the Spotify API will just return an empty list on a valid call, and just
   # running the function again th same way will make it work.
-  if (length(content) != 18){
-    stop("Something unexpected went wrong. Please try again.")
-  }
+  #if (length(content) != 18){
+  #  stop("Something unexpected went wrong. Please try again.")
+  #}
 
-  if (output != "json") {
+  if (output == "json") {
+
+    return(content)
+
+  } else if (output == "dataframe") {
+
+    metrics <- c("danceability", "energy", "speechiness", "acousticness",
+                "instrumentalness", "liveness", "valence", "tempo",
+                "time_signature", "duration_ms", "loudness")
+
     songname <- getSongInfo(songId, dataframe = TRUE)$trackName
-    df <- data.frame(metric = c("danceability", "energy", "speechiness", "acousticness",
-                                "instrumentalness", "liveness", "valence", "tempo", "time_signature",
-                                "duration_ms", "loudness"),
+
+    df <- data.frame(metric = metrics,
                      value = c(content$danceability, content$energy, content$speechiness,
                                content$acousticness, content$instrumentalness, content$liveness, content$valence,
                                content$tempo, content$time_signature, content$duration_ms, content$loudness))
 
-    if (output == "dataframe") {
-      return(df)
-    }
+    return(df)
 
     # Only output left is 'graph'
-    else {
+  } else {
+
       dfsub <- df[-c(8,9,10,11),]
+
       plot <- ggplot2::ggplot(dfsub, ggplot2::aes(y = metric, x = value)) +
         ggplot2::geom_point(fill = "blue") +
         ggplot2::ggtitle(paste0(songname, "'s Metrics"))+
         ggplot2::ylab("Song Metric")+
         ggplot2::xlab("Value") +
         ggplot2::xlim(c(0,1))
+
       return(plot)
+
     }
-  } else { # User requested json
-    return(content)
-  }
 }
