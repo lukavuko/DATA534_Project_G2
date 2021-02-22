@@ -33,6 +33,22 @@ getPodcastID <- function(query, market='US', authentication_token = getAuthentic
 
   content <- httr::content(response)
 
+  # If the content returned is atomic, simply re-query the api
+  # for a recursive type vector. (Spotify sometimes fails to return data)
+  if (is.atomic(content) == TRUE) {
+    response <- httr::GET(base_url,
+                          query = list(q = enc2utf8(query),
+                                       type = 'show',
+                                       market=market),
+                          httr::add_headers(Accept = 'application/json',
+                                            Authorization = paste('Bearer', authentication_token)))
+    content <- httr::content(response)
+    if (is.atomic(content) == TRUE) {
+      message('Returned content is atomic. Querying was unsuccessful.')
+      return NULL
+      }
+  }
+
   if(response$status_code != 200){
     stop(paste(response$status_code,":", content$error$message))
   }
