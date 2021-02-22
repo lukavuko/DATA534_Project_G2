@@ -45,7 +45,7 @@ getPodcastID <- function(query, market='US', authentication_token = getAuthentic
     content <- httr::content(response)
     if (is.atomic(content) == TRUE) {
       message('Returned content is atomic. Querying was unsuccessful.')
-      return NULL
+      return (NULL)
       }
   }
 
