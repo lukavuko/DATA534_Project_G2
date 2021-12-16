@@ -22,7 +22,7 @@ test_that("Gets correct song", {
 # Test getRelatedArtists
 
 test_that("Check related artists", {
-  expect_match(getRelatedArtists("6HZr7Fs2VfV1PYHIwo8Ylc", dataframe = T)$name[1], "Chelsea Grin")
+  expect_match(getRelatedArtists("6HZr7Fs2VfV1PYHIwo8Ylc", dataframe = T)$name[1], "All Shall Perish")
   expect_match(getRelatedArtists("1Qp56T7n950O3EGMsSl81D", dataframe = T)$name[1], "Mastodon")
   expect_error(getRelatedArtists("BADINPUT") , "400 : invalid id")
 })

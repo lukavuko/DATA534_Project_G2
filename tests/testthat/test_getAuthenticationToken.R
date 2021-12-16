@@ -4,8 +4,7 @@
 
 
 
-# This test fails because the code is robust and will generate an auth_token
-#using predefined variables, even if user uses bad variables
+# This test fails because the code is robust and will generate an auth_token using predefined variables, even if user uses bad variables
 
 #test_that("Authorization function returns NULL and warns user of invalid credentials", {
 #  expect_true(is(getAuthenticationToken(CLIENT_ID = "undefined",
