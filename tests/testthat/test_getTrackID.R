@@ -9,7 +9,6 @@ test_that('Track ID converter can handle missing track arguments', {
 
 test_that('Track ID converter can handle failed searches', {
   expect_true(is(getTrackID(''), 'NULL'))
-  expect_message(getTrackID(''), 'Search failed with response status: 404')
 })
 
 # This test doesn't work in CI

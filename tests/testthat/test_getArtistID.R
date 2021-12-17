@@ -9,7 +9,6 @@ test_that('Artist ID converter can handle missing artist arguments', {
 
 test_that('Artist ID converter can handle failed searches', {
   expect_true(is(getArtistID(''), 'NULL'))
-  expect_message(getArtistID(''), 'Search failed with response status: 404')
 })
 
 test_that('Artist ID converter returns the correct dataframe', {
